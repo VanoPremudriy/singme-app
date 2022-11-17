@@ -5,8 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.singmeapp.databinding.FragmentMessengerBinding
 
 class MessengerFragment : Fragment() {
+
+    lateinit var binding: FragmentMessengerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +20,8 @@ class MessengerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_messenger, container, false)
+        binding = FragmentMessengerBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     companion object {
