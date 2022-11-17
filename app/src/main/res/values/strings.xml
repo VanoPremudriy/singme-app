@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">SingMeApp</string>
+    <string name="app_name" translatable="false">SingMeApp</string>
+    <string name="messenger">Messenger</string>
+    <string name="profile">Profile</string>
+    <string name="library">Library</string>
+    <string name="home">Home</string>
 </resources>

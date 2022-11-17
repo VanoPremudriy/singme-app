@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="messenger">Мессенджер</string>
+    <string name="library">Библиотека</string>
+    <string name="profile">Профиль</string>
+    <string name="home">Главная</string>
+</resources>
