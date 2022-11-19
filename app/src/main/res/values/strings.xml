@@ -1,7 +1,30 @@
 <resources>
     <string name="app_name" translatable="false">SingMeApp</string>
+
     <string name="messenger">Messenger</string>
     <string name="profile">Profile</string>
     <string name="library">Library</string>
     <string name="home">Home</string>
+
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="not_authorized">You are not authorized</string>
+
+    <string name="name">Name</string>
+    <string name="last_name">Last name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat password</string>
+
+    <string name="not_verify">Account is not verify</string>
+    <string name="incorrect_email_password">Incorrect email or password</string>
+    <string name="verify_message">A confirmation email has been sent to your email</string>
+
+    <string name="null_name">Name is null</string>
+    <string name="null_last_name">Last Name is null</string>
+    <string name="null_email">Email is null</string>
+    <string name="null_pass">Password is null</string>
+    <string name="not_equals_pass">Passwords not equals</string>
+    <string name="incorrect_email">Incorrect email</string>
+    <string name="small_pass">The password must contain more than 8 characters</string>
 </resources>

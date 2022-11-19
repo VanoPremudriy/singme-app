@@ -4,4 +4,26 @@
     <string name="library">Библиотека</string>
     <string name="profile">Профиль</string>
     <string name="home">Главная</string>
+
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="not_authorized">Вы не авторизированы</string>
+
+    <string name="name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="repeat_password">Повторите пароль</string>
+
+    <string name="not_verify">Аккаунт не верифицирован</string>
+    <string name="incorrect_email_password">Неправильный логин или пароль</string>
+    <string name="verify_message">На вашу почту отправлено письмо с подтверждением</string>
+
+    <string name="null_name">Имя пустое</string>
+    <string name="null_last_name">Фамилия пустая</string>
+    <string name="null_email">Почта пустая</string>
+    <string name="null_pass">Пароль пустой</string>
+    <string name="not_equals_pass">Пароли не совпадают</string>
+    <string name="incorrect_email">Почта некорректна</string>
+    <string name="small_pass">Пароль должен содержать больше 8 символов</string>
 </resources>

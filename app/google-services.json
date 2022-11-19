@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "424841603837",
+    "firebase_url": "https://singmedb-default-rtdb.firebaseio.com",
+    "project_id": "singmedb",
+    "storage_bucket": "singmedb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424841603837:android:c8e70ae39f4aa8aa3dac94",
+        "android_client_info": {
+          "package_name": "com.example.singmeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424841603837-02usgpb0jlndrpfdqrv4eu37gt3f8r2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ2CAuaMa6raIlidz1Gb1zGsApSCv90mI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424841603837-02usgpb0jlndrpfdqrv4eu37gt3f8r2v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

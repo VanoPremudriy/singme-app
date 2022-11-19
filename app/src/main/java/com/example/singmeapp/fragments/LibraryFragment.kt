@@ -1,10 +1,12 @@
-package com.example.singmeapp
+package com.example.singmeapp.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentLibraryBinding
 
 class LibraryFragment : Fragment() {
@@ -13,6 +15,10 @@ class LibraryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val fragActivity = activity as AppCompatActivity
+        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        fragActivity.title = getString(R.string.library)
+
     }
 
     override fun onCreateView(
