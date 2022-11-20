@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bNav.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.libraryItem -> {supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, LibraryFragment.newInstance()).commit()}
+                R.id.libraryItem -> {supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, PlayerFragment.newInstance()).commit()}
                 R.id.profileItem -> {
                     if (auth.currentUser != null)
                     supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, ProfileFragment.newInstance()).commit()

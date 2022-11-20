@@ -27,4 +27,6 @@
     <string name="not_equals_pass">Passwords not equals</string>
     <string name="incorrect_email">Incorrect email</string>
     <string name="small_pass">The password must contain more than 8 characters</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
