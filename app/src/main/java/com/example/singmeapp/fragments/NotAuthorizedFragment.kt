@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentNotAuthorizedBinding
 
@@ -19,20 +22,22 @@ class NotAuthorizedFragment : Fragment() {
         fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         fragActivity.title = getString(R.string.profile)
 
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentNotAuthorizedBinding.inflate(layoutInflater)
 
         binding.bSignIn2.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, LoginFragment.newInstance())?.commit()
+            findNavController().navigate(R.id.action_notAuthorizedFragment_to_loginFragment)
         }
 
         binding.bSignUp2.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, RegistrationFragment.newInstance())?.commit()
+            findNavController().navigate(R.id.action_notAuthorizedFragment_to_registrationFragment)
         }
         // Inflate the layout for this fragment
         return binding.root

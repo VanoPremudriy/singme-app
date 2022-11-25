@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -55,7 +56,7 @@ class ProfileFragment : Fragment() {
 
         binding.button3.setOnClickListener {
             auth.signOut()
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, NotAuthorizedFragment.newInstance())?.commit()
+            findNavController().navigate(R.id.action_profileFragment_to_notAuthorizedFragment)
         }
 
 

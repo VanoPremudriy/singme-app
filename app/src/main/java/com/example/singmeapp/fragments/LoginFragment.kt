@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -61,9 +62,7 @@ class LoginFragment : Fragment() {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         if (auth.currentUser?.isEmailVerified == true) {
-                            activity?.supportFragmentManager?.beginTransaction()
-                                ?.replace(R.id.fragmentContainer, ProfileFragment.newInstance())
-                                ?.commit()
+                            findNavController().navigate(R.id.action_loginFragment_to_profileFragment);
                         } else {
                             Toast.makeText(
                                 context,
@@ -82,7 +81,7 @@ class LoginFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, NotAuthorizedFragment.newInstance())?.commit()
+            findNavController().navigate(R.id.action_loginFragment_pop);
         }
         return true
     }

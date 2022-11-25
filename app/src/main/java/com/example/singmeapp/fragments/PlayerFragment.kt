@@ -1,52 +1,93 @@
 package com.example.singmeapp.fragments
 
-import android.media.AudioManager
+import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.singmeapp.R
-import com.example.singmeapp.databinding.FragmentPlayerBinding
 import android.widget.SeekBar
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import com.example.singmeapp.databinding.FragmentPlayerBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import java.io.File
+import java.io.IOException
+import java.util.*
+import java.util.function.Consumer
+import kotlin.collections.ArrayList
 
 
 class PlayerFragment : Fragment() {
 
     lateinit var storage: FirebaseStorage
     lateinit var binding: FragmentPlayerBinding
-    lateinit var mPlayer: MediaPlayer
+    var mPlayer: MediaPlayer = MediaPlayer()
     private lateinit var runnable:Runnable
     private var handler: Handler = Handler()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var database = FirebaseDatabase.getInstance()
+    private val firebaseUrl = "https://firebasestorage.googleapis.com/v0/b/singmedb.appspot.com/o/songs"
+    private val token = "?alt=media&token=0cae4f78-6eb5-4026-b4ed-49cb0f844f86"
+    val songList = ArrayList<String>()
+    val coverList = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         storage = FirebaseStorage.getInstance()
-        mPlayer =  MediaPlayer.create(context, R.raw.addicted)
+
+
+        database.getReference("songs").addValueEventListener(object : ValueEventListener{
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach(Consumer { t ->
+                    songList.add("/" + t.value.toString())
+                    Log.e("SONGS", t.value.toString())
+                })
+                mPlayer.setDataSource(firebaseUrl + songList[0].replace("/", "%2F") + token)
+                mPlayer.prepare()
+                initializeSeekBar()
+                initializeButtonsClickListeners()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            }
+        )
+
+
+
+        database.getReference("covers").addValueEventListener(object : ValueEventListener{
+            @SuppressLint("RestrictedApi")
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach(Consumer { t ->
+                    coverList.add(t.value.toString())
+                    Log.e("COVERS", t.value.toString())
+                })
+                initializeCover(coverList[0])
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        }
+        )
+
 
         binding = FragmentPlayerBinding.inflate(layoutInflater)
-
-        initializeSeekBar()
-
-        binding.imageButton.setOnClickListener{
-            if (!mPlayer.isPlaying){
-                binding.imageButton.setImageResource(android.R.drawable.ic_media_pause)
-                mPlayer.start()
-            }
-            else{
-                binding.imageButton.setImageResource(android.R.drawable.ic_media_play)
-                mPlayer.pause()
-            }
-        }
 
         binding.seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, i: Int, b: Boolean) {
@@ -71,7 +112,61 @@ class PlayerFragment : Fragment() {
         return binding.root
     }
 
-    private fun initializeSeekBar() {
+    fun initializeButtonsClickListeners(){
+        binding.ibPlay.setOnClickListener {
+
+                if (!mPlayer.isPlaying) {
+                    binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
+                    mPlayer.start()
+                } else {
+                    binding.ibPlay.setImageResource(android.R.drawable.ic_media_play)
+                    mPlayer.pause()
+                }
+
+        }
+
+        binding.ibMusicRight.setOnClickListener {
+
+                mPlayer.stop()
+                mPlayer = MediaPlayer()
+                mPlayer.setDataSource(firebaseUrl + songList[1].replace("/", "%2F") + token)
+                mPlayer.prepare()
+                initializeSeekBar()
+                initializeCover(coverList[1])
+                binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
+                mPlayer.start()
+
+        }
+
+        binding.ibMusicLeft.setOnClickListener {
+
+                mPlayer.stop()
+                mPlayer = MediaPlayer()
+                mPlayer.setDataSource(firebaseUrl + songList[0].replace("/", "%2F") + token)
+                mPlayer.prepare()
+                initializeSeekBar()
+                initializeCover(coverList[0])
+                binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
+                mPlayer.start()
+
+        }
+
+
+    }
+
+    fun initializeCover(coverName: String){
+        try {
+            val localFile: File = File.createTempFile("default_picture", "jpg")
+            storage.getReferenceFromUrl("gs://singmedb.appspot.com/covers").child(coverName).getFile(localFile)
+                .addOnSuccessListener {
+                    val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+                    binding.imageView6.setImageBitmap(bitmap)
+                }.addOnFailureListener { }
+        } catch (e: IOException) {
+        }
+    }
+
+    fun initializeSeekBar() {
         binding.seekBar.max = mPlayer.seconds
 
         runnable = Runnable {
@@ -99,3 +194,4 @@ class PlayerFragment : Fragment() {
 
     }
 }
+

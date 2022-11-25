@@ -1,6 +1,5 @@
 package com.example.singmeapp.fragments
 
-import android.R.attr.password
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -9,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentRegistrationBinding
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -76,8 +75,7 @@ class RegistrationFragment : Fragment() {
                         }
                     Toast.makeText(context, getString(R.string.verify_message), Toast.LENGTH_SHORT).show()
                     auth.signOut()
-                    activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.fragmentContainer, LoginFragment.newInstance())?.commit()
+                    findNavController().navigate(R.id.action_registrationFragment_to_loginFragment);
                 }
             }
         }
@@ -85,7 +83,7 @@ class RegistrationFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, NotAuthorizedFragment.newInstance())?.commit()
+            findNavController().navigate(R.id.action_registrationFragment_pop);
         }
         return true
     }

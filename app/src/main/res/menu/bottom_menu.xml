@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeItem"
+        android:id="@+id/homeFragment"
         android:title="@string/home"
         android:orderInCategory="1"/>
     <item
-        android:id="@+id/messengerItem"
+        android:id="@+id/messengerFragment"
         android:title="@string/messenger"
         android:orderInCategory="2"/>
     <item
-        android:id="@+id/libraryItem"
+        android:id="@+id/libraryFragment"
         android:title="@string/library"
         android:orderInCategory="3"/>
     <item
-        android:id="@+id/profileItem"
+        android:id="@+id/profileFragment"
         android:title="@string/profile"
         android:orderInCategory="4"/>
 </menu>
