@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
        binding.bNav.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.libraryFragment ->  {navController.navigate(R.id.playerFragment)}//{navController.navigate(R.id.action_global_libraryFragment) }
+                R.id.libraryFragment ->  {navController.navigate(R.id.myLibraryFragment)}//{navController.navigate(R.id.action_global_libraryFragment) }
                 R.id.profileFragment -> {
                     if (auth.currentUser != null)
                         navController.navigate(R.id.action_global_profileFragment)
