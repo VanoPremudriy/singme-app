@@ -26,6 +26,7 @@
     <string name="not_equals_pass">Пароли не совпадают</string>
     <string name="incorrect_email">Почта некорректна</string>
     <string name="small_pass">Пароль должен содержать больше 8 символов</string>
+    <string name="email_exist">Пользователь с этой почтой уже существует</string>
 
     <string name="albums">Альбомы</string>
     <string name="Playlists">Плейлисты</string>

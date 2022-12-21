@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentRegistrationBinding
-import com.google.android.material.snackbar.Snackbar
+import com.example.singmeapp.viewmodels.RegistrationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -22,6 +23,7 @@ class RegistrationFragment : Fragment() {
     lateinit var binding: FragmentRegistrationBinding
     lateinit var auth: FirebaseAuth
     var database = Firebase.database
+    lateinit var regViewModel: RegistrationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +39,11 @@ class RegistrationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentRegistrationBinding.inflate(layoutInflater)
+        val provider = ViewModelProvider(this)
+        regViewModel = provider[RegistrationViewModel::class.java]
         auth = FirebaseAuth.getInstance()
         binding.bSignUpReg.setOnClickListener {
-            clearValid()
+            regViewModel.clearValid()
             signUp()
         }
 
@@ -57,27 +61,19 @@ class RegistrationFragment : Fragment() {
             val uLastName = binding.etLastNameInRegistration.text.toString()
             val uEmail = binding.etEmailInRegistration.text.toString()
             val uPassword = binding.etPasswordInRegistration.text.toString()
-            auth.createUserWithEmailAndPassword(uEmail, uPassword).addOnCompleteListener { it1 ->
-                if (it1.isSuccessful) {
-                    auth.signInWithEmailAndPassword(uEmail, uPassword)
-                        .addOnCompleteListener { it2 ->
-                            if (it2.isSuccessful) {
-                                database.getReference("users/" + auth.currentUser?.uid + "/profile/name")
-                                    .setValue(uName)
-                                database.getReference("users/" + auth.currentUser?.uid + "/profile/last_name")
-                                    .setValue(uLastName)
-                                database.getReference("users/" + auth.currentUser?.uid + "/profile/email")
-                                    .setValue(uEmail)
-                                database.getReference("users/" + auth.currentUser?.uid + "/profile/password")
-                                    .setValue(uPassword)
-                                auth.currentUser?.sendEmailVerification()
-                            }
-                        }
+
+            regViewModel.setRegValues(arrayListOf(uName, uLastName, uEmail, uPassword))
+            regViewModel.registration()
+            regViewModel.isSuccess.observe(viewLifecycleOwner){
+                if (it){
                     Toast.makeText(context, getString(R.string.verify_message), Toast.LENGTH_SHORT).show()
-                    auth.signOut()
-                    findNavController().navigate(R.id.action_registrationFragment_to_loginFragment);
+                    findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+                }
+                else {
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                 }
             }
+
         }
     }
 
@@ -94,52 +90,37 @@ class RegistrationFragment : Fragment() {
         val uEmail = binding.etEmailInRegistration.text.toString()
         val uPassword = binding.etPasswordInRegistration.text.toString()
         val uRepPassword = binding.etRepeatPasswordInRegistration.text.toString()
-        if (uName == ""){
-            binding.tvNameValid.text = getString(R.string.null_name)
-            return false
-        }
 
-        if (uLastName == ""){
-            binding.tvLastNameValid.text = getString(R.string.null_last_name)
-            return false
-        }
+        regViewModel.setValidValues(arrayListOf(uName, uLastName, uEmail, uPassword, uRepPassword))
 
-        if (uEmail == ""){
-            binding.tvEmailValid.text = getString(R.string.null_email)
-            return false
-        }
+        val result =  regViewModel.Valid()
+        observeViewModel()
+        return result
 
-        if (uPassword == ""){
-            binding.tvPassValid.text = getString(R.string.null_pass)
-            return false
-        }
-
-        if (uPassword != uRepPassword){
-            binding.tvPassValid.text = getString(R.string.not_equals_pass)
-            binding.tvRepPassValid.text = getString(R.string.not_equals_pass)
-            return false
-        }
-
-        if (uEmail.indexOf('@') == -1){
-            binding.tvEmailValid.text = getString(R.string.incorrect_email)
-            return false
-        }
-
-        if (uPassword.length < 8){
-            binding.tvPassValid.text = getString(R.string.small_pass)
-            return false
-        }
-        return true
     }
 
-    private fun clearValid(){
-        binding.apply {
-            tvNameValid.text = ""
-            tvLastNameValid.text = ""
-            tvEmailValid.text = ""
-            tvPassValid.text = ""
-            tvRepPassValid.text = ""
+
+    fun observeViewModel(){
+        regViewModel.nameValid.observe(viewLifecycleOwner){
+            binding.tvNameValid.text = it.toString()
         }
+
+        regViewModel.lastNameValid.observe(viewLifecycleOwner){
+            binding.tvLastNameValid.text = it.toString()
+        }
+
+        regViewModel.emailValid.observe(viewLifecycleOwner){
+            binding.tvEmailValid.text = it.toString()
+        }
+
+        regViewModel.passValid.observe(viewLifecycleOwner){
+            binding.tvPassValid.text = it.toString()
+        }
+
+        regViewModel.repPassValid.observe(viewLifecycleOwner){
+            binding.tvRepPassValid.text = it.toString()
+        }
+
     }
 
 }
