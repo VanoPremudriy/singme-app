@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="90dp"
+    app:behavior_peekHeight="80dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <SeekBar
@@ -25,11 +25,11 @@
         android:id="@+id/imageView6"
         android:layout_width="267dp"
         android:layout_height="269dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:src="@drawable/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/upMenu" />
 
     <ImageButton
         android:id="@+id/ibPlay"
@@ -62,15 +62,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ibPlay" />
 
-    <Button
-        android:id="@+id/bClose"
-        android:layout_width="23dp"
-        android:layout_height="29dp"
-        android:layout_marginTop="4dp"
-        android:text="Button"
+    <LinearLayout
+        android:id="@+id/upMenu"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:background="#DCDCDC"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.955"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/ibDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:visibility="gone"
+            app:srcCompat="@android:drawable/arrow_down_float" />
+
+        <ImageButton
+            android:id="@+id/ibPlayUpMenu"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="8"
+            app:srcCompat="@android:drawable/ic_media_play" />
+
+        <LinearLayout
+            android:id="@+id/textUpMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSongNameUpMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tvBandNameUpMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/ibClose"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="8"
+            android:text="Button"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

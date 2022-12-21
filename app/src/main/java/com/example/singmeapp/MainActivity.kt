@@ -16,6 +16,7 @@ import com.example.singmeapp.fragments.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
+import java.time.Duration
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,11 +43,12 @@ class MainActivity : AppCompatActivity() {
 
         setNavigation()
 
-        binding.player.bClose.setOnClickListener {
+        binding.player.ibClose.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.player.root)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -57,16 +59,30 @@ class MainActivity : AppCompatActivity() {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED ->{
                         supportActionBar?.hide()
-                        binding.bNav.visibility = View.INVISIBLE
-                        binding.player.bClose.visibility = View.GONE
+                        binding.bNav.visibility = View.GONE
+                        bottomSheet.setClickable(true)
+                        binding.player.ibPlayUpMenu.visibility = View.GONE
+                        binding.player.textUpMenu.visibility = View.GONE
+                        binding.player.ibClose.visibility = View.GONE
+                        binding.player.ibDown.visibility = View.VISIBLE
                     }
 
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         supportActionBar?.show()
                         binding.bNav.visibility = View.VISIBLE
-                        binding.player.bClose.visibility = View.VISIBLE
-
+                        bottomSheet.setClickable(false)
+                        binding.player.ibPlayUpMenu.visibility = View.VISIBLE
+                        binding.player.textUpMenu.visibility = View.VISIBLE
+                        binding.player.ibClose.visibility = View.VISIBLE
+                        binding.player.ibDown.visibility = View.GONE
                     }
+
+                    BottomSheetBehavior.STATE_HIDDEN ->{
+                        supportActionBar?.show()
+                        binding.bNav.visibility = View.VISIBLE
+                        bottomSheet.setClickable(false)
+                    }
+
                     else -> {
 
                     }
@@ -74,9 +90,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-
-
 
     }
 
