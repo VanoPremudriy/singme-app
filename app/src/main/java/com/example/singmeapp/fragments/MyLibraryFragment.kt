@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentMyLibraryBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -46,6 +49,9 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
             binding.idPlaylists.id -> {
                 Snackbar.make(p,"Playlist",Snackbar.LENGTH_SHORT).show()
             }
+            binding.button.id -> {
+                (activity as MainActivity).bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
         }
     }
 
@@ -53,6 +59,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         binding.apply {
             idBands.setOnClickListener(this@MyLibraryFragment)
             idPlaylists.setOnClickListener(this@MyLibraryFragment)
+            button.setOnClickListener(this@MyLibraryFragment)
         }
     }
 

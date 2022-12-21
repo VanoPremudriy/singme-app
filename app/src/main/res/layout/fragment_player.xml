@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="500dp"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="80dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    tools:context=".fragments.PlayerFragment">
+    app:behavior_peekHeight="90dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -61,5 +61,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/ibPlay"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ibPlay" />
+
+    <Button
+        android:id="@+id/bClose"
+        android:layout_width="23dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="4dp"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

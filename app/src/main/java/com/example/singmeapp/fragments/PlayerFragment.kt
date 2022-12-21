@@ -14,6 +14,7 @@ import android.widget.SeekBar
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.singmeapp.databinding.FragmentPlayerBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -26,7 +27,7 @@ import java.util.function.Consumer
 import kotlin.collections.ArrayList
 
 
-class PlayerFragment : Fragment() {
+class PlayerFragment : BottomSheetDialogFragment() {
 
     lateinit var storage: FirebaseStorage
     lateinit var binding: FragmentPlayerBinding
@@ -57,6 +58,8 @@ class PlayerFragment : Fragment() {
                 mPlayer.prepare()
                 initializeSeekBar()
                 initializeButtonsClickListeners()
+
+
             }
 
             override fun onCancelled(error: DatabaseError) {
