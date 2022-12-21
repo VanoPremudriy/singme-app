@@ -1,6 +1,7 @@
 package com.example.singmeapp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,20 +9,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentLoginBinding
+import com.example.singmeapp.viewmodels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.ktx.Firebase
+import java.security.Provider
+import kotlin.math.log
 
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
-    lateinit var auth: FirebaseAuth
-    private var database = FirebaseDatabase.getInstance()
+
+    lateinit var loginViewModel: LoginViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +43,9 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLoginBinding.inflate(layoutInflater)
-        auth = FirebaseAuth.getInstance()
+
+        val provider = ViewModelProvider(this)
+        loginViewModel = provider[LoginViewModel::class.java]
 
         binding.bSignInLogin.setOnClickListener {
             signIn()
@@ -57,25 +64,21 @@ class LoginFragment : Fragment() {
         if (textValidation()) {
             val uEmail = binding.etEmailInLogin.text.toString()
             val uPassword = binding.etPasswordInLogin.text.toString()
+            Log.d("LOG", "qq")
+            loginViewModel.setLoginValues(arrayListOf(uEmail, uPassword))
+            loginViewModel.logIn()
 
-            auth.signInWithEmailAndPassword(uEmail, uPassword)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        if (auth.currentUser?.isEmailVerified == true) {
-                            findNavController().navigate(R.id.action_loginFragment_to_profileFragment);
-                        } else {
-                            Toast.makeText(
-                                context,
-                                getString(R.string.not_verify),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            auth.signOut()
-                        }
-                    } else {
-                        Toast.makeText(context, getString(R.string.incorrect_email_password), Toast.LENGTH_SHORT)
-                            .show()
-                    }
+            if (loginViewModel.isSuccess.value == true){
+                if (loginViewModel.isVerify.value == true){
+                    findNavController().navigate(R.id.action_loginFragment_to_profileFragment);
                 }
+                else {
+                    Toast.makeText(context, getString(R.string.not_verify), Toast.LENGTH_SHORT).show()
+                }
+            }
+            else {
+                Toast.makeText(context, getString(R.string.incorrect_email_password), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -90,24 +93,22 @@ class LoginFragment : Fragment() {
         val uEmail = binding.etEmailInLogin.text.toString()
         val uPassword = binding.etPasswordInLogin.text.toString()
 
-        if (uEmail == ""){
-            binding.tvEmailValidLogin.text = getString(R.string.null_email)
-            return false
-        }
+        loginViewModel.setValidVaues(arrayListOf(uEmail, uPassword))
 
-        if (uPassword == ""){
-            binding.tvPasswordValidLogin.text = getString(R.string.null_pass)
-        }
+        val result =  loginViewModel.valid()
+        observeViewModel()
+        return result
 
-        if (uEmail.indexOf('@') == -1){
-            binding.tvEmailValidLogin.text = getString(R.string.incorrect_email)
-            return false
-        }
-
-        return true
     }
 
-    private fun clearValid(){
+    fun observeViewModel(){
+        loginViewModel.emailValid.observe(viewLifecycleOwner){
+            binding.tvEmailValidLogin.text = it.toString()
+        }
+
+        loginViewModel.passValid.observe(viewLifecycleOwner){
+            binding.tvPasswordValidLogin.text = it.toString()
+        }
 
     }
 

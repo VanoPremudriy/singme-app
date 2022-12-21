@@ -21,8 +21,6 @@ import com.google.firebase.ktx.Firebase
 class RegistrationFragment : Fragment() {
 
     lateinit var binding: FragmentRegistrationBinding
-    lateinit var auth: FirebaseAuth
-    var database = Firebase.database
     lateinit var regViewModel: RegistrationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +39,6 @@ class RegistrationFragment : Fragment() {
         binding = FragmentRegistrationBinding.inflate(layoutInflater)
         val provider = ViewModelProvider(this)
         regViewModel = provider[RegistrationViewModel::class.java]
-        auth = FirebaseAuth.getInstance()
         binding.bSignUpReg.setOnClickListener {
             regViewModel.clearValid()
             signUp()
