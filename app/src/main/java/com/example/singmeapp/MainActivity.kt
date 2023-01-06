@@ -1,22 +1,30 @@
 package com.example.singmeapp
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Resources
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.example.singmeapp.adapters.PlayerPagerAdapter
 import com.example.singmeapp.databinding.ActivityMainBinding
-import com.example.singmeapp.fragments.*
+import com.example.singmeapp.fragments.PlayerPlayerFragment
+import com.example.singmeapp.fragments.PlayerPlaylistFragment
+import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
-import java.time.Duration
+
+import java.security.Provider
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +36,10 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
+    lateinit var viewPager: ViewPager2
+    lateinit var  tabLayout: TabLayout
+
+    val playlistViewModel: PlayerPlaylistViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         binding.player.ibClose.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-
         bottomSheetBehavior = BottomSheetBehavior.from(binding.player.root)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehavior.addBottomSheetCallback(object :
@@ -91,6 +102,27 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        viewPager = binding.player.viewPager
+
+        tabLayout = binding.player.tabLayout
+
+
+
+        viewPager.adapter =  PlayerPagerAdapter(this)
+        TabLayoutMediator(tabLayout, viewPager) { tab, index ->
+            tab.icon = when(index){
+                0 ->  getDrawable(android.R.drawable.radiobutton_off_background)
+                1 ->  getDrawable(android.R.drawable.ic_menu_sort_by_size)
+                else -> {throw Resources.NotFoundException("14")}
+            }
+        }.attach()
+
+
+
+        //playlistViewModel = ViewModelProvider(this)[PlayerPlaylistViewModel::class.java]
+
+
+
     }
 
     fun setNavigation(){
@@ -108,5 +140,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
 
 }
