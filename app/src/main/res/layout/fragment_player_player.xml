@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -22,7 +22,7 @@
         android:id="@+id/imageView6"
         android:layout_width="267dp"
         android:layout_height="269dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="48dp"
         android:src="@drawable/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,15 +32,15 @@
         android:id="@+id/ibPlay"
         android:layout_width="74dp"
         android:layout_height="70dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="32dp"
         android:src="@android:drawable/ic_media_play"
-        app:layout_constraintEnd_toStartOf="@+id/ibMusicLeft"
+        app:layout_constraintEnd_toStartOf="@+id/ibMusicRight"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toEndOf="@+id/ibMusicRight"
+        app:layout_constraintStart_toEndOf="@+id/ibMusicLeft"
         app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
     <ImageButton
-        android:id="@+id/ibMusicLeft"
+        android:id="@+id/ibMusicRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="60dp"
@@ -50,7 +50,7 @@
         app:layout_constraintTop_toTopOf="@+id/ibPlay" />
 
     <ImageButton
-        android:id="@+id/ibMusicRight"
+        android:id="@+id/ibMusicLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
@@ -58,5 +58,27 @@
         app:layout_constraintBottom_toBottomOf="@+id/ibPlay"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ibPlay" />
+
+    <TextView
+        android:id="@+id/tvPlayerTrackName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
+    <TextView
+        android:id="@+id/tvPlayerBandName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPlayerTrackName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

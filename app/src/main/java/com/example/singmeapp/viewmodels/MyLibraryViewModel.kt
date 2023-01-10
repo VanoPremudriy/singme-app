@@ -42,7 +42,7 @@ class MyLibraryViewModel: ViewModel() {
                         t.child("band").value.toString(),
                         t.child("album").value.toString(),
                         "${firebaseImageUrl}/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/cover.jpg",
-                        "${firebaseSongUrl}bands%2F${t.child("band").value.toString()}%2Falbums%2F${t.child("album").value.toString()}%2F${t.child("name").value.toString()}.mp3${token}"
+                        "https://www.dropbox.com/s/pz68j3ixhtqg32k/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/${t.child("name").value.toString()}.mp3?dl=1"//"${firebaseSongUrl}bands%2F${t.child("band").value.toString()}%2Falbums%2F${t.child("album").value.toString()}%2F${t.child("name").value.toString()}.mp3${token}"
                     )
                     arrayListSong.add(song)
                     Log.d("ViewModel", song.songUrl)

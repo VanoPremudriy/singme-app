@@ -8,6 +8,8 @@ import com.example.singmeapp.items.Song
 class PlayerPlaylistViewModel : ViewModel(){
     var songList = MutableLiveData<List<Song>>()
     var url = MutableLiveData<String>()
+    var currentSongId = MutableLiveData<Int>()
+    var isPlaying = MutableLiveData<Boolean>()
 
 
 }
