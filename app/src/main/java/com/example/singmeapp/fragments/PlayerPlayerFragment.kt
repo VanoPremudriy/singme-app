@@ -59,7 +59,7 @@ class PlayerPlayerFragment : Fragment() {
                     if (previousSong == null) {
                         //mPlayer = MediaPlayer.create(context, R.raw.addicted)
                         mPlayer = MediaPlayer()
-                        mPlayer.setDataSource("https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/EKNGIvRoIXAiLw?alt=media")//currentSong.songUrl)
+                        mPlayer.setDataSource(currentSong.songUrl)
                         mPlayer.prepare()
                         mPlayer.start()
                         playerPlaylistViewModel.isPlaying.value = true

@@ -53,15 +53,7 @@ class SongAdapter(val fragmentActivity: AppCompatActivity, val url: String): Rec
            val provider = ViewModelProvider(fragmentActivity)
             playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
-            /*SongLayout.setOnClickListener {
-                if (playerPlaylistViewModel.songList.value != songList){
-                    playerPlaylistViewModel.songList.value = songList
-                    playerPlaylistViewModel.url.value = url
-                }
-                //Log.d("Adapter", playerPlaylistViewModel.songList[SongLayout.] )
-                //tvBandName.text = "fds"
 
-            }*/
         }
     }
 
