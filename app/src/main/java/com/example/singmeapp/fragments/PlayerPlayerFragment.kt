@@ -151,7 +151,7 @@ class PlayerPlayerFragment : Fragment() {
     }
 
     fun initializeCover(coverUrl: String){
-        Picasso.get().load(coverUrl).fit().into(binding.imageView6)
+        Picasso.get().load(coverUrl).fit().into(binding.ivCover)
     }
 
     fun initializeSeekBar() {

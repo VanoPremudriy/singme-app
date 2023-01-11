@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
-import com.example.singmeapp.databinding.SongItemBinding
+import com.example.singmeapp.databinding.TrackItemBinding
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -24,12 +24,12 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val url: String): Re
 
 
         lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
-        val binding = SongItemBinding.bind(item)
+        val binding = TrackItemBinding.bind(item)
 
         fun bind(track: Track) = with(binding){
-            tvSongName.text = track.name
+            tvTrackName.text = track.name
             tvBandName.text = track.band
-            Picasso.get().load(track.imageUrl).fit().into(ivSongCover)
+            Picasso.get().load(track.imageUrl).fit().into(ivTrackCover)
             val provider = ViewModelProvider(fragmentActivity)
             playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
@@ -38,7 +38,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val url: String): Re
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.song_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
         return  TrackHolder(view, fragmentActivity)
     }
 

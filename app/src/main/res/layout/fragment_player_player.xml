@@ -19,7 +19,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ibPlay" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/ivCover"
         android:layout_width="267dp"
         android:layout_height="269dp"
         android:layout_marginTop="48dp"
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toStartOf="@+id/ibMusicRight"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toEndOf="@+id/ibMusicLeft"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintTop_toBottomOf="@+id/ivCover" />
 
     <ImageButton
         android:id="@+id/ibMusicRight"

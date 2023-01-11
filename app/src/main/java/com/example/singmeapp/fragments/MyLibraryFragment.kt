@@ -62,9 +62,6 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
             binding.idPlaylists.id -> {
                 Snackbar.make(p,"Playlist",Snackbar.LENGTH_SHORT).show()
             }
-            binding.button.id -> {
-                (activity as MainActivity).bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
         }
     }
 
@@ -72,7 +69,6 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         binding.apply {
             idBands.setOnClickListener(this@MyLibraryFragment)
             idPlaylists.setOnClickListener(this@MyLibraryFragment)
-            button.setOnClickListener(this@MyLibraryFragment)
         }
     }
 
