@@ -53,16 +53,17 @@ class MyLibraryViewModel: ViewModel() {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach(Consumer { t ->
-                    val path = mService.getTrack("/storage/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/${t.child("name").value.toString()}.mp3",authToken).execute().body()?.public_url
-                    if (path != null) {
-                        Log.d("PATH", path)
+                    val trackPath = mService.getFile("/storage/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/${t.child("name").value.toString()}.mp3",authToken).execute().body()?.public_url
+                    val imagePath = mService.getFile("storage/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/cover.jpg", authToken).execute().body()?.public_url
+                    if (trackPath != null) {
+                        Log.d("PATH", trackPath)
                     }
                     val song = Song(
                         t.child("name").value.toString(),
                         t.child("band").value.toString(),
                         t.child("album").value.toString(),
-                        "${firebaseImageUrl}/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/cover.jpg",
-                        "https://getfile.dokpub.com/yandex/get/${path}"
+                        "https://getfile.dokpub.com/yandex/get/${imagePath}",//"${firebaseImageUrl}/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/cover.jpg",
+                        "https://getfile.dokpub.com/yandex/get/${trackPath}"
                     )
                     arrayListSong.add(song)
                     Log.d("ViewModel", song.songUrl)

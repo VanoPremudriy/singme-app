@@ -19,6 +19,7 @@ import com.example.singmeapp.items.Song
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.io.File
 import java.io.IOException
 
@@ -32,25 +33,13 @@ class SongAdapter(val fragmentActivity: AppCompatActivity, val url: String): Rec
 
 
         lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
-        var storage = FirebaseStorage.getInstance()
         val binding = SongItemBinding.bind(item)
 
         fun bind(song: Song) = with(binding){
             tvSongName.text = song.name
             tvBandName.text = song.band
-
-
-            try {
-                val localFile: File = File.createTempFile("default_picture", "jpg")
-                storage.getReferenceFromUrl(song.imageUrl).getFile(localFile)
-                    .addOnSuccessListener {
-                        val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                        ivSongCover.setImageBitmap(bitmap)
-                    }.addOnFailureListener { }
-            } catch (e: IOException) {
-            }
-
-           val provider = ViewModelProvider(fragmentActivity)
+            Picasso.get().load(song.imageUrl).fit().into(ivSongCover)
+            val provider = ViewModelProvider(fragmentActivity)
             playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
 

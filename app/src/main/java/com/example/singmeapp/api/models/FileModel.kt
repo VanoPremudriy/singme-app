@@ -1,6 +1,6 @@
 package com.example.singmeapp.api.models
 
-data class TrackApiModel(
+data class FileApiModel(
     val antivirus_status: String,
     val comment_ids: CommentIds,
     val created: String,

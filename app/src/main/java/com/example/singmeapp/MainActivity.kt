@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewPager: ViewPager2
     lateinit var  tabLayout: TabLayout
 
-    val playlistViewModel: PlayerPlaylistViewModel by viewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +48,6 @@ class MainActivity : AppCompatActivity() {
 
         setNavigation()
 
-        /*binding.player.ibClose.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }*/
         bottomSheetBehavior = BottomSheetBehavior.from(binding.player.root)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehavior.addBottomSheetCallback(object :
@@ -98,9 +93,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewPager = binding.player.viewPager
-
         tabLayout = binding.player.tabLayout
-
 
 
         viewPager.adapter =  PlayerPagerAdapter(this)
@@ -111,12 +104,6 @@ class MainActivity : AppCompatActivity() {
                 else -> {throw Resources.NotFoundException("14")}
             }
         }.attach()
-
-
-
-        //playlistViewModel = ViewModelProvider(this)[PlayerPlaylistViewModel::class.java]
-
-
 
     }
 

@@ -17,6 +17,7 @@ import com.example.singmeapp.databinding.FragmentPlayerPlayerBinding
 import com.example.singmeapp.items.Song
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.io.File
 import java.io.IOException
 
@@ -24,7 +25,6 @@ class PlayerPlayerFragment : Fragment() {
 
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
     lateinit var fragActivity: AppCompatActivity
-    lateinit var storage: FirebaseStorage
     var mPlayer: MediaPlayer = MediaPlayer()
     private lateinit var runnable:Runnable
     private var handler: Handler = Handler()
@@ -45,7 +45,6 @@ class PlayerPlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPlayerPlayerBinding.inflate(layoutInflater)
-        storage = FirebaseStorage.getInstance()
         fragActivity = activity as AppCompatActivity
         val provider = ViewModelProvider(fragActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
@@ -57,7 +56,6 @@ class PlayerPlayerFragment : Fragment() {
                     binding.tvPlayerBandName.text = currentSong.band
                     Log.e("Player", previousSong.toString())
                     if (previousSong == null) {
-                        //mPlayer = MediaPlayer.create(context, R.raw.addicted)
                         mPlayer = MediaPlayer()
                         mPlayer.setDataSource(currentSong.songUrl)
                         mPlayer.prepare()
@@ -77,7 +75,6 @@ class PlayerPlayerFragment : Fragment() {
                             }
                         } else {
                             mPlayer.stop()
-                           // mPlayer = MediaPlayer.create(context, R.raw.addicted)
                             mPlayer = MediaPlayer()
                             mPlayer.setDataSource(currentSong.songUrl)
                             mPlayer.prepare()
@@ -107,9 +104,11 @@ class PlayerPlayerFragment : Fragment() {
                 }
             }
             override fun onStartTrackingTouch(p0: SeekBar?) {
+
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
+
             }
 
         })
@@ -125,9 +124,11 @@ class PlayerPlayerFragment : Fragment() {
             if (!mPlayer.isPlaying) {
                 binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
                 mPlayer.start()
+                playerPlaylistViewModel.isPlaying.value = true
             } else {
                 binding.ibPlay.setImageResource(android.R.drawable.ic_media_play)
                 mPlayer.pause()
+                playerPlaylistViewModel.isPlaying.value = false
             }
 
         }
@@ -154,16 +155,8 @@ class PlayerPlayerFragment : Fragment() {
         }
     }
 
-    fun initializeCover(coverName: String){
-        try {
-            val localFile: File = File.createTempFile("default_picture", "jpg")
-            storage.getReferenceFromUrl(coverName).getFile(localFile)
-                .addOnSuccessListener {
-                    val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                    binding.imageView6.setImageBitmap(bitmap)
-                }.addOnFailureListener { }
-        } catch (e: IOException) {
-        }
+    fun initializeCover(coverUrl: String){
+        Picasso.get().load(coverUrl).fit().into(binding.imageView6)
     }
 
     fun initializeSeekBar() {
