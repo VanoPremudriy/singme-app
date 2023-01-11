@@ -6,17 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.singmeapp.MainActivity
-import com.example.singmeapp.R
-import com.example.singmeapp.adapters.SongAdapter
+import com.example.singmeapp.adapters.TrackAdapter
 import com.example.singmeapp.databinding.FragmentMyLibraryBinding
-import com.example.singmeapp.items.Song
+import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.MyLibraryViewModel
-import com.example.singmeapp.viewmodels.RegistrationViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 
@@ -25,7 +22,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
     lateinit var fragmentActivity: AppCompatActivity
     lateinit var binding: FragmentMyLibraryBinding
     lateinit var myLibraryViewModel: MyLibraryViewModel
-    lateinit var songAdapter: SongAdapter //= SongAdapter(fragmentActivity)
+    lateinit var trackAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,18 +38,14 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         fragmentActivity = activity as AppCompatActivity
         val provider = ViewModelProvider(this)
         myLibraryViewModel = provider[MyLibraryViewModel::class.java]
-        myLibraryViewModel.getSongs()
+        myLibraryViewModel.getTracks()
         buttonSets()
         binding.rcView.layoutManager = LinearLayoutManager(activity)
-        songAdapter = SongAdapter(fragmentActivity, myLibraryViewModel.url)
-        myLibraryViewModel.listSong.observe(viewLifecycleOwner){
-            songAdapter.songList = it as ArrayList<Song>
-            binding.rcView.adapter = songAdapter
+        trackAdapter = TrackAdapter(fragmentActivity, myLibraryViewModel.url)
+        myLibraryViewModel.listTrack.observe(viewLifecycleOwner){
+            trackAdapter.trackList = it as ArrayList<Track>
+            binding.rcView.adapter = trackAdapter
         }
-        /*binding.rcView.layoutManager = LinearLayoutManager(activity)
-        observeViewModel()
-        binding.rcView.adapter = songAdapter*/
-
         return binding.root
     }
 
@@ -103,10 +96,5 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         Log.e("LifeCycle", "onDestroy")
 
     }
-
-    fun observeViewModel(){
-
-    }
-
 
 }

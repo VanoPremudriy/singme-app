@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.singmeapp.api.Common.Common
 import com.example.singmeapp.api.interfaces.RetrofitServices
-import com.example.singmeapp.items.Song
+import com.example.singmeapp.items.Track
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,33 +22,26 @@ import java.util.function.Consumer
 
 class MyLibraryViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
-    private val firebaseSongUrl = "https://firebasestorage.googleapis.com/v0/b/singmedb.appspot.com/o/"
-    private val firebaseImageUrl = "gs://singmedb.appspot.com/"
-    private val token = "?alt=media&token=0cae4f78-6eb5-4026-b4ed-49cb0f844f86"
-    lateinit var mService: RetrofitServices
+    var mService: RetrofitServices = Common.retrofitService
 
-    var auth: FirebaseAuth
-    var database = Firebase.database
-    var listSong = MutableLiveData<List<Song>>()
-    val arrayListSong = ArrayList<Song>()
-    lateinit var url: String
+    var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var database = Firebase.database
+    var listTrack = MutableLiveData<List<Track>>()
+    val arrayListTrack = ArrayList<Track>()
+    var url: String = "tracks/user_tracks/${auth.currentUser?.uid}/love"
 
     init {
-        auth = FirebaseAuth.getInstance()
-        url = "songs/user_songs/${auth.currentUser?.uid}/love"
-        mService = Common.retrofitService
         val SDK_INT = Build.VERSION.SDK_INT
         if (SDK_INT > 8) {
             val policy = ThreadPolicy.Builder()
                 .permitAll().build()
             StrictMode.setThreadPolicy(policy)
-            //your codes here
         }
     }
 
-    fun getSongs(){
+    fun getTracks(){
         if (auth.currentUser != null)
-        database.getReference("songs/user_songs/${auth.currentUser?.uid}/love").addValueEventListener(object : ValueEventListener{
+        database.getReference(url).addValueEventListener(object : ValueEventListener{
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -58,18 +51,18 @@ class MyLibraryViewModel: ViewModel() {
                     if (trackPath != null) {
                         Log.d("PATH", trackPath)
                     }
-                    val song = Song(
+                    val track = Track(
                         t.child("name").value.toString(),
                         t.child("band").value.toString(),
                         t.child("album").value.toString(),
-                        "https://getfile.dokpub.com/yandex/get/${imagePath}",//"${firebaseImageUrl}/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/cover.jpg",
+                        "https://getfile.dokpub.com/yandex/get/${imagePath}",
                         "https://getfile.dokpub.com/yandex/get/${trackPath}"
                     )
-                    arrayListSong.add(song)
-                    Log.d("ViewModel", song.songUrl)
-                    Log.d("ViewModel", song.imageUrl)
+                    arrayListTrack.add(track)
+                    Log.d("ViewModel", track.trackUrl)
+                    Log.d("ViewModel", track.imageUrl)
                 })
-                listSong.value = arrayListSong
+                listTrack.value = arrayListTrack
             }
 
             override fun onCancelled(error: DatabaseError) {

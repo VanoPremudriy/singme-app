@@ -1,44 +1,35 @@
 package com.example.singmeapp.adapters
 
-import android.graphics.BitmapFactory
-import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.SongItemBinding
-import com.example.singmeapp.items.Song
+import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import java.io.File
-import java.io.IOException
 
 
-class SongAdapter(val fragmentActivity: AppCompatActivity, val url: String): RecyclerView.Adapter<SongAdapter.SongHolder>() {
+class TrackAdapter(val fragmentActivity: AppCompatActivity, val url: String): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
-    public var songList = ArrayList<Song>()
+    public var trackList = ArrayList<Track>()
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
 
-    class SongHolder(item: View, val songList: ArrayList<Song>, val fragmentActivity: AppCompatActivity,val url: String): RecyclerView.ViewHolder(item){//, View.OnClickListener  {
+    class TrackHolder(item: View, private val fragmentActivity: AppCompatActivity): RecyclerView.ViewHolder(item){
 
 
         lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
         val binding = SongItemBinding.bind(item)
 
-        fun bind(song: Song) = with(binding){
-            tvSongName.text = song.name
-            tvBandName.text = song.band
-            Picasso.get().load(song.imageUrl).fit().into(ivSongCover)
+        fun bind(track: Track) = with(binding){
+            tvSongName.text = track.name
+            tvBandName.text = track.band
+            Picasso.get().load(track.imageUrl).fit().into(ivSongCover)
             val provider = ViewModelProvider(fragmentActivity)
             playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
@@ -46,31 +37,31 @@ class SongAdapter(val fragmentActivity: AppCompatActivity, val url: String): Rec
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.song_item, parent, false)
-        return  SongHolder(view, songList, fragmentActivity, url)
+        return  TrackHolder(view, fragmentActivity)
     }
 
-    override fun onBindViewHolder(holder: SongHolder, position: Int) {
-        holder.bind(songList[position])
+    override fun onBindViewHolder(holder: TrackHolder, position: Int) {
+        holder.bind(trackList[position])
         val provider = ViewModelProvider(fragmentActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
         holder.binding.SongLayout.setOnClickListener {
-            if (playerPlaylistViewModel.songList.value != songList){
-                playerPlaylistViewModel.songList.value = songList
+            if (playerPlaylistViewModel.trackList.value != trackList){
+                playerPlaylistViewModel.trackList.value = trackList
             }
             playerPlaylistViewModel.url.value = url
-            playerPlaylistViewModel.currentSongId.value = position
+            playerPlaylistViewModel.currentTrackId.value = position
             if ((fragmentActivity as MainActivity).bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN)
             fragmentActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            fragmentActivity.binding.player.tvSongNameUpMenu.text = songList[position].name
-            fragmentActivity.binding.player.tvBandNameUpMenu.text = songList[position].band
+            fragmentActivity.binding.player.tvSongNameUpMenu.text = trackList[position].name
+            fragmentActivity.binding.player.tvBandNameUpMenu.text = trackList[position].band
         }
 
         (fragmentActivity as MainActivity).binding.player.ibClose.setOnClickListener {
             //playerPlaylistViewModel.songList.value = null
-            playerPlaylistViewModel.currentSongId.value = null
+            playerPlaylistViewModel.currentTrackId.value = null
             fragmentActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -82,14 +73,14 @@ class SongAdapter(val fragmentActivity: AppCompatActivity, val url: String): Rec
         }
 
         (fragmentActivity as MainActivity).binding.player.ibPlayUpMenu.setOnClickListener{
-            playerPlaylistViewModel.currentSongId.value = playerPlaylistViewModel.currentSongId.value
+            playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value
         }
 
 
     }
 
     override fun getItemCount(): Int {
-       return songList.size
+       return trackList.size
     }
 
 

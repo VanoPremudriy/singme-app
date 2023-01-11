@@ -1,6 +1,5 @@
 package com.example.singmeapp.fragments
 
-import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -12,14 +11,10 @@ import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentPlayerPlayerBinding
-import com.example.singmeapp.items.Song
+import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
-import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import java.io.File
-import java.io.IOException
 
 class PlayerPlayerFragment : Fragment() {
 
@@ -28,8 +23,8 @@ class PlayerPlayerFragment : Fragment() {
     var mPlayer: MediaPlayer = MediaPlayer()
     private lateinit var runnable:Runnable
     private var handler: Handler = Handler()
-    lateinit var currentSong: Song
-    var previousSong: Song? = null
+    lateinit var currentTrack: Track
+    var previousTrack: Track? = null
 
 
 
@@ -48,22 +43,22 @@ class PlayerPlayerFragment : Fragment() {
         fragActivity = activity as AppCompatActivity
         val provider = ViewModelProvider(fragActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
-        playerPlaylistViewModel.songList.observe(viewLifecycleOwner){ it1 ->
-            playerPlaylistViewModel.currentSongId.observe(viewLifecycleOwner) { it2 ->
+        playerPlaylistViewModel.trackList.observe(viewLifecycleOwner){ it1 ->
+            playerPlaylistViewModel.currentTrackId.observe(viewLifecycleOwner) { it2 ->
                 if (it1 != null && it2 != null) {
-                    currentSong = it1[it2]
-                    binding.tvPlayerTrackName.text = currentSong.name
-                    binding.tvPlayerBandName.text = currentSong.band
-                    Log.e("Player", previousSong.toString())
-                    if (previousSong == null) {
+                    currentTrack = it1[it2]
+                    binding.tvPlayerTrackName.text = currentTrack.name
+                    binding.tvPlayerBandName.text = currentTrack.band
+                    Log.e("Player", previousTrack.toString())
+                    if (previousTrack == null) {
                         mPlayer = MediaPlayer()
-                        mPlayer.setDataSource(currentSong.songUrl)
+                        mPlayer.setDataSource(currentTrack.trackUrl)
                         mPlayer.prepare()
                         mPlayer.start()
                         playerPlaylistViewModel.isPlaying.value = true
                         binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
                     } else {
-                        if (previousSong == currentSong) {
+                        if (previousTrack == currentTrack) {
                             if (!mPlayer.isPlaying) {
                                 binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
                                 mPlayer.start()
@@ -76,21 +71,21 @@ class PlayerPlayerFragment : Fragment() {
                         } else {
                             mPlayer.stop()
                             mPlayer = MediaPlayer()
-                            mPlayer.setDataSource(currentSong.songUrl)
+                            mPlayer.setDataSource(currentTrack.trackUrl)
                             mPlayer.prepare()
                             mPlayer.start()
                             binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
                             playerPlaylistViewModel.isPlaying.value = true
                         }
                     }
-                    initializeCover(currentSong.imageUrl)
+                    initializeCover(currentTrack.imageUrl)
                     initializeSeekBar()
                     initializeButtonsClickListeners()
-                    previousSong = currentSong
+                    previousTrack = currentTrack
                 }
                 else {
                     mPlayer.stop()
-                    previousSong = null
+                    previousTrack = null
                     playerPlaylistViewModel.isPlaying.value = false
                 }
             }
@@ -134,21 +129,21 @@ class PlayerPlayerFragment : Fragment() {
         }
 
         binding.ibMusicRight.setOnClickListener {
-            if (playerPlaylistViewModel.currentSongId.value?.plus(1) == playerPlaylistViewModel.songList.value?.size)
-                playerPlaylistViewModel.currentSongId.value = 0
+            if (playerPlaylistViewModel.currentTrackId.value?.plus(1) == playerPlaylistViewModel.trackList.value?.size)
+                playerPlaylistViewModel.currentTrackId.value = 0
             else
-            playerPlaylistViewModel.currentSongId.value = playerPlaylistViewModel.currentSongId.value?.plus(
+            playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value?.plus(
                 1
             )
         }
 
         binding.ibMusicLeft.setOnClickListener {
-            if (playerPlaylistViewModel.currentSongId.value!! > 0)
-            playerPlaylistViewModel.currentSongId.value = playerPlaylistViewModel.currentSongId.value?.minus(
+            if (playerPlaylistViewModel.currentTrackId.value!! > 0)
+            playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value?.minus(
                 1
             )
             else{
-                playerPlaylistViewModel.currentSongId.value = playerPlaylistViewModel.songList.value?.size?.minus(
+                playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.trackList.value?.size?.minus(
                     1
                 )
             }
