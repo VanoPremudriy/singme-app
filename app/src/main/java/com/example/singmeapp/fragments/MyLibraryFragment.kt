@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.singmeapp.MainActivity
+import com.example.singmeapp.R
 import com.example.singmeapp.adapters.TrackAdapter
 import com.example.singmeapp.databinding.FragmentMyLibraryBinding
 import com.example.singmeapp.items.Track
@@ -41,7 +43,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         myLibraryViewModel.getTracks()
         buttonSets()
         binding.rcView.layoutManager = LinearLayoutManager(activity)
-        trackAdapter = TrackAdapter(fragmentActivity, myLibraryViewModel.url)
+        trackAdapter = TrackAdapter(fragmentActivity)
         myLibraryViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track>
             binding.rcView.adapter = trackAdapter
@@ -62,6 +64,11 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
             binding.idPlaylists.id -> {
                 Snackbar.make(p,"Playlist",Snackbar.LENGTH_SHORT).show()
             }
+            binding.idAlbums.id -> {
+                val bundle = Bundle()
+                bundle.putInt("Back", R.id.myLibraryFragment)
+                findNavController().navigate(R.id.loveAlbumsFragment, bundle)
+            }
         }
     }
 
@@ -69,6 +76,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         binding.apply {
             idBands.setOnClickListener(this@MyLibraryFragment)
             idPlaylists.setOnClickListener(this@MyLibraryFragment)
+            idAlbums.setOnClickListener(this@MyLibraryFragment)
         }
     }
 

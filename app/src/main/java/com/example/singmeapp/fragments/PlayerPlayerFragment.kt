@@ -10,11 +10,14 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.singmeapp.databinding.FragmentPlayerPlayerBinding
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Delay
 
 class PlayerPlayerFragment : Fragment() {
 
@@ -25,7 +28,7 @@ class PlayerPlayerFragment : Fragment() {
     private var handler: Handler = Handler()
     lateinit var currentTrack: Track
     var previousTrack: Track? = null
-
+    var currentList = ArrayList<Track>()
 
 
     lateinit var binding: FragmentPlayerPlayerBinding
@@ -43,13 +46,12 @@ class PlayerPlayerFragment : Fragment() {
         fragActivity = activity as AppCompatActivity
         val provider = ViewModelProvider(fragActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
-        playerPlaylistViewModel.trackList.observe(viewLifecycleOwner){ it1 ->
-            playerPlaylistViewModel.currentTrackId.observe(viewLifecycleOwner) { it2 ->
-                if (it1 != null && it2 != null) {
-                    currentTrack = it1[it2]
-                    binding.tvPlayerTrackName.text = currentTrack.name
-                    binding.tvPlayerBandName.text = currentTrack.band
-                    Log.e("Player", previousTrack.toString())
+        //val pairMediatorLiveData = PairMediatorLiveData<List<Track>, Int>(playerPlaylistViewModel.trackList, playerPlaylistViewModel.currentTrackId)
+        //pairMediatorLiveData.observe(viewLifecycleOwner){
+        playerPlaylistViewModel.currentTrackId.observe(viewLifecycleOwner){it ->
+            try{
+                if (playerPlaylistViewModel.trackList.value != null && it != null) {
+                    currentTrack = playerPlaylistViewModel.trackList.value!![it!!]
                     if (previousTrack == null) {
                         mPlayer = MediaPlayer()
                         mPlayer.setDataSource(currentTrack.trackUrl)
@@ -57,40 +59,64 @@ class PlayerPlayerFragment : Fragment() {
                         mPlayer.start()
                         playerPlaylistViewModel.isPlaying.value = true
                         binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
+                        previousTrack = currentTrack
+                        currentList = playerPlaylistViewModel.trackList.value as ArrayList<Track>
+                        Log.e("is", "One")
                     } else {
-                        if (previousTrack == currentTrack) {
-                            if (!mPlayer.isPlaying) {
-                                binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
-                                mPlayer.start()
-                                playerPlaylistViewModel.isPlaying.value = true
-                            } else {
-                                binding.ibPlay.setImageResource(android.R.drawable.ic_media_play)
-                                mPlayer.pause()
-                                playerPlaylistViewModel.isPlaying.value = false
-                            }
-                        } else {
+                        if (previousTrack == currentTrack && !currentList.equals(playerPlaylistViewModel.trackList.value)) {
                             mPlayer.stop()
                             mPlayer = MediaPlayer()
                             mPlayer.setDataSource(currentTrack.trackUrl)
                             mPlayer.prepare()
                             mPlayer.start()
-                            binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
                             playerPlaylistViewModel.isPlaying.value = true
-                        }
+                            previousTrack = currentTrack
+                            Log.e("is", "Two")/* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+                        } else if (previousTrack == currentTrack && currentList.equals(playerPlaylistViewModel.trackList.value)) {
+                                if (!mPlayer.isPlaying) {
+                                    binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
+                                    mPlayer.start()
+                                    playerPlaylistViewModel.isPlaying.value = true
+                                } else {
+                                    binding.ibPlay.setImageResource(android.R.drawable.ic_media_play)
+                                    mPlayer.pause()
+                                    playerPlaylistViewModel.isPlaying.value = false
+                                }
+                            Log.e("is", "Tree")
+                            Log.e("Size", playerPlaylistViewModel.trackList.value!!.size.toString())
+                            } else if (previousTrack != currentTrack) {
+                                mPlayer.stop()
+                                mPlayer = MediaPlayer()
+                                mPlayer.setDataSource(currentTrack.trackUrl)
+                                mPlayer.prepare()
+                                mPlayer.start()
+                                binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
+                                playerPlaylistViewModel.isPlaying.value = true
+                            Log.e("is", "four")
+                            }
+                        currentList = playerPlaylistViewModel.trackList.value as ArrayList<Track>
+
                     }
+                    initializeButtonsClickListeners()
                     initializeCover(currentTrack.imageUrl)
                     initializeSeekBar()
-                    initializeButtonsClickListeners()
                     previousTrack = currentTrack
+                    Log.e("ee", "ee")
+                    binding.tvPlayerBandName.text = currentTrack.band
+                    binding.tvPlayerTrackName.text = currentTrack.name
                 }
+
                 else {
                     mPlayer.stop()
                     previousTrack = null
                     playerPlaylistViewModel.isPlaying.value = false
                 }
+            } catch (e: Throwable){
+
             }
 
         }
+
 
         binding.seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, i: Int, b: Boolean) {

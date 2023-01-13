@@ -10,13 +10,16 @@
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable/song_item.xml" value="0.2365" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable/song_iten.xml" value="0.2375" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/activity_main.xml" value="0.11" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/album_item.xml" value="0.33" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/avtiviti_second_main.xml" value="0.2921195652173913" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_album.xml" value="0.33" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_blank.xml" value="0.22" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_blank2.xml" value="0.2921195652173913" />
-        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_home.xml" value="0.14" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_item_list.xml" value="0.2015625" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_library.xml" value="0.2" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_login.xml" value="0.22028688524590165" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_love_albums.xml" value="0.23157894736842105" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_messenger.xml" value="0.2921195652173913" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_my_library.xml" value="0.2" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_not_authorized.xml" value="0.23157894736842105" />
@@ -24,11 +27,11 @@
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_player.xml" value="0.25" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_player_player.xml" value="0.22028688524590165" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_player_playlist.xml" value="0.14605263157894738" />
-        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/fragment_registration.xml" value="0.33" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/song_item.xml" value="0.5" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/test.xml" value="0.21448087431693988" />
-        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/track_item.xml" value="0.23157894736842105" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/track_item.xml" value="0.33" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/menu/bottom_menu.xml" value="0.365625" />
       </map>
     </option>

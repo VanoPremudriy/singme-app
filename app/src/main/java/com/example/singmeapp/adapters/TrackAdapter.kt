@@ -1,5 +1,6 @@
 package com.example.singmeapp.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 
 
-class TrackAdapter(val fragmentActivity: AppCompatActivity, val url: String): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(val fragmentActivity: AppCompatActivity): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
     public var trackList = ArrayList<Track>()
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
@@ -27,9 +28,9 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val url: String): Re
         val binding = TrackItemBinding.bind(item)
 
         fun bind(track: Track) = with(binding){
-            tvTrackName.text = track.name
-            tvBandName.text = track.band
-            Picasso.get().load(track.imageUrl).fit().into(ivTrackCover)
+            tvItemTrackName.text = track.name
+            tvItemTrackBandName.text = track.band
+            Picasso.get().load(track.imageUrl).fit().into(ivItemTrackCover)
             val provider = ViewModelProvider(fragmentActivity)
             playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
@@ -48,11 +49,17 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val url: String): Re
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
         holder.binding.SongLayout.setOnClickListener {
-            if (playerPlaylistViewModel.trackList.value != trackList){
+            if (playerPlaylistViewModel.trackList.value == null || playerPlaylistViewModel.trackList.value?.equals(trackList) == false){
+                Log.e("IsEq", playerPlaylistViewModel.trackList.value?.equals(trackList).toString())
                 playerPlaylistViewModel.trackList.value = trackList
+                //playerPlaylistViewModel.trackList.postValue(trackList)
+                //Log.e("SIZE", (playerPlaylistViewModel.trackList.value as ArrayList<Track>).size.toString())
+                //Log.e("IsNull", position.toString())
             }
-            playerPlaylistViewModel.url.value = url
+
+            //playerPlaylistViewModel.currentTrackId.value = position
             playerPlaylistViewModel.currentTrackId.value = position
+            Log.e("POS ADAPTER", position.toString())
             if ((fragmentActivity as MainActivity).bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN)
             fragmentActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             fragmentActivity.binding.player.tvSongNameUpMenu.text = trackList[position].name

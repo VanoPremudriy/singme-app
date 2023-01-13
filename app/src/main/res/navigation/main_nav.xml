@@ -112,4 +112,14 @@
         android:name="com.example.singmeapp.fragments.MyLibraryFragment"
         android:label="fragment_my_library"
         tools:layout="@layout/fragment_my_library" />
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.example.singmeapp.fragments.AlbumFragment"
+        android:label="fragment_album"
+        tools:layout="@layout/fragment_album" />
+    <fragment
+        android:id="@+id/loveAlbumsFragment"
+        android:name="com.example.singmeapp.fragments.LoveAlbumsFragment"
+        android:label="fragment_love_albums"
+        tools:layout="@layout/fragment_love_albums" />
 </navigation>

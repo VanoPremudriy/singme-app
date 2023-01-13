@@ -29,7 +29,7 @@ class PlayerPlaylistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         fragActivity = activity as AppCompatActivity
-        trackAdapter = TrackAdapter(fragActivity, "")
+        trackAdapter = TrackAdapter(fragActivity)
         binding = FragmentPlayerPlaylistBinding.inflate(layoutInflater)
         val provider = ViewModelProvider(fragActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
