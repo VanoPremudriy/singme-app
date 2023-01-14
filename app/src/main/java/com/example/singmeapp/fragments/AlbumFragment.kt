@@ -37,7 +37,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        fragmentActivity.supportActionBar?.hide()
         binding = FragmentAlbumBinding.inflate(layoutInflater)
         buttonSets()
         val album = arguments?.getSerializable("album") as Album
@@ -57,6 +57,10 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        fragmentActivity.supportActionBar?.hide()
+    }
     override fun onClick(p0: View?) {
         when(p0?.id){
             binding.ibBack.id -> {

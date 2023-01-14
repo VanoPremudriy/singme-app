@@ -46,11 +46,12 @@ class LoveAlbumsViewModel: ViewModel() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     snapshot.children.forEach(Consumer { t ->
                         val imagePath = mService.getFile("storage/bands/${t.child("band").value.toString()}/albums/${t.child("name").value.toString()}/cover.jpg", authToken).execute().body()?.public_url
+                        val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
                         val album = Album(
                             t.child("name").value.toString(),
                             t.child("band").value.toString(),
                             t.child("year").value.toString().toInt(),
-                            "https://getfile.dokpub.com/yandex/get/${imagePath}",
+                            imageUrl,
                         )
                         arrayListAlbum.add(album)
                     })

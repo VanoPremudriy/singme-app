@@ -22,7 +22,7 @@ import com.google.firebase.ktx.Firebase
 import java.security.Provider
 import kotlin.math.log
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentLoginBinding
 
@@ -47,11 +47,14 @@ class LoginFragment : Fragment() {
         val provider = ViewModelProvider(this)
         loginViewModel = provider[LoginViewModel::class.java]
 
-        binding.bSignInLogin.setOnClickListener {
-            signIn()
-        }
+        setButtons()
+
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    fun setButtons(){
+        binding.bSignInLogin.setOnClickListener(this@LoginFragment)
     }
 
     companion object {
@@ -110,6 +113,14 @@ class LoginFragment : Fragment() {
             binding.tvPasswordValidLogin.text = it.toString()
         }
 
+    }
+
+    override fun onClick(p0: View?) {
+        when(p0?.id){
+            binding.bSignInLogin.id ->{
+                signIn()
+            }
+        }
     }
 
 }

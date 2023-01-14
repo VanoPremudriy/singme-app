@@ -19,7 +19,7 @@ import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Delay
 
-class PlayerPlayerFragment : Fragment() {
+class PlayerPlayerFragment : Fragment(), View.OnClickListener {
 
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
     lateinit var fragActivity: AppCompatActivity
@@ -46,8 +46,7 @@ class PlayerPlayerFragment : Fragment() {
         fragActivity = activity as AppCompatActivity
         val provider = ViewModelProvider(fragActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
-        //val pairMediatorLiveData = PairMediatorLiveData<List<Track>, Int>(playerPlaylistViewModel.trackList, playerPlaylistViewModel.currentTrackId)
-        //pairMediatorLiveData.observe(viewLifecycleOwner){
+
         playerPlaylistViewModel.currentTrackId.observe(viewLifecycleOwner){it ->
             try{
                 if (playerPlaylistViewModel.trackList.value != null && it != null) {
@@ -140,40 +139,11 @@ class PlayerPlayerFragment : Fragment() {
     }
 
     fun initializeButtonsClickListeners(){
-        binding.ibPlay.setOnClickListener {
+        binding.ibPlay.setOnClickListener(this@PlayerPlayerFragment)
 
-            if (!mPlayer.isPlaying) {
-                binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
-                mPlayer.start()
-                playerPlaylistViewModel.isPlaying.value = true
-            } else {
-                binding.ibPlay.setImageResource(android.R.drawable.ic_media_play)
-                mPlayer.pause()
-                playerPlaylistViewModel.isPlaying.value = false
-            }
+        binding.ibMusicRight.setOnClickListener(this@PlayerPlayerFragment)
 
-        }
-
-        binding.ibMusicRight.setOnClickListener {
-            if (playerPlaylistViewModel.currentTrackId.value?.plus(1) == playerPlaylistViewModel.trackList.value?.size)
-                playerPlaylistViewModel.currentTrackId.value = 0
-            else
-            playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value?.plus(
-                1
-            )
-        }
-
-        binding.ibMusicLeft.setOnClickListener {
-            if (playerPlaylistViewModel.currentTrackId.value!! > 0)
-            playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value?.minus(
-                1
-            )
-            else{
-                playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.trackList.value?.size?.minus(
-                    1
-                )
-            }
-        }
+        binding.ibMusicLeft.setOnClickListener(this@PlayerPlayerFragment)
     }
 
     fun initializeCover(coverUrl: String){
@@ -205,6 +175,43 @@ class PlayerPlayerFragment : Fragment() {
         @JvmStatic
         fun newInstance() = PlayerPlayerFragment()
 
+    }
+
+    override fun onClick(p0: View?) {
+        when(p0?.id){
+            binding.ibPlay.id -> {
+                if (!mPlayer.isPlaying) {
+                    binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
+                    mPlayer.start()
+                    playerPlaylistViewModel.isPlaying.value = true
+                } else {
+                    binding.ibPlay.setImageResource(android.R.drawable.ic_media_play)
+                    mPlayer.pause()
+                    playerPlaylistViewModel.isPlaying.value = false
+                }
+            }
+
+            binding.ibMusicLeft.id -> {
+                if (playerPlaylistViewModel.currentTrackId.value!! > 0)
+                    playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value?.minus(
+                        1
+                    )
+                else{
+                    playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.trackList.value?.size?.minus(
+                        1
+                    )
+                }
+
+            }
+            binding.ibMusicRight.id ->{
+                if (playerPlaylistViewModel.currentTrackId.value?.plus(1) == playerPlaylistViewModel.trackList.value?.size)
+                    playerPlaylistViewModel.currentTrackId.value = 0
+                else
+                    playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value?.plus(
+                        1
+                    )
+            }
+        }
     }
 
 }

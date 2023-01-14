@@ -33,4 +33,6 @@
     <string name="Bands">Исполнители</string>
 
     <string name="my_music">Моя музыка</string>
+
+    <string name="exit">Выход</string>
 </resources>

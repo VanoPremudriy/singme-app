@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.singmeapp.adapters.PlayerPagerAdapter
 import com.example.singmeapp.databinding.ActivityMainBinding
+import com.example.singmeapp.fragments.AlbumFragment
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     BottomSheetBehavior.STATE_COLLAPSED -> {
+                        if (navController.currentDestination?.id?.equals(R.id.albumFragment) == false)
                         supportActionBar?.show()
                         binding.bNav.visibility = View.VISIBLE
                         bottomSheet.setClickable(false)
@@ -79,6 +81,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     BottomSheetBehavior.STATE_HIDDEN ->{
+                        if (navController.currentDestination?.id?.equals(R.id.albumFragment) == false)
                         supportActionBar?.show()
                         binding.bNav.visibility = View.VISIBLE
                         bottomSheet.setClickable(false)

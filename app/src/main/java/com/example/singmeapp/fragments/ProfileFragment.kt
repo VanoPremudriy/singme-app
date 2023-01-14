@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.processNextEventInCurrentThread
 
 
-class ProfileFragment : Fragment(), View.OnTouchListener {
+class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
 
     lateinit var binding: FragmentProfileBinding
     lateinit var profileViewModel: ProfileViewModel
@@ -43,43 +43,39 @@ class ProfileFragment : Fragment(), View.OnTouchListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(layoutInflater)
-        binding.imageButton.setOnClickListener {
-            binding.profileMenu.visibility  = View.VISIBLE
-        }
-        binding.profileMenu.setOnTouchListener(this@ProfileFragment)
-        binding.profileLayout.setOnTouchListener(this@ProfileFragment)
 
-        val provider = ViewModelProvider(this)
-        profileViewModel = provider[ProfileViewModel::class.java]
-
+        buttonSets()
         observe()
-
-
-        binding.button3.setOnClickListener {
-            profileViewModel.auth.signOut()
-            findNavController().navigate(R.id.action_profileFragment_to_notAuthorizedFragment)
-        }
 
         return binding.root
     }
 
-    fun observe(){
+    private fun observe(){
+        val provider = ViewModelProvider(this)
+        profileViewModel = provider[ProfileViewModel::class.java]
         profileViewModel.currentUser.observe(viewLifecycleOwner){
-            Picasso.get().load(it.avatarUrl).fit().into(binding.imageView2)
+            Log.e("ProfileFrag",it.avatarUrl)
+            Log.e("ProfileFrag", it.name)
+            Picasso.get().load(it.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.imageView2)
             binding.textView.text = it.name
         }
     }
 
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun buttonSets(){
+        binding.imageButton.setOnClickListener(this@ProfileFragment)
+        binding.profileMenu.setOnTouchListener(this@ProfileFragment)
+        binding.profileLayout.setOnTouchListener(this@ProfileFragment)
+        binding.tvProfileExit.setOnClickListener(this@ProfileFragment)
+
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-
-        val x = p1?.x
-        val y = p1?.y
         if (p1?.action == MotionEvent.ACTION_DOWN){
-            Log.e("qe", p0.toString())
             if (p0?.id != binding.profileMenu.id) binding.profileMenu.visibility = View.GONE
         }
-
         return true
     }
 
@@ -87,6 +83,18 @@ class ProfileFragment : Fragment(), View.OnTouchListener {
     companion object {
         @JvmStatic
         fun newInstance() = ProfileFragment()
+    }
+
+    override fun onClick(p0: View?) {
+        when (p0?.id){
+            binding.tvProfileExit.id ->{
+                profileViewModel.auth.signOut()
+                findNavController().navigate(R.id.action_profileFragment_to_notAuthorizedFragment)
+            }
+            binding.imageButton.id -> {
+                binding.profileMenu.visibility  = View.VISIBLE
+            }
+        }
     }
 
 }

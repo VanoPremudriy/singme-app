@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentNotAuthorizedBinding
 
-class NotAuthorizedFragment : Fragment() {
+class NotAuthorizedFragment : Fragment(), View.OnClickListener {
 
     lateinit var binding: FragmentNotAuthorizedBinding
 
@@ -32,19 +32,30 @@ class NotAuthorizedFragment : Fragment() {
 
         binding = FragmentNotAuthorizedBinding.inflate(layoutInflater)
 
-        binding.bSignIn2.setOnClickListener {
-            findNavController().navigate(R.id.action_notAuthorizedFragment_to_loginFragment)
-        }
+        setButtons()
 
-        binding.bSignUp2.setOnClickListener {
-            findNavController().navigate(R.id.action_notAuthorizedFragment_to_registrationFragment)
-        }
         // Inflate the layout for this fragment
         return binding.root
     }
 
+    fun setButtons(){
+        binding.bSignIn2.setOnClickListener(this@NotAuthorizedFragment)
+        binding.bSignUp2.setOnClickListener(this@NotAuthorizedFragment)
+    }
+
     companion object {
         @JvmStatic
-        fun newInstance() =NotAuthorizedFragment()
+        fun newInstance() = NotAuthorizedFragment()
+    }
+
+    override fun onClick(p0: View?) {
+    when(p0?.id){
+        binding.bSignIn2.id -> {
+            findNavController().navigate(R.id.action_notAuthorizedFragment_to_loginFragment)
+        }
+        binding.bSignUp2.id ->{
+            findNavController().navigate(R.id.action_notAuthorizedFragment_to_registrationFragment)
+        }
+    }
     }
 }

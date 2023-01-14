@@ -48,6 +48,8 @@ class MyLibraryViewModel: ViewModel() {
                 snapshot.children.forEach(Consumer { t ->
                     val trackPath = mService.getFile("/storage/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/${t.child("name").value.toString()}.mp3",authToken).execute().body()?.public_url
                     val imagePath = mService.getFile("storage/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/cover.jpg", authToken).execute().body()?.public_url
+                    val trackUrl = mService.getSecondFile(trackPath!!, authToken).execute().body()?.href.toString()
+                    val imageUrl = mService.getSecondFile(imagePath!!,authToken).execute().body()?.href.toString()
                     if (trackPath != null) {
                         Log.d("PATH", trackPath)
                     }
@@ -55,8 +57,8 @@ class MyLibraryViewModel: ViewModel() {
                         t.child("name").value.toString(),
                         t.child("band").value.toString(),
                         t.child("album").value.toString(),
-                        "https://getfile.dokpub.com/yandex/get/${imagePath}",
-                        "https://getfile.dokpub.com/yandex/get/${trackPath}"
+                        imageUrl,
+                        trackUrl
                     )
                     arrayListTrack.add(track)
                     Log.d("ViewModel", track.trackUrl)
