@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     fun setNavigation(){
         binding.bNav.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.libraryFragment ->  {navController.navigate(R.id.myLibraryFragment)}//{navController.navigate(R.id.action_global_libraryFragment) }
+                R.id.myLibraryFragment ->  {navController.navigate(R.id.action_global_myLibraryFragment)}//{navController.navigate(R.id.action_global_libraryFragment) }
                 R.id.profileFragment -> {
                     if (auth.currentUser != null)
                         navController.navigate(R.id.action_global_profileFragment)
@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.homeFragment -> {navController.navigate(R.id.action_global_homeFragment)}
                 R.id.messengerFragment -> navController.navigate(R.id.action_global_messengerFragment)
+                R.id.catalogueFragment -> navController.navigate(R.id.bandFragment)
             }
             true
         }

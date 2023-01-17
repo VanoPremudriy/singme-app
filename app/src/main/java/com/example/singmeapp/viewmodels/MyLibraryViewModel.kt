@@ -10,13 +10,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.singmeapp.api.Common.Common
 import com.example.singmeapp.api.interfaces.RetrofitServices
+import com.example.singmeapp.api.models.FileApiModel
+import com.example.singmeapp.api.models.SecondFileApiModel
 import com.example.singmeapp.items.Track
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.ktx.Firebase
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.function.Consumer
 
 
@@ -28,7 +34,7 @@ class MyLibraryViewModel: ViewModel() {
     private var database = Firebase.database
     var listTrack = MutableLiveData<List<Track>>()
     val arrayListTrack = ArrayList<Track>()
-    var url: String = "tracks/user_tracks/${auth.currentUser?.uid}/love"
+    var url: String = "/users/Vtkal2hD2uRkpWBJfigYnvShhJu1/library/love_tracks"
 
     init {
         val SDK_INT = Build.VERSION.SDK_INT
@@ -39,42 +45,109 @@ class MyLibraryViewModel: ViewModel() {
         }
     }
 
-    fun getTracks(){
+    fun getTracks() {
+        var fbTrackUrl: String
+        var fbImageUrl: String
+        var count = 0
         if (auth.currentUser != null)
-        database.getReference(url).addValueEventListener(object : ValueEventListener{
-            @SuppressLint("RestrictedApi")
-            @RequiresApi(Build.VERSION_CODES.N)
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach(Consumer { t ->
-                    val trackPath = mService.getFile("/storage/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/${t.child("name").value.toString()}.mp3",authToken).execute().body()?.public_url
-                    val imagePath = mService.getFile("storage/bands/${t.child("band").value.toString()}/albums/${t.child("album").value.toString()}/cover.jpg", authToken).execute().body()?.public_url
-                    val trackUrl = mService.getSecondFile(trackPath!!, authToken).execute().body()?.href.toString()
-                    val imageUrl = mService.getSecondFile(imagePath!!,authToken).execute().body()?.href.toString()
-                    if (trackPath != null) {
-                        Log.d("PATH", trackPath)
-                    }
-                    val track = Track(
-                        t.child("name").value.toString(),
-                        t.child("band").value.toString(),
-                        t.child("album").value.toString(),
-                        imageUrl,
-                        trackUrl
-                    )
-                    arrayListTrack.add(track)
-                    Log.d("ViewModel", track.trackUrl)
-                    Log.d("ViewModel", track.imageUrl)
-                })
-                listTrack.value = arrayListTrack
-            }
+            database.reference.addValueEventListener(object : ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
+                        Consumer {
 
-            override fun onCancelled(error: DatabaseError) {
+                            val band =
+                                snapshot.child("/tracks/${it.value}").child("band").value.toString()
+                            val album = snapshot.child("/tracks/${it.value}")
+                                .child("album").value.toString()
 
-            }
+                            val trackName =
+                                snapshot.child("/tracks/${it.value}").child("name").value.toString()
+                            val bandName =
+                                snapshot.child("/bands/${band}").child("name").value.toString()
+                            val albumName =
+                                snapshot.child("/albums/${album}").child("name").value.toString()
 
-        })
+
+                            fbTrackUrl =
+                                "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
+                            fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.jpg"
+
+                            val track = Track(
+                                it.value.toString(),
+                                trackName,
+                                bandName,
+                                albumName,
+                                "",//imageUrl,
+                                ""//trackUrl
+                            )
+
+                            arrayListTrack.add(track)
+                            listTrack.value = arrayListTrack
+                            getFilePath(fbImageUrl, "image", count)
+                            getFilePath(fbTrackUrl, "track", count)
+                            count++
+                        })
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
     }
 
+    fun getFilePath(url: String, value: String, index: Int){
+        mService.getFile(url, authToken)
+            .enqueue(object : Callback<FileApiModel> {
+                override fun onResponse(
+                    call: Call<FileApiModel>,
+                    response: Response<FileApiModel>
+                ) {
+                    Log.e("Track", "Three")
+                    val filePath = (response.body() as FileApiModel).public_url
+                    getFileUrl(filePath,value, index)
+                }
 
+                override fun onFailure(call: Call<FileApiModel>, t: Throwable) {
 
+                }
+
+            })
+    }
+
+    fun getFileUrl(url: String, value: String, index: Int){
+        mService.getSecondFile(url, authToken)
+            .enqueue(object : Callback<SecondFileApiModel> {
+                override fun onResponse(
+                    call: Call<SecondFileApiModel>,
+                    response: Response<SecondFileApiModel>
+                ) {
+                    val fileUrl = (response.body() as SecondFileApiModel).href
+                    setList(fileUrl, value, index)
+                }
+
+                override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
+
+                }
+
+            })
+    }
+
+    fun setList(url: String, value: String, index: Int){
+        when(value){
+            "image" -> {
+                arrayListTrack[index].imageUrl = url
+                listTrack.value = arrayListTrack
+            }
+            "track" -> {
+                arrayListTrack[index].trackUrl = url
+                listTrack.value = arrayListTrack
+            }
+        }
+
+    }
 
 }

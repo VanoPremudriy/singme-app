@@ -28,6 +28,10 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fragmentActivity = activity as AppCompatActivity
+        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        setHasOptionsMenu(true)
+        fragmentActivity.title = getString(R.string.albums)
         Log.e("LifeCycle", "onCreate")
     }
 

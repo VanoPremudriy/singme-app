@@ -1,3 +1,3 @@
 package com.example.singmeapp.items
 
-data class Track(val name: String, val band: String, val album:String, val imageUrl: String, val trackUrl: String)
+data class Track(var uuid: String, var name: String, var band: String, var album:String, var imageUrl: String, var trackUrl: String)

@@ -26,6 +26,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     lateinit var binding: FragmentAlbumBinding
     lateinit var trackAdapter: TrackAdapter
     lateinit var albumViewModel: AlbumViewModel
+    lateinit var album: Album
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +41,10 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         fragmentActivity.supportActionBar?.hide()
         binding = FragmentAlbumBinding.inflate(layoutInflater)
         buttonSets()
-        val album = arguments?.getSerializable("album") as Album
+        album = arguments?.getSerializable("album") as Album
         binding.tvAlbumName.text = album.name
         binding.tvAlbumBandName.text = album.band
+        if (album.imageUrl != "")
         Picasso.get().load(album.imageUrl).fit().into(binding.ivAlbumCover)
         val provider = ViewModelProvider(this)
         albumViewModel = provider[AlbumViewModel::class.java]
@@ -64,8 +66,8 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when(p0?.id){
             binding.ibBack.id -> {
-                (activity as AppCompatActivity).supportActionBar?.show()
-                arguments?.let { findNavController().navigate(it.getInt("Back")) }
+                    (activity as AppCompatActivity).supportActionBar?.show()
+                    arguments?.let { findNavController().navigate(it.getInt("Back")) }
             }
         }
     }

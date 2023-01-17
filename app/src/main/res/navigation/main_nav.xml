@@ -16,10 +16,10 @@
         android:label="fragment_messenger"
         tools:layout="@layout/fragment_messenger" />
     <fragment
-        android:id="@+id/libraryFragment"
-        android:name="com.example.singmeapp.fragments.LibraryFragment"
-        android:label="fragment_library"
-        tools:layout="@layout/fragment_library" />
+        android:id="@+id/catalogueFragment"
+        android:name="com.example.singmeapp.fragments.CatalogueFragment"
+        android:label="fragment_catalogue"
+        tools:layout="@layout/fragment_catalogue" />
     <fragment
         android:id="@+id/notAuthorizedFragment"
         android:name="com.example.singmeapp.fragments.NotAuthorizedFragment"
@@ -96,8 +96,8 @@
         app:enterAnim="@android:anim/slide_in_left"
         app:exitAnim="@android:anim/slide_out_right" />
     <action
-        android:id="@+id/action_global_libraryFragment"
-        app:destination="@id/libraryFragment"
+        android:id="@+id/action_global_catalogueFragment"
+        app:destination="@id/catalogueFragment"
         app:enterAnim="@android:anim/slide_in_left"
         app:exitAnim="@android:anim/slide_out_right"
         app:popEnterAnim="@android:anim/slide_in_left"
@@ -122,4 +122,15 @@
         android:name="com.example.singmeapp.fragments.LoveAlbumsFragment"
         android:label="fragment_love_albums"
         tools:layout="@layout/fragment_love_albums" />
+    <action
+        android:id="@+id/action_global_myLibraryFragment"
+        app:destination="@id/myLibraryFragment"
+        app:enterAnim="@android:anim/slide_in_left"
+        app:exitAnim="@android:anim/slide_out_right"
+        app:popEnterAnim="@android:anim/slide_in_left" />
+    <fragment
+        android:id="@+id/bandFragment"
+        android:name="com.example.singmeapp.fragments.BandFragment"
+        android:label="fragment_band"
+        tools:layout="@layout/fragment_band" />
 </navigation>

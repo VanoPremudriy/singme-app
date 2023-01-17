@@ -5,15 +5,19 @@
         android:title="@string/home"
         android:orderInCategory="1"/>
     <item
-        android:id="@+id/messengerFragment"
-        android:title="@string/messenger"
+        android:id="@+id/catalogueFragment"
+        android:title="@string/catalogue"
         android:orderInCategory="2"/>
     <item
-        android:id="@+id/libraryFragment"
-        android:title="@string/library"
+        android:id="@+id/messengerFragment"
+        android:title="@string/messenger"
         android:orderInCategory="3"/>
+    <item
+        android:id="@+id/myLibraryFragment"
+        android:title="@string/library"
+        android:orderInCategory="4"/>
     <item
         android:id="@+id/profileFragment"
         android:title="@string/profile"
-        android:orderInCategory="4"/>
+        android:orderInCategory="5"/>
 </menu>

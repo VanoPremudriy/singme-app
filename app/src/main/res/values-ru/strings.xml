@@ -4,6 +4,8 @@
     <string name="library">Библиотека</string>
     <string name="profile">Профиль</string>
     <string name="home">Главная</string>
+    <string name="catalogue">Каталог</string>
+
 
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>

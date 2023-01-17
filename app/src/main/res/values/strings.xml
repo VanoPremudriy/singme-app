@@ -5,6 +5,7 @@
     <string name="profile">Profile</string>
     <string name="library">Library</string>
     <string name="home">Home</string>
+    <string name="catalogue">Catalogue</string>
 
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
@@ -38,5 +39,11 @@
     <string name="my_music">My music</string>
 
     <string name="exit">Exit</string>
+
+    <string name="large_text" translatable="false">
+        A
+    \nB
+    \nC
+    </string>
 
 </resources>

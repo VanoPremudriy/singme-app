@@ -155,9 +155,9 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
 
         runnable = Runnable {
             binding.seekBar.progress = mPlayer.currentSeconds
-            handler.postDelayed(runnable, 1000)
+            handler.postDelayed(runnable, 10)
         }
-        handler.postDelayed(runnable, 1000)
+        handler.postDelayed(runnable, 10)
     }
 
     // Creating an extension property to get the media player time duration in seconds

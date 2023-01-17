@@ -54,9 +54,8 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
         val provider = ViewModelProvider(this)
         profileViewModel = provider[ProfileViewModel::class.java]
         profileViewModel.currentUser.observe(viewLifecycleOwner){
-            Log.e("ProfileFrag",it.avatarUrl)
-            Log.e("ProfileFrag", it.name)
-            Picasso.get().load(it.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.imageView2)
+            if (it.avatarUrl != "")
+            Picasso.get().load(it.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivProfileAvatar)
             binding.textView.text = it.name
         }
     }
