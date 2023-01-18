@@ -36,7 +36,7 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
             albumViewModel = provider[AlbumViewModel::class.java]
             LinearLayoutCompat.setOnClickListener{
                 if (album.imageUrl != "") {
-                    albumViewModel.currentAlbum = album
+
                     val bundle = Bundle()
                     bundle.putInt("Back", R.id.loveAlbumsFragment)
                     bundle.putSerializable("album", album)

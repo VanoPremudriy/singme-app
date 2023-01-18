@@ -49,7 +49,6 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         val provider = ViewModelProvider(this)
         albumViewModel = provider[AlbumViewModel::class.java]
         albumViewModel.getTracks(album)
-        buttonSets()
         binding.rcView.layoutManager = LinearLayoutManager(activity)
         trackAdapter = TrackAdapter(fragmentActivity)
         albumViewModel.listTrack.observe(viewLifecycleOwner){

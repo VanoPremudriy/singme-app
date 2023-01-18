@@ -27,7 +27,7 @@ import java.util.function.Consumer
 class AlbumViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
     var mService: RetrofitServices = Common.retrofitService
-    lateinit var currentAlbum:Album
+
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
     var listTrack = MutableLiveData<List<Track>>()

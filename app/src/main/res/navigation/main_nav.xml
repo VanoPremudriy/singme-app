@@ -133,4 +133,9 @@
         android:name="com.example.singmeapp.fragments.BandFragment"
         android:label="fragment_band"
         tools:layout="@layout/fragment_band" />
+    <fragment
+        android:id="@+id/loveBandsFragment"
+        android:name="com.example.singmeapp.fragments.LoveBandsFragment"
+        android:label="fragment_love_bands"
+        tools:layout="@layout/fragment_love_bands" />
 </navigation>

@@ -130,7 +130,7 @@
     <LinearLayout
         android:id="@+id/llBandMembers"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_marginTop="36dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,37 +144,10 @@
             android:layout_height="wrap_content"
             android:text="Участники" />
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcVievMembers"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvBandAvatar1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="100dp">
-
-                <ImageView
-                    android:id="@+id/ivBandAvatar1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/back" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvBandAvatar2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="100dp">
-
-                <ImageView
-                    android:id="@+id/ivBandAvatar2"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/back" />
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

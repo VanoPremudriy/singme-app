@@ -63,7 +63,9 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
     override fun onClick(p: View?) {
         when(p?.id) {
             binding.idBands.id -> {
-                Snackbar.make(p,"Bands",Snackbar.LENGTH_SHORT).show()
+                val bundle = Bundle()
+                bundle.putInt("Back", R.id.myLibraryFragment)
+                findNavController().navigate(R.id.loveBandsFragment, bundle)
             }
             binding.idPlaylists.id -> {
                 Snackbar.make(p,"Playlist",Snackbar.LENGTH_SHORT).show()
