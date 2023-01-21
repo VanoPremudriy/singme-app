@@ -45,12 +45,13 @@ class BandViewModel: ViewModel() {
                         Consumer { t ->
 
                             val memberName = snapshot.child("/users/${t.key}/profile/name").value.toString()
+                            var extension = snapshot.child("/users/${t.key}/profile/avatar").value.toString()
                             var memberRoles = t.value.toString()
                             /*t.children.forEach(Consumer { t ->
                                 memberRoles += "${t.value.toString()}, "
                             })*/
 
-                            fbAvatarImageUrl = "/storage/users/${t.key}/profile/avatar.jpg"
+                            fbAvatarImageUrl = "/storage/users/${t.key}/profile/avatar.${extension}"
 
                             val member = Member(
                                 t.key.toString(),

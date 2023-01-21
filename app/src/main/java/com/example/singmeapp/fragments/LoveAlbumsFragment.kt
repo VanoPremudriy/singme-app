@@ -28,19 +28,23 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
-        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         setHasOptionsMenu(true)
-        fragmentActivity.title = getString(R.string.albums)
+
+        val provider = ViewModelProvider(this)
+        loveAlbumsViewModel = provider[LoveAlbumsViewModel::class.java]
+        loveAlbumsViewModel.getAlbums()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        fragmentActivity.title = getString(R.string.albums)
+
         binding = FragmentLoveAlbumsBinding.inflate(layoutInflater)
-        val provider = ViewModelProvider(this)
-        loveAlbumsViewModel = provider[LoveAlbumsViewModel::class.java]
-        loveAlbumsViewModel.getAlbums()
+
         binding.rcView.layoutManager = LinearLayoutManager(activity)
         albumAdapter = AlbumAdapter(this)
         loveAlbumsViewModel.listAlbum.observe(viewLifecycleOwner){
@@ -53,7 +57,17 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
-           findNavController().navigate(R.id.myLibraryFragment)
+           //findNavController().navigate(R.id.myLibraryFragment)
+            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+
+            if (count == 0) {
+                (activity as AppCompatActivity).supportActionBar?.show()
+                activity?.onBackPressed()
+
+            } else {
+                (activity as AppCompatActivity).supportActionBar?.show()
+                findNavController().popBackStack()
+            }
         }
         return true
     }

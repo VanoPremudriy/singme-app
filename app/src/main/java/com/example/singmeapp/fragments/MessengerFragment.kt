@@ -12,18 +12,19 @@ import com.example.singmeapp.databinding.FragmentMessengerBinding
 class MessengerFragment : Fragment() {
 
     lateinit var binding: FragmentMessengerBinding
-
+    private lateinit var fragActivity: AppCompatActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fragActivity = activity as AppCompatActivity
-        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        fragActivity.title = getString(R.string.messenger)
+        fragActivity = activity as AppCompatActivity
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        fragActivity.title = getString(R.string.messenger)
         // Inflate the layout for this fragment
         binding = FragmentMessengerBinding.inflate(layoutInflater)
         return binding.root

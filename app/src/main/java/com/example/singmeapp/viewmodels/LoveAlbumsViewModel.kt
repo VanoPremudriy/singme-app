@@ -30,8 +30,10 @@ class LoveAlbumsViewModel: ViewModel() {
 
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
+
     var listAlbum = MutableLiveData<List<Album>>()
     val arrayListAlbum = ArrayList<Album>()
+
     var url: String = "tracks/user_tracks/${auth.currentUser?.uid}/albums"
 
     init {
@@ -57,11 +59,12 @@ class LoveAlbumsViewModel: ViewModel() {
                         val bandName = snapshot.child("/bands/${band}").child("name").value.toString()
                         val albumName = snapshot.child("/albums/${t.value}").child("name").value.toString()
                         val year = snapshot.child("/albums/${t.value}").child("year").value.toString().toInt()
+                        val extension = snapshot.child("/albums/${t.value}").child("cover").value.toString()
 
                         //val imagePath = mService.getFile("/storage/bands/${bandName}/albums/${albumName}/cover.jpg", authToken).execute().body()?.public_url
                         //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
 
-                        fbAlbumImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.jpg"
+                        fbAlbumImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
 
                         val album = Album(
                             t.value.toString(),

@@ -30,27 +30,32 @@ class AlbumFragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         fragmentActivity =  activity as AppCompatActivity
         fragmentActivity.supportActionBar?.hide()
+
+        album = arguments?.getSerializable("album") as Album
+
+        val provider = ViewModelProvider(this)
+        albumViewModel = provider[AlbumViewModel::class.java]
+        albumViewModel.getTracks(album)
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentActivity.supportActionBar?.hide()
         binding = FragmentAlbumBinding.inflate(layoutInflater)
         buttonSets()
-        album = arguments?.getSerializable("album") as Album
+
         binding.tvAlbumName.text = album.name
         binding.tvAlbumBandName.text = album.band
         if (album.imageUrl != "")
         Picasso.get().load(album.imageUrl).fit().into(binding.ivAlbumCover)
-        val provider = ViewModelProvider(this)
-        albumViewModel = provider[AlbumViewModel::class.java]
-        albumViewModel.getTracks(album)
+
         binding.rcView.layoutManager = LinearLayoutManager(activity)
-        trackAdapter = TrackAdapter(fragmentActivity)
+        trackAdapter = TrackAdapter(fragmentActivity, this)
         albumViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track>
             binding.rcView.adapter = trackAdapter
@@ -65,10 +70,37 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when(p0?.id){
             binding.ibBack.id -> {
+                //(activity as AppCompatActivity).supportActionBar?.show()
+                //arguments?.let { findNavController().navigate(it.getInt("Back")) }
+
+                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+
+                if (count == 0) {
                     (activity as AppCompatActivity).supportActionBar?.show()
-                    arguments?.let { findNavController().navigate(it.getInt("Back")) }
+                    activity?.onBackPressed()
+
+                } else {
+                    (activity as AppCompatActivity).supportActionBar?.show()
+                    findNavController().popBackStack()
+                }
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home){
+            Log.e("Back", "home")
+            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+
+            if (count == 0) {
+                (activity as AppCompatActivity).supportActionBar?.show()
+                activity?.onBackPressed()
+            } else {
+                (activity as AppCompatActivity).supportActionBar?.show()
+                findNavController().popBackStack()
+            }
+        }
+        return true
     }
 
     fun buttonSets(){
@@ -76,6 +108,8 @@ class AlbumFragment : Fragment(), View.OnClickListener {
            ibBack.setOnClickListener(this@AlbumFragment)
         }
     }
+
+
 
 
 

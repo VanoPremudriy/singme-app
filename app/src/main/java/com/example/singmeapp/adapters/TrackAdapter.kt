@@ -6,18 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.TrackItemBinding
+import com.example.singmeapp.fragments.AlbumFragment
+import com.example.singmeapp.fragments.DiscographyFragment
+import com.example.singmeapp.fragments.MyLibraryFragment
+import com.example.singmeapp.fragments.PlayerPlaylistFragment
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 
 
-class TrackAdapter(val fragmentActivity: AppCompatActivity): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragment): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
     public var trackList = ArrayList<Track>()
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
@@ -42,7 +49,38 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity): RecyclerView.Adapte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+        when(fragment::class.java){
+            DiscographyFragment::class.java -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item_2, parent, false)
+            }
+            MyLibraryFragment::class.java -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+            }
+            AlbumFragment::class.java -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+            }
+            PlayerPlaylistFragment::class.java -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+            }
+        }
+        /*when (NavHostFragment.findNavController(fragment).currentDestination?.id){
+            R.id.myLibraryFragment -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+            }
+            R.id.discographyFragment -> {
+                Log.e("Is", "Discography")
+                Log.e("Frag", R.id.discographyFragment.toString())
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item_2, parent, false)
+            }
+            R.id.albumFragment -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+            }
+            R.id.playerPlaylistFragment ->{
+                Log.e("Is", "Playlist")
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+            }
+        }*/
         return  TrackHolder(view, fragmentActivity)
     }
 

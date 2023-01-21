@@ -1,5 +1,6 @@
 package com.example.singmeapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
@@ -8,8 +9,10 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.findFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.singmeapp.adapters.PlayerPagerAdapter
 import com.example.singmeapp.databinding.ActivityMainBinding
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var  tabLayout: TabLayout
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -110,6 +114,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        //bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
     fun setNavigation(){
         binding.bNav.setOnItemSelectedListener {
             when(it.itemId){
@@ -125,6 +134,31 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (navController.currentDestination?.id != R.id.albumFragment){
+            supportActionBar?.show()
+        }
+        when(navController.currentDestination?.id){
+            R.id.homeFragment ->{
+                binding.bNav.menu.getItem(0).isChecked = true
+            }
+            R.id.catalogueFragment ->{
+                binding.bNav.menu.getItem(1).isChecked = true
+            }
+            R.id.messengerFragment ->{
+                binding.bNav.menu.getItem(2).isChecked = true
+            }
+            R.id.myLibraryFragment ->{
+                binding.bNav.menu.getItem(3).isChecked = true
+            }
+            R.id.profileFragment ->{
+                binding.bNav.menu.getItem(4).isChecked = true
+            }
+        }
+
     }
 
 

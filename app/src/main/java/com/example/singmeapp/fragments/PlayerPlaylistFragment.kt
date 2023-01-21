@@ -1,6 +1,7 @@
 package com.example.singmeapp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,8 @@ class PlayerPlaylistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         fragActivity = activity as AppCompatActivity
-        trackAdapter = TrackAdapter(fragActivity)
+        Log.e("PlaylistFrag", this.id.toString())
+        trackAdapter = TrackAdapter(fragActivity, this@PlayerPlaylistFragment)
         binding = FragmentPlayerPlaylistBinding.inflate(layoutInflater)
         val provider = ViewModelProvider(fragActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]

@@ -67,11 +67,13 @@ class MyLibraryViewModel: ViewModel() {
                                 snapshot.child("/bands/${band}").child("name").value.toString()
                             val albumName =
                                 snapshot.child("/albums/${album}").child("name").value.toString()
+                            val extension = snapshot.child("/albums/${album}").child("cover").value.toString()
+                            Log.e("sv", extension)
 
 
                             fbTrackUrl =
                                 "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
-                            fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.jpg"
+                            fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
 
 
                             val track = Track(

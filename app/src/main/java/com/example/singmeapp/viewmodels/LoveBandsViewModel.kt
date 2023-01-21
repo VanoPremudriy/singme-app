@@ -45,8 +45,9 @@ class LoveBandsViewModel: ViewModel() {
                         Consumer { t ->
 
                         val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
+                        var extension = snapshot.child("/bands/${t.value}").child("avatar").value.toString()
 
-                        fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.jpg"
+                        fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
 
                         val band = Band(
                             t.value.toString(),

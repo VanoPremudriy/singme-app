@@ -37,4 +37,11 @@
     <string name="my_music">Моя музыка</string>
 
     <string name="exit">Выход</string>
+
+    <string name="members">Участники</string>
+    <string name="band_info">О группе</string>
+    <string name="top_tracks">Популярные треки</string>
+    <string name="all">Все</string>
+    <string name="discography">Дискография</string>
+    <string name="singles_ep">Синглы/EP</string>
 </resources>

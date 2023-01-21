@@ -30,20 +30,23 @@ class LoveBandsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
-        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setHasOptionsMenu(true)
-        fragmentActivity.title = getString(R.string.Bands)
 
+        setHasOptionsMenu(true)
+
+        val provider = ViewModelProvider(this)
+        loveBandsViewModel= provider[LoveBandsViewModel::class.java]
+        loveBandsViewModel.getBands()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        fragmentActivity.title = getString(R.string.Bands)
+
         binding = FragmentLoveBandsBinding.inflate(layoutInflater)
-        val provider = ViewModelProvider(this)
-        loveBandsViewModel= provider[LoveBandsViewModel::class.java]
-        loveBandsViewModel.getBands()
+
         binding.rcView.layoutManager = GridLayoutManager(context, 3)
         bandAdapter = BandAdapter(this)
         loveBandsViewModel.listBand.observe(viewLifecycleOwner){
@@ -55,7 +58,16 @@ class LoveBandsFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
-            findNavController().navigate(R.id.myLibraryFragment)
+           // findNavController().navigate(R.id.myLibraryFragment)
+            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+
+            if (count == 0) {
+                activity?.onBackPressed()
+                //additional code
+            } else {
+                findNavController().popBackStack()
+                //activity?.supportFragmentManager?.popBackStack()
+            }
         }
         return true
     }

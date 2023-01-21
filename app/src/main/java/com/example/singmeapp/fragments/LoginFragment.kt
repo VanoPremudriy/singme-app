@@ -27,14 +27,14 @@ class LoginFragment : Fragment(), View.OnClickListener {
     private lateinit var binding: FragmentLoginBinding
 
     lateinit var loginViewModel: LoginViewModel
-
+    private lateinit var fragActivity: AppCompatActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var fragActivity =activity as AppCompatActivity
-        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        fragActivity =activity as AppCompatActivity
+
         setHasOptionsMenu(true)
-        fragActivity.title = getString(R.string.sign_in)
+
 
     }
 
@@ -42,6 +42,9 @@ class LoginFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        fragActivity.title = getString(R.string.sign_in)
+
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
         val provider = ViewModelProvider(this)

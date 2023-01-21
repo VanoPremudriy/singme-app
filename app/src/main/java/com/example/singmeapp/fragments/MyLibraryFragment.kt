@@ -29,9 +29,12 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
-        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         setHasOptionsMenu(true)
-        fragmentActivity.title = getString(R.string.albums)
+
+        val provider = ViewModelProvider(this)
+        myLibraryViewModel = provider[MyLibraryViewModel::class.java]
+        myLibraryViewModel.getTracks()
         Log.e("LifeCycle", "onCreate")
     }
 
@@ -39,15 +42,15 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        fragmentActivity.title = getString(R.string.albums)
+
         Log.e("LifeCycle", "onCreateView")
         binding = FragmentMyLibraryBinding.inflate(layoutInflater)
-        fragmentActivity = activity as AppCompatActivity
-        val provider = ViewModelProvider(this)
-        myLibraryViewModel = provider[MyLibraryViewModel::class.java]
-        myLibraryViewModel.getTracks()
+
         buttonSets()
         binding.rcView.layoutManager = LinearLayoutManager(activity)
-        trackAdapter = TrackAdapter(fragmentActivity)
+        trackAdapter = TrackAdapter(fragmentActivity, this)
         myLibraryViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track>
             binding.rcView.adapter = trackAdapter

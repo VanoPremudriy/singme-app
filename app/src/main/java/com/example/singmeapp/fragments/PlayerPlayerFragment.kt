@@ -138,6 +138,15 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
         return binding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPlayer.stop()
+    }
+
     fun initializeButtonsClickListeners(){
         binding.ibPlay.setOnClickListener(this@PlayerPlayerFragment)
 

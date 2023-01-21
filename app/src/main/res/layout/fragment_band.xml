@@ -53,7 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Группа"
+        android:text=""
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
         app:layout_constraintTop_toBottomOf="@+id/cvBandBack" />
 
@@ -106,9 +107,10 @@
     <LinearLayout
         android:id="@+id/llBandInfo"
         android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_height="24dp"
         android:layout_marginTop="32dp"
         android:orientation="vertical"
+        android:paddingLeft="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -118,21 +120,23 @@
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="О группе" />
+            android:text="@string/band_info"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llBandMembers"
         android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_height="24dp"
         android:layout_marginTop="36dp"
         android:orientation="vertical"
+        android:paddingLeft="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -142,13 +146,48 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Участники" />
+            android:text="@string/members"
+            android:textSize="18sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcVievMembers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/idDiscography"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_weight="9"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llBandMembers">
+
+        <TextView
+            android:id="@+id/tvDiscography"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/discography"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvArrow1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text=">"
+            android:textSize="24sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

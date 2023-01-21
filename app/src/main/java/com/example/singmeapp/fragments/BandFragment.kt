@@ -3,13 +3,13 @@ package com.example.singmeapp.fragments
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,8 +32,13 @@ class BandFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
-        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         setHasOptionsMenu(true)
+
+        band = arguments?.getSerializable("band") as Band
+        val provider = ViewModelProvider(this)
+        bandViewModel = provider[BandViewModel::class.java]
+        bandViewModel.getMembers(band)
 
     }
     fun convert(value: Int):Int{
@@ -44,18 +49,18 @@ class BandFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        fragmentActivity.title = band.name
+
         binding = FragmentBandBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
         setButtons()
-        band = arguments?.getSerializable("band") as Band
-        fragmentActivity.title = band.name
+
         binding.tvBandNameBandFragment.text = band.name
         if (band.imageUrl != ""){
             Picasso.get().load(band.imageUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivBandAvatar)
         }
-        val provider = ViewModelProvider(this)
-        bandViewModel = provider[BandViewModel::class.java]
-        bandViewModel.getMembers(band)
+
         binding.rcVievMembers.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         memberAdapter = MemberAdapter()
         bandViewModel.listMember.observe(viewLifecycleOwner){
@@ -68,6 +73,7 @@ class BandFragment : Fragment(), View.OnClickListener {
     fun setButtons(){
         binding.ibWrapBandInfo.setOnClickListener(this@BandFragment)
         binding.ibWrapBandMembers.setOnClickListener(this@BandFragment)
+        binding.idDiscography.setOnClickListener(this@BandFragment)
     }
 
     companion object {
@@ -92,12 +98,19 @@ class BandFragment : Fragment(), View.OnClickListener {
             binding.ibSubscribeBand.id ->{
                 Toast.makeText(context, "Subscribed", Toast.LENGTH_SHORT).show()
             }
+            binding.idDiscography.id ->{
+                val bundle = Bundle()
+                bundle.putInt("Back", R.id.bandFragment)
+                bundle.putSerializable("band", band)
+                Log.e("band", band.name)
+                findNavController().navigate(R.id.discographyFragment, bundle)
+            }
         }
 
     }
 
     private fun wrap(wrapItem: View){
-        if (wrapItem.height == convert(20)) {
+        if (wrapItem.height == convert(24)) {
             Log.e("efs", "YES")
             var params = wrapItem.layoutParams
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -106,15 +119,21 @@ class BandFragment : Fragment(), View.OnClickListener {
         }
         else {
             var params = wrapItem.layoutParams
-            params.height = convert(20)
+            params.height = convert(24)
             wrapItem.layoutParams = params
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
-            arguments?.let { findNavController().navigate(it.getInt("Back")) }
+                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+                if (count == 0) {
+                    activity?.onBackPressed()
+                } else {
+                    findNavController().popBackStack()
+                }
         }
         return true
     }
+
 }

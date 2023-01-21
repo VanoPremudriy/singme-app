@@ -46,4 +46,11 @@
     \nC
     </string>
 
+    <string name="members">Members</string>
+    <string name="band_info">About</string>
+    <string name="top_tracks">Top tracks</string>
+    <string name="all">All</string>
+    <string name="discography">Discography</string>
+    <string name="singles_ep">Singles/EP</string>
+
 </resources>

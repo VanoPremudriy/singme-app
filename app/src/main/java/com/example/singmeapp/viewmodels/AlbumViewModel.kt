@@ -86,7 +86,6 @@ class AlbumViewModel: ViewModel() {
                     call: Call<FileApiModel>,
                     response: Response<FileApiModel>
                 ) {
-                    Log.e("Track", "Three")
                     val filePath = (response.body() as FileApiModel).public_url
                     getFileUrl(filePath,value, index)
                 }

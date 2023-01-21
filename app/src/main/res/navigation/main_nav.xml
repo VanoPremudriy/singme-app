@@ -138,4 +138,14 @@
         android:name="com.example.singmeapp.fragments.LoveBandsFragment"
         android:label="fragment_love_bands"
         tools:layout="@layout/fragment_love_bands" />
+    <fragment
+        android:id="@+id/discographyFragment"
+        android:name="com.example.singmeapp.fragments.DiscographyFragment"
+        android:label="fragment_discography"
+        tools:layout="@layout/fragment_discography" />
+    <fragment
+        android:id="@+id/playerPlaylistFragment"
+        android:name="com.example.singmeapp.fragments.PlayerPlaylistFragment"
+        android:label="fragment_player_playlist"
+        tools:layout="@layout/fragment_player_playlist" />
 </navigation>
