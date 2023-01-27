@@ -36,6 +36,7 @@ class LoveBandsViewModel: ViewModel() {
 
     fun getBands(){
         var fbBandImageUrl = ""
+        var fbBandBackUrl = ""
         var count = 0
         if (auth.currentUser != null){
             //if (user.)
@@ -49,19 +50,23 @@ class LoveBandsViewModel: ViewModel() {
                             val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
                             var extension = snapshot.child("/bands/${t.value}").child("avatar").value.toString()
                             var info = snapshot.child("/bands/${t.value}").child("info").value.toString()
+                            var backExtension = snapshot.child("/bands/${t.key}").child("background").value.toString()
 
                             fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
+                            fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
 
                             val band = Band(
                                 t.value.toString(),
                                 bandName,
                                 info,
-                            ""
+                            "",
+                                ""
                             )
 
                             arrayListBand.add(band)
                             listBand.value = arrayListBand
                             getFilePath(fbBandImageUrl, "image", count)
+                            getFilePath(fbBandBackUrl, "back", count)
                             count++
                         }
                     )
@@ -77,6 +82,7 @@ class LoveBandsViewModel: ViewModel() {
 
     fun getBands(user: User){
         var fbBandImageUrl = ""
+        var fbBandBackUrl = ""
         var count = 0
         if (auth.currentUser != null){
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -89,19 +95,23 @@ class LoveBandsViewModel: ViewModel() {
                             val bandName = snapshot.child("/bands/${t.key}").child("name").value.toString()
                             var extension = snapshot.child("/bands/${t.key}").child("avatar").value.toString()
                             var info = snapshot.child("/bands/${t.key}").child("info").value.toString()
+                            var backExtension = snapshot.child("/bands/${t.key}").child("background").value.toString()
 
                             fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
+                            fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
 
                             val band = Band(
                                 t.key.toString(),
                                 bandName,
                                 info,
-                                ""
+                                "",
+                            ""
                             )
 
                             arrayListBand.add(band)
                             listBand.value = arrayListBand
                             getFilePath(fbBandImageUrl, "image", count)
+                            getFilePath(fbBandBackUrl, "back", count)
                             count++
                         })
 
@@ -158,6 +168,10 @@ class LoveBandsViewModel: ViewModel() {
         when(value){
             "image" -> {
                 arrayListBand[index].imageUrl= url
+                listBand.value = arrayListBand
+            }
+            "back" -> {
+                arrayListBand[index].backgroundUrl = url
                 listBand.value = arrayListBand
             }
         }

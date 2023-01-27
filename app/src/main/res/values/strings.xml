@@ -54,5 +54,16 @@
     <string name="singles_ep">Singles/EP</string>
     <string name="my_projects">My projects</string>
     <string name="projects">Projects</string>
+    <string name="enter_project_name">Enter the project name</string>
+    <string name="choose_project_avatar">Choose an avatar</string>
+    <string name="choose_project_background">Choose a background</string>
+    <string name="write_project_information">Write information about the project</string>
+    <string name="add_your_project_roles">Add your roles in the project</string>
+    <string name="choose">Choose</string>
+    <string name="create_project">Create project</string>
+    <string name="roles">Roles</string>
+    <string name="add">Add</string>
+    <string name="fill_all_fields">Fill in all the fields</string>
+    <string name="this_project_already_exist">This project is already exist</string>
 
 </resources>

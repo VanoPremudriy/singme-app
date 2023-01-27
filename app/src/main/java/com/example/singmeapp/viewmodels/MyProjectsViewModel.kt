@@ -34,7 +34,7 @@ class MyProjectsViewModel: ViewModel() {
     var arrayListBand = ArrayList<Band>()
 
 
-    fun getBands(){
+    /*fun getBands(){
         var fbBandImageUrl = ""
         var count = 0
         if (auth.currentUser != null){
@@ -72,7 +72,7 @@ class MyProjectsViewModel: ViewModel() {
 
             })
         }
-    }
+    }*/
 
     fun getFilePath(url: String, value: String, index: Int){
         mService.getFile(url, authToken)

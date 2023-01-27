@@ -32,7 +32,14 @@ class CreateBandViewModel: ViewModel() {
     private var database = Firebase.database
     val isExist = MutableLiveData<Boolean>()
 
-    fun createBand(band: Band, avatar: RequestBody, back: RequestBody, avatarExtension: String, backExtension: String){
+    fun createBand(
+        band: Band,
+        avatar: RequestBody,
+        back: RequestBody,
+        avatarExtension: String,
+        backExtension: String,
+        rolesArray: ArrayList<String>
+    ){
         val uuid = java.util.UUID.randomUUID()
         band.uuid = uuid.toString()
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -50,8 +57,8 @@ class CreateBandViewModel: ViewModel() {
                     database.reference.child("bands/${band.uuid}").child("info").setValue(band.info)
                     database.reference.child("bands/${band.uuid}").child("avatar").setValue(avatarExtension)
                     database.reference.child("bands/${band.uuid}").child("background").setValue(backExtension)
-                    database.reference.child("bands_has_users").child(band.uuid).child(auth.currentUser!!.uid).setValue("Вокалист")
-                    database.reference.child("users_has_bands").child(auth.currentUser!!.uid).child(band.uuid).setValue("Вокалист")
+                    database.reference.child("bands_has_users").child(band.uuid).child(auth.currentUser!!.uid).setValue(rolesArray)
+                    database.reference.child("users_has_bands").child(auth.currentUser!!.uid).child(band.uuid).setValue(rolesArray)
                 }
 
 

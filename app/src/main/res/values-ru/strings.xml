@@ -46,4 +46,15 @@
     <string name="singles_ep">Синглы/EP</string>
     <string name="my_projects">Мои проекты</string>
     <string name="projects">Проекты</string>
+    <string name="enter_project_name">Введите название проекта</string>
+    <string name="choose_project_avatar">Выберите аватарку</string>
+    <string name="choose_project_background">Выберите фон</string>
+    <string name="write_project_information">Напишите информацию о проекте</string>
+    <string name="add_your_project_roles">Добавьте ваши роли в проекте</string>
+    <string name="choose">Выбрать</string>
+    <string name="create_project">Создать проект</string>
+    <string name="roles">Роли</string>
+    <string name="add">Добавить</string>
+    <string name="fill_all_fields">Заполните все поля</string>
+    <string name="this_project_already_exist">Такой проект уже существует</string>
 </resources>

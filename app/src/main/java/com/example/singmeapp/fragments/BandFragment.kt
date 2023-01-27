@@ -60,6 +60,11 @@ class BandFragment : Fragment(), View.OnClickListener {
         if (band.imageUrl != ""){
             Picasso.get().load(band.imageUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivBandAvatar)
         }
+        if (band.backgroundUrl != ""){
+            Picasso.get().load(band.backgroundUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivBandBack)
+        }
+
+        binding.textView7.text = band.info
 
         binding.rcVievMembers.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         memberAdapter = MemberAdapter()
