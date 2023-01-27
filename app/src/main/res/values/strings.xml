@@ -52,5 +52,7 @@
     <string name="all">All</string>
     <string name="discography">Discography</string>
     <string name="singles_ep">Singles/EP</string>
+    <string name="my_projects">My projects</string>
+    <string name="projects">Projects</string>
 
 </resources>

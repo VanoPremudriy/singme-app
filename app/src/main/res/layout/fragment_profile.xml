@@ -19,19 +19,6 @@
         app:layout_constraintStart_toEndOf="@+id/cvProfileAvatar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="328dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.091" />
-
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
@@ -82,6 +69,42 @@
             android:gravity="center_vertical"
             android:text="@string/exit" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/idMyBands"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="204dp"
+        android:layout_weight="9"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cvProfileAvatar">
+
+        <TextView
+            android:id="@+id/tvMyBands"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/my_projects"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvArrow1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text=">"
+            android:textSize="24sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

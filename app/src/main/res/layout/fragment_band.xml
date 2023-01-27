@@ -1,193 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.BandFragment"
-    >
+    android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvBandBack"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        app:cardBackgroundColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.BandFragment">
 
-        <ImageView
-            android:id="@+id/ivBandBack"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            app:srcCompat="@drawable/back2"
-            tools:src="@drawable/back2"
-            tools:srcCompat="@drawable/back2" />
-    </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvBandBack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvBandAvatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="104dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="1000dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.019"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cvBandBack">
+            <ImageView
+                android:id="@+id/ivBandBack"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:srcCompat="@drawable/back2"
+                tools:src="@drawable/back2"
+                tools:srcCompat="@drawable/back2" />
+        </androidx.cardview.widget.CardView>
 
-        <ImageView
-            android:id="@+id/ivBandAvatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/back" />
-    </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvBandAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="104dp"
+            app:cardCornerRadius="100dp"
+            app:cardElevation="1000dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.019"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cvBandBack">
 
-    <TextView
-        android:id="@+id/tvBandNameBandFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text=""
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/cvBandBack" />
-
-    <ImageButton
-        android:id="@+id/ibSubscribeBand"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:background="#00FFFFFF"
-        android:src="@android:drawable/ic_popup_reminder"
-        app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/tvBandNameBandFragment" />
-
-    <ImageButton
-        android:id="@+id/ibAddBand"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="12dp"
-        android:background="#00FFFFFF"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_constraintStart_toEndOf="@+id/ibSubscribeBand"
-        app:layout_constraintTop_toBottomOf="@+id/tvBandNameBandFragment" />
-
-    <ImageButton
-        android:id="@+id/ibWrapBandInfo"
-        android:layout_width="30dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="16dp"
-        android:background="#9839B5"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@android:drawable/arrow_down_float"
-        app:layout_constraintEnd_toEndOf="@+id/llBandInfo"
-        app:layout_constraintTop_toBottomOf="@+id/llBandInfo" />
-
-    <ImageButton
-        android:id="@+id/ibWrapBandMembers"
-        android:layout_width="30dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="16dp"
-        android:background="#9839B5"
-        android:src="@android:drawable/arrow_down_float"
-        app:layout_constraintEnd_toEndOf="@+id/llBandMembers"
-        app:layout_constraintTop_toBottomOf="@+id/llBandMembers"
-        android:clickable="true"
-        android:focusable="true" />
-
-    <LinearLayout
-        android:id="@+id/llBandInfo"
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="32dp"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ibSubscribeBand">
+            <ImageView
+                android:id="@+id/ivBandAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/back" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
+            android:id="@+id/tvBandNameBandFragment"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/band_info"
-            android:textSize="18sp" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/cvBandBack" />
+
+        <ImageButton
+            android:id="@+id/ibSubscribeBand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:background="#00FFFFFF"
+            android:src="@android:drawable/ic_popup_reminder"
+            app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/tvBandNameBandFragment" />
+
+        <ImageButton
+            android:id="@+id/ibAddBand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="12dp"
+            android:background="#00FFFFFF"
+            android:src="@android:drawable/ic_input_add"
+            app:layout_constraintStart_toEndOf="@+id/ibSubscribeBand"
+            app:layout_constraintTop_toBottomOf="@+id/tvBandNameBandFragment" />
+
+        <ImageButton
+            android:id="@+id/ibWrapBandInfo"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="#9839B5"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/arrow_down_float"
+            app:layout_constraintEnd_toEndOf="@+id/llBandInfo"
+            app:layout_constraintTop_toBottomOf="@+id/llBandInfo" />
+
+        <ImageButton
+            android:id="@+id/ibWrapBandMembers"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="#9839B5"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/arrow_down_float"
+            app:layout_constraintEnd_toEndOf="@+id/llBandMembers"
+            app:layout_constraintTop_toBottomOf="@+id/llBandMembers" />
+
+        <LinearLayout
+            android:id="@+id/llBandInfo"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ibSubscribeBand">
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/band_info"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llBandMembers"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="36dp"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llBandInfo">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/members"
+                android:textSize="18sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcVievMembers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/idDiscography"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_weight="9"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llBandMembers">
+
+            <TextView
+                android:id="@+id/tvDiscography"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/discography"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvArrow1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:text=">"
+                android:textSize="24sp" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="" />
-    </LinearLayout>
+            android:layout_marginTop="100dp"
+            android:text="ln"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/idDiscography"
+            tools:layout_editor_absoluteX="200dp" />
 
-    <LinearLayout
-        android:id="@+id/llBandMembers"
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="36dp"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llBandInfo">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/members"
-            android:textSize="18sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcVievMembers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/idDiscography"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_weight="9"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llBandMembers">
-
-        <TextView
-            android:id="@+id/tvDiscography"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/discography"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tvArrow1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:text=">"
-            android:textSize="24sp" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

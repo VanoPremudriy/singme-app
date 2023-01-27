@@ -1,3 +1,5 @@
 package com.example.singmeapp.items
 
-data class User(var name: String, val age: Int, val sex: String, var avatarUrl: String)
+import java.io.Serializable
+
+data class User(var uuid: String, var name: String, val age: Int, val sex: String, var avatarUrl: String): Serializable

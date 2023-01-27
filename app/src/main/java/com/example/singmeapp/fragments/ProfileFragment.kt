@@ -26,21 +26,22 @@ import kotlinx.coroutines.processNextEventInCurrentThread
 
 class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
 
+    lateinit var fragActivity: AppCompatActivity
     lateinit var binding: FragmentProfileBinding
     lateinit var profileViewModel: ProfileViewModel
+    val bundle = Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fragActivity = activity as AppCompatActivity
-        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        fragActivity.title = getString(R.string.profile)
-
+        fragActivity = activity as AppCompatActivity
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        fragActivity.title = getString(R.string.profile)
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(layoutInflater)
 
@@ -56,6 +57,7 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
         profileViewModel.currentUser.observe(viewLifecycleOwner){
             if (it.avatarUrl != "")
             Picasso.get().load(it.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivProfileAvatar)
+            bundle.putSerializable("curUser", it)
             binding.textView.text = it.name
         }
     }
@@ -67,6 +69,7 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
         binding.profileMenu.setOnTouchListener(this@ProfileFragment)
         binding.profileLayout.setOnTouchListener(this@ProfileFragment)
         binding.tvProfileExit.setOnClickListener(this@ProfileFragment)
+        binding.idMyBands.setOnClickListener(this@ProfileFragment)
 
     }
 
@@ -92,6 +95,9 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
             }
             binding.imageButton.id -> {
                 binding.profileMenu.visibility  = View.VISIBLE
+            }
+            binding.idMyBands.id -> {
+                findNavController().navigate(R.id.loveBandsFragment, bundle)
             }
         }
     }

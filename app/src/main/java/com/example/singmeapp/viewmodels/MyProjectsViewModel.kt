@@ -12,7 +12,6 @@ import com.example.singmeapp.api.models.FileApiModel
 import com.example.singmeapp.api.models.SecondFileApiModel
 import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Band
-import com.example.singmeapp.items.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,26 +23,26 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.function.Consumer
 
-class LoveBandsViewModel: ViewModel() {
+class MyProjectsViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
     var mService: RetrofitServices = Common.retrofitService
 
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
+
     var listBand = MutableLiveData<List<Band>>()
-    val arrayListBand = ArrayList<Band>()
-    var url: String = "/users/${auth.currentUser?.uid}/library/love_bands"
+    var arrayListBand = ArrayList<Band>()
+
 
     fun getBands(){
         var fbBandImageUrl = ""
         var count = 0
         if (auth.currentUser != null){
-            //if (user.)
             database.reference.addValueEventListener(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_bands").children.forEach(
+                    snapshot.child("/users_has_bands/${auth.currentUser?.uid}/library/love_bands").children.forEach(
                         Consumer { t ->
 
                             val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
@@ -54,46 +53,6 @@ class LoveBandsViewModel: ViewModel() {
 
                             val band = Band(
                                 t.value.toString(),
-                                bandName,
-                                info,
-                            ""
-                            )
-
-                            arrayListBand.add(band)
-                            listBand.value = arrayListBand
-                            getFilePath(fbBandImageUrl, "image", count)
-                            count++
-                        }
-                    )
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-        }
-    }
-
-    fun getBands(user: User){
-        var fbBandImageUrl = ""
-        var count = 0
-        if (auth.currentUser != null){
-            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
-                @SuppressLint("RestrictedApi")
-                @RequiresApi(Build.VERSION_CODES.N)
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/users_has_bands/${user.uuid}").children.forEach(
-                        Consumer { t ->
-                            Log.e("ds", t.toString())
-                            val bandName = snapshot.child("/bands/${t.key}").child("name").value.toString()
-                            var extension = snapshot.child("/bands/${t.key}").child("avatar").value.toString()
-                            var info = snapshot.child("/bands/${t.key}").child("info").value.toString()
-
-                            fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
-
-                            val band = Band(
-                                t.key.toString(),
                                 bandName,
                                 info,
                                 ""
@@ -114,8 +73,6 @@ class LoveBandsViewModel: ViewModel() {
             })
         }
     }
-
-
 
     fun getFilePath(url: String, value: String, index: Int){
         mService.getFile(url, authToken)
@@ -162,5 +119,4 @@ class LoveBandsViewModel: ViewModel() {
             }
         }
     }
-
 }

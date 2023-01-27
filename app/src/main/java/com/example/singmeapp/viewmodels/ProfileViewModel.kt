@@ -50,7 +50,7 @@ class ProfileViewModel: ViewModel() {
                 //val imagePath = mService.getFile("storage/users/${auth.currentUser?.uid}/profile/avatar.jpg", authToken).execute().body()?.public_url
                 //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
                 fbAvatar = "storage/users/${auth.currentUser?.uid}/profile/avatar.${extension}"
-                user = User(name, 21, "M", "")
+                user = User(auth.currentUser!!.uid,name, 21, "M", "")
                 currentUser.value = user
                 getFilePath(fbAvatar, "avatar")
             }

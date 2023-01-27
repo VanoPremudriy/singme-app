@@ -2,6 +2,7 @@ package com.example.singmeapp.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -27,6 +28,10 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     lateinit var trackAdapter: TrackAdapter
     lateinit var albumViewModel: AlbumViewModel
     lateinit var album: Album
+
+    fun convert(value: Int):Int{
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics).toInt()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +65,16 @@ class AlbumFragment : Fragment(), View.OnClickListener {
             trackAdapter.trackList = it as ArrayList<Track>
             binding.rcView.adapter = trackAdapter
         }
+
+        binding.textView9.text = album.name
+        binding.albumScrollView.viewTreeObserver.addOnScrollChangedListener {
+            if (binding.albumScrollView.scrollY > 150){
+                binding.llTopMenu.visibility = View.VISIBLE
+            } else {
+                binding.llTopMenu.visibility = View.GONE
+            }
+        }
+
         return binding.root
     }
 

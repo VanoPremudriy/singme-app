@@ -67,6 +67,7 @@ class BandFragment : Fragment(), View.OnClickListener {
             memberAdapter.memberList =it as ArrayList<Member> /* = java.util.ArrayList<com.example.singmeapp.items.Member> */
             binding.rcVievMembers.adapter = memberAdapter
         }
+
         return binding.root
     }
 

@@ -44,4 +44,6 @@
     <string name="all">Все</string>
     <string name="discography">Дискография</string>
     <string name="singles_ep">Синглы/EP</string>
+    <string name="my_projects">Мои проекты</string>
+    <string name="projects">Проекты</string>
 </resources>

@@ -48,7 +48,7 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
         binding.rcView.layoutManager = LinearLayoutManager(activity)
         albumAdapter = AlbumAdapter(this)
         loveAlbumsViewModel.listAlbum.observe(viewLifecycleOwner){
-            albumAdapter.albumList = it as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+            albumAdapter.albumList = it as ArrayList<Album>
             binding.rcView.adapter = albumAdapter
         }
 
