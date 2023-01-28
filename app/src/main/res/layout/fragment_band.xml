@@ -28,6 +28,14 @@
                 app:srcCompat="@drawable/back2"
                 tools:src="@drawable/back2"
                 tools:srcCompat="@drawable/back2" />
+
+            <ImageButton
+                android:id="@+id/ibEditBandBackInBandFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:visibility="gone"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -48,7 +56,20 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/back" />
+
         </androidx.cardview.widget.CardView>
+
+        <ImageButton
+            android:id="@+id/ibEditBandAvatarInBandFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-30dp"
+            android:background="#BDB8B8"
+            android:elevation="100000dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
+            app:layout_constraintTop_toTopOf="@+id/cvBandAvatar"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
 
         <TextView
             android:id="@+id/tvBandNameBandFragment"
@@ -96,6 +117,19 @@
             app:layout_constraintTop_toBottomOf="@+id/llBandInfo" />
 
         <ImageButton
+            android:id="@+id/ibEditBandInfo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:background="#9839B5"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/ic_menu_edit"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llBandInfo" />
+
+        <ImageButton
             android:id="@+id/ibWrapBandMembers"
             android:layout_width="30dp"
             android:layout_height="20dp"
@@ -105,6 +139,19 @@
             android:focusable="true"
             android:src="@android:drawable/arrow_down_float"
             app:layout_constraintEnd_toEndOf="@+id/llBandMembers"
+            app:layout_constraintTop_toBottomOf="@+id/llBandMembers" />
+
+        <ImageButton
+            android:id="@+id/ibAddNewMember"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:background="#9839B5"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/ic_input_add"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llBandMembers" />
 
         <LinearLayout
@@ -120,28 +167,39 @@
             app:layout_constraintTop_toBottomOf="@+id/ibSubscribeBand">
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/tvBandAboutInBandFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/band_info"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/tvBandInfoInBandFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="" />
+
+            <EditText
+                android:id="@+id/etBandInfoInBandFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1DFDF"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:visibility="gone" />
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llBandMembers"
             android:layout_width="0dp"
             android:layout_height="24dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="48dp"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llBandInfo">
 

@@ -50,7 +50,7 @@ class LoveBandsViewModel: ViewModel() {
                             val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
                             var extension = snapshot.child("/bands/${t.value}").child("avatar").value.toString()
                             var info = snapshot.child("/bands/${t.value}").child("info").value.toString()
-                            var backExtension = snapshot.child("/bands/${t.key}").child("background").value.toString()
+                            var backExtension = snapshot.child("/bands/${t.value}").child("background").value.toString()
 
                             fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
                             fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
@@ -134,7 +134,7 @@ class LoveBandsViewModel: ViewModel() {
                     call: Call<FileApiModel>,
                     response: Response<FileApiModel>
                 ) {
-                    Log.e("Track", "Three")
+                    Log.e("Track", url)
                     val filePath = (response.body() as FileApiModel).public_url
                     getFileUrl(filePath,value, index)
                 }

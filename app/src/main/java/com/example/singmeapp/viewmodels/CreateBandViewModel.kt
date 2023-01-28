@@ -123,28 +123,20 @@ class CreateBandViewModel: ViewModel() {
     }
 
     fun getFileUrl(url: String, file: RequestBody){
-        //Log.e("Response", file.body().toString())
         mService.getUrlForUpload(url, authToken).enqueue(object :
             Callback<SecondFileApiModel> {
             override fun onResponse(
                 call: Call<SecondFileApiModel>,
                 response: Response<SecondFileApiModel>
             ) {
-                Log.e("Response", url)
-                Log.e("Response", response.code().toString())
-                Log.e("Response", response.body().toString())
                 if (response.code() == 200) {
-                    Log.e("Responce", "URL Getted")
                     mService.addFile(response.body()!!.href, file, "image/*", "*/*").enqueue(object: Callback<ResponseBody>{
                         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                            Log.e("Response", "File added")
-                            Log.e("Response", response.message())
                             publicFile(url)
                         }
 
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Log.e("Response", "File not created")
-                            Log.e("Response", t.toString())
+                            t.printStackTrace()
                         }
 
                     })

@@ -28,5 +28,8 @@ interface RetrofitServices {
     @PUT("v1/disk/resources/publish")
     fun publishFile(@Query("path") path: String, @Header("Authorization") land: String): Call<SecondFileApiModel>
 
+    @GET("v1/disk/resources/upload")
+    fun getUrlForReUpload(@Query("path") path: String, @Query("overwrite") overwrite: String, @Header("Authorization") land: String): Call<SecondFileApiModel>
+
 
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bandEdit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:orderInCategory="1"
+        android:visible="true"
+        android:title="Edit"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/bandEditApply"
+        android:icon="@android:drawable/checkbox_on_background"
+        android:orderInCategory="1"
+        android:title="Apply"
+        android:visible="false"
+        app:showAsAction="always" />
+</menu>

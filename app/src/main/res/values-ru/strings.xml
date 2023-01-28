@@ -57,4 +57,5 @@
     <string name="add">Добавить</string>
     <string name="fill_all_fields">Заполните все поля</string>
     <string name="this_project_already_exist">Такой проект уже существует</string>
+    <string name="finish_editing_text">Завершите редактирование текста</string>
 </resources>

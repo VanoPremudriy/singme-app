@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:visibility="visible">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvMemberAvatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:background="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -22,6 +23,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/back" />
+
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -46,4 +48,16 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/cvMemberAvatar"
         app:layout_constraintTop_toBottomOf="@+id/tvMemberName" />
+
+    <ImageButton
+        android:id="@+id/deleteMember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="1000dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/btn_dialog" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

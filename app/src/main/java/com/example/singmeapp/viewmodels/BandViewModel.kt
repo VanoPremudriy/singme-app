@@ -19,6 +19,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import extensions.Extension
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,13 +34,15 @@ class BandViewModel: ViewModel() {
     private var database = Firebase.database
     var listMember = MutableLiveData<List<Member>>()
     val arrayListMember = ArrayList<Member>()
+    val isEdit = MutableLiveData<Boolean>()
+    val editText = MutableLiveData<String>()
 
 
     fun getMembers(currentBand: Band){
         var fbAvatarImageUrl: String
         var count = 0
         if (auth.currentUser != null){
-            database.reference.addValueEventListener(object : ValueEventListener {
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -120,6 +125,73 @@ class BandViewModel: ViewModel() {
                 listMember.value = arrayListMember
             }
         }
+    }
+
+    fun editBandInfo(band: Band){
+        database.reference.child("bands/${band.uuid}/info").setValue(editText.value)
+    }
+
+    fun changeImage(band: Band, file: RequestBody, extension: String, image: String){
+        if (image == "avatar") {
+            getFileUrl("storage/bands/${band.name}/profile/avatar.${extension}", file)
+            database.reference.child("bands/${band.uuid}/avatar").setValue(extension)
+        }
+        if (image == "back") {
+            getFileUrl("storage/bands/${band.name}/profile/back.${extension}", file)
+            database.reference.child("bands/${band.uuid}/background").setValue(extension)
+        }
+    }
+
+    fun getFileUrl(url: String, file: RequestBody){
+        mService.getUrlForReUpload(url, "true", authToken).enqueue(object :
+            Callback<SecondFileApiModel> {
+            override fun onResponse(
+                call: Call<SecondFileApiModel>,
+                response: Response<SecondFileApiModel>
+            ) {
+                if (response.code() == 200 || response.code() == 409) {
+                    mService.addFile(response.body()!!.href, file, "image/*", "*/*").enqueue(object: Callback<ResponseBody>{
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            publicFile(url)
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            t.printStackTrace()
+                        }
+
+                    })
+
+                }
+                else Log.e("Responce", "URL not Getted")
+            }
+
+
+            override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
+
+            }
+
+        })
+    }
+
+
+    fun publicFile(url: String){
+        mService.publishFile(url, authToken).enqueue(object :
+            Callback<SecondFileApiModel> {
+            override fun onResponse(
+                call: Call<SecondFileApiModel>,
+                response: Response<SecondFileApiModel>
+            ) {
+                if (response.code() == 200)
+                    Log.e("CreateBand", "File public")
+                else Log.e("CreateBand", response.code().toString())
+            }
+
+
+            override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+        })
     }
 
 }
