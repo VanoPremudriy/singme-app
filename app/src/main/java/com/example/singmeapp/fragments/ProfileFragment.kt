@@ -70,7 +70,7 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
         binding.profileLayout.setOnTouchListener(this@ProfileFragment)
         binding.tvProfileExit.setOnClickListener(this@ProfileFragment)
         binding.idMyBands.setOnClickListener(this@ProfileFragment)
-
+        binding.idMyFriends.setOnClickListener(this@ProfileFragment)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -98,6 +98,9 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
             }
             binding.idMyBands.id -> {
                 findNavController().navigate(R.id.loveBandsFragment, bundle)
+            }
+            binding.idMyFriends.id ->{
+                findNavController().navigate(R.id.friendsFragment)
             }
         }
     }

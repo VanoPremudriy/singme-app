@@ -66,5 +66,14 @@
     <string name="fill_all_fields">Fill in all the fields</string>
     <string name="this_project_already_exist">This project is already exist</string>
     <string name="finish_editing_text">Finish editing the text</string>
+    <string name="my_friends">My friends</string>
+    <string name="requests">Friend requests</string>
+    <string name="my_requests">My friend requests</string>
+    <string name="go_to_profile">Go to profile</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="cancel_my_request">Cancel equest</string>
+    <string name="go_to_chat">Go to chat</string>
+    <string name="delete_friend">Delete a friend</string>
 
 </resources>

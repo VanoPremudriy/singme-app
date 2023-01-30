@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
 
     lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    lateinit var bottomSheetBehavior2: BottomSheetBehavior<View>
 
     lateinit var viewPager: ViewPager2
     lateinit var  tabLayout: TabLayout
@@ -53,7 +54,10 @@ class MainActivity : AppCompatActivity() {
 
         setNavigation()
 
+        bottomSheetBehavior2 = BottomSheetBehavior.from(binding.bottomSheetMenu)
+
         bottomSheetBehavior = BottomSheetBehavior.from(binding.player.root)
+        bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -95,6 +99,31 @@ class MainActivity : AppCompatActivity() {
 
                     }
                 }
+            }
+
+        })
+
+        bottomSheetBehavior2.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.view15.visibility = View.GONE
+                        binding.friendMenu.visibility = View.GONE
+                        binding.requestMenu.visibility = View.GONE
+                        binding.myRequestMenu.visibility = View.GONE
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.view15.visibility = View.GONE
+                        binding.friendMenu.visibility = View.GONE
+                        binding.requestMenu.visibility = View.GONE
+                        binding.myRequestMenu.visibility = View.GONE
+
+                    }
+            }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
             }
 
         })

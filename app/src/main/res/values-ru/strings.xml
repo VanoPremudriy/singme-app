@@ -58,4 +58,13 @@
     <string name="fill_all_fields">Заполните все поля</string>
     <string name="this_project_already_exist">Такой проект уже существует</string>
     <string name="finish_editing_text">Завершите редактирование текста</string>
+    <string name="my_friends">Мои друзья</string>
+    <string name="requests">Заявки в друзья</string>
+    <string name="my_requests">Мои заявки в друзья</string>
+    <string name="go_to_profile">Перейти в профиль</string>
+    <string name="cancel">Отменить</string>
+    <string name="apply">Принять</string>
+    <string name="cancel_my_request">Отменить запрос</string>
+    <string name="go_to_chat">Перейти в чат</string>
+    <string name="delete_friend">Удалить друга</string>
 </resources>
