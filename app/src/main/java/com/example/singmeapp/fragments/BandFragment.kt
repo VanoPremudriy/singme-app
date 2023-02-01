@@ -164,12 +164,16 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
             memberAdapter.memberList =it as ArrayList<Member> /* = java.util.ArrayList<com.example.singmeapp.items.Member> */
             binding.rcVievMembers.adapter = memberAdapter
             it.forEach { it1 ->
+                Log.e("RC", "OBSERVE")
+                Log.e("RC", (it1.uuid == bandViewModel.auth.currentUser?.uid).toString())
+                Log.e("RC", (!isMenuProvider).toString())
                 if (it1.uuid == bandViewModel.auth.currentUser?.uid && !isMenuProvider){
                     fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
                     isMenuProvider = true
                 }
             }
         }
+
 
         bandViewModel.editText.observe(viewLifecycleOwner){
             if (binding.tvBandInfoInBandFragment.text != it){
@@ -181,6 +185,11 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         return binding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        isMenuProvider = false
+    }
+
     fun setButtons(){
         binding.ibWrapBandInfo.setOnClickListener(this@BandFragment)
         binding.ibWrapBandMembers.setOnClickListener(this@BandFragment)
@@ -188,6 +197,7 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         binding.ibEditBandInfo.setOnClickListener(this@BandFragment)
         binding.ibEditBandBackInBandFragment.setOnClickListener(this@BandFragment)
         binding.ibEditBandAvatarInBandFragment.setOnClickListener(this@BandFragment)
+        binding.ibAddNewMember.setOnClickListener(this@BandFragment)
 
     }
 
@@ -219,6 +229,7 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
                 bundle.putInt("Back", R.id.bandFragment)
                 bundle.putSerializable("band", band)
                 Log.e("band", band.name)
+                isMenuProvider = false
                 findNavController().navigate(R.id.discographyFragment, bundle)
             }
             binding.ibEditBandInfo.id ->{
@@ -236,8 +247,14 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
                 verifyStoragePermissions()
                 getBandAvatar.launch(photoPickIntent)
             }
+            binding.ibAddNewMember.id -> {
+                bandViewModel.isEdit.value = false
+                isMenuProvider = false
+                val bundle = Bundle()
+                bundle.putSerializable("band", band)
+                findNavController().navigate(R.id.chooseMemberFragment, bundle)
+            }
         }
-
     }
 
     private fun wrap(wrapItem: View){
@@ -261,6 +278,8 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
                 if (count == 0) {
                     activity?.onBackPressed()
                 } else {
+                    isMenuProvider = false
+                    bandViewModel.isEdit.value = false
                     findNavController().popBackStack()
                 }
         }

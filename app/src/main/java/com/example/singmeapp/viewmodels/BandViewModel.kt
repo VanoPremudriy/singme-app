@@ -81,6 +81,15 @@ class BandViewModel: ViewModel() {
         }
     }
 
+    fun deleteMember(uuid: String, band: Band):Boolean{
+        if (auth.currentUser?.uid != uuid){
+        database.reference.child("bands_has_users/${band.uuid}/${uuid}").setValue(null)
+        database.reference.child("users_has_bands/${uuid}/${band.uuid}").setValue(null)
+            return true
+        }
+        else return false
+    }
+
     fun getFilePath(url: String, value: String, index: Int){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {

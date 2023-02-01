@@ -90,10 +90,6 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
 
         override fun onClick(p0: View?) {
             when (p0?.id){
-                binding.ibFriendItemMenu.id -> {
-
-                }
-
                 activity.binding.tvGoToMyProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                     Log.e("Click", "Profile")
