@@ -67,4 +67,5 @@
     <string name="cancel_my_request">Отменить запрос</string>
     <string name="go_to_chat">Перейти в чат</string>
     <string name="delete_friend">Удалить друга</string>
+    <string name="friendship_request">Отправить запрос на дружбу</string>
 </resources>

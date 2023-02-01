@@ -45,6 +45,9 @@ class FriendsViewModel: ViewModel() {
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
 
+    var listAllUsers = MutableLiveData<List<User>>()
+    lateinit var arrayListAllUsers: ArrayList<User>
+
 
     fun getFriends(){
         var fbFriendAvatarUrl: String
@@ -113,6 +116,77 @@ class FriendsViewModel: ViewModel() {
     }
 
 
+    fun getAllUsers(){
+        var fbAvatarUrl: String
+
+        database.reference.addValueEventListener(object : ValueEventListener{
+            @SuppressLint("RestrictedApi")
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var count = 0
+                arrayListAllUsers = ArrayList<User>()
+                listAllUsers.value = arrayListAllUsers
+                snapshot.child("users").children.forEach {
+                    val userName = it.child("profile/name").value.toString()
+                    val userAge = it.child("profile/age").value.toString()
+                    val userSex = it.child("profile/sex").value.toString()
+                    val avatarExtension = it.child("profile/avatar").value.toString()
+                    val friendShipStatus:String? = snapshot.child("user_has_friends/${auth.currentUser?.uid}/${it.key}").value?.toString()
+
+                    fbAvatarUrl = "/storage/users/${it.key}/profile/avatar.${avatarExtension}"
+
+                    val user = User(
+                        it.key.toString(),
+                        userName,
+                        userAge.toInt(),
+                        userSex,
+                        friendshipStatus = friendShipStatus ?: "unknown",
+                        ""
+                    )
+
+                    Log.e("sts", user.friendshipStatus)
+
+                    arrayListAllUsers.add(user)
+                    listAllUsers.value = arrayListAllUsers
+                    getFilePath(fbAvatarUrl, "avatarUser", count)
+                    count++
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+
+    fun sendRequest(uuid: String){
+        database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue("my request")
+        database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue("request")
+    }
+
+    fun deleteFriend(uuid: String){
+        database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue(null)
+        database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue(null)
+    }
+
+    fun applyRequest(uuid: String){
+        database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue("friend")
+        database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue("friend")
+    }
+
+    fun cancelRequest(uuid: String){
+        database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue(null)
+        database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue(null)
+    }
+
+    fun cancelMyRequest(uuid: String){
+        database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue(null)
+        database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue(null)
+    }
+
+
     fun getFilePath(url: String, value: String, index: Int){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {
@@ -166,6 +240,13 @@ class FriendsViewModel: ViewModel() {
                 arrayListMyRequests[index].avatarUrl = url
                 listMyRequests.value = arrayListMyRequests
             }
+
+            "avatarUser" ->{
+                arrayListAllUsers[index].avatarUrl = url
+                listAllUsers.value = arrayListAllUsers
+            }
         }
     }
+
+
 }

@@ -75,5 +75,6 @@
     <string name="cancel_my_request">Cancel equest</string>
     <string name="go_to_chat">Go to chat</string>
     <string name="delete_friend">Delete a friend</string>
+    <string name="friendship_request">Send a friendship request</string>
 
 </resources>

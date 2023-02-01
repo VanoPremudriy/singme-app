@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
@@ -15,6 +16,7 @@ import com.example.singmeapp.databinding.FriendItemBinding
 import com.example.singmeapp.fragments.FriendsFragment
 import com.example.singmeapp.items.Friend
 import com.example.singmeapp.items.User
+import com.example.singmeapp.viewmodels.FriendsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 import kotlin.random.Random
@@ -23,11 +25,17 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
 
     var friendList = ArrayList<User>()
 
-    class FriendHolder(item: View, val fragment: Fragment): RecyclerView.ViewHolder(item){
+    class FriendHolder(item: View, val fragment: Fragment): RecyclerView.ViewHolder(item), View.OnClickListener{
         val binding = FriendItemBinding.bind(item)
+        val friendsFragment = fragment as FriendsFragment
+        val activity = friendsFragment.activity as MainActivity
+        val provider  = ViewModelProvider(fragment)
+        var friendsViewModel = provider[FriendsViewModel::class.java]
+        lateinit var curFriend: User
 
         @SuppressLint("ClickableViewAccessibility")
         fun bind(friend: User) = with(binding){
+            curFriend = friend
             tvFriendItemName.text = friend.name
             tvFriendItemAge.text = friend.age.toString()
             tvFriendItemSex.text = friend.sex
@@ -36,28 +44,129 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
             }
 
 
-
-            val fr = fragment as FriendsFragment
-            var act = fr.activity as MainActivity
-
-            binding.ibFriendItemMenu.setOnClickListener{
-                when (friend.friendshipStatus) {
+            binding.ibFriendItemMenu.setOnClickListener(this@FriendHolder)
+            binding.ibFriendItemMenu.setOnClickListener {
+                when (curFriend.friendshipStatus) {
                     "friend" ->{
-                        act.binding.friendMenu.visibility = View.VISIBLE
+                        activity.binding.friendMenu.visibility = View.VISIBLE
                     }
                     "request" ->{
-                        act.binding.requestMenu.visibility = View.VISIBLE
+                        activity.binding.requestMenu.visibility = View.VISIBLE
                     }
                     "my request" ->{
-                        act.binding.myRequestMenu.visibility = View.VISIBLE
+                        activity.binding.myRequestMenu.visibility = View.VISIBLE
+                    }
+                    "unknown" ->{
+                        activity.binding.unknownUserMenu.visibility = View.VISIBLE
+                    }
+                    "me" -> {
+                        activity.binding.meMenu.visibility = View.VISIBLE
                     }
                 }
-                act.binding.view15.visibility = View.VISIBLE
-                act.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+                activity.binding.view15.visibility = View.VISIBLE
+                activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
 
+                activity.binding.tvGoToMyProfile.setOnClickListener(this@FriendHolder)
+
+                activity.binding.tvSendFriendshipRequest.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToUnknownUserProfile.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToUnknownUserChat.setOnClickListener(this@FriendHolder)
+
+                activity.binding.tvGoToFriendProfile.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToFriendChat.setOnClickListener(this@FriendHolder)
+                activity.binding.tvDeleteFriend.setOnClickListener(this@FriendHolder)
+
+                activity.binding.tvApplyRequest.setOnClickListener(this@FriendHolder)
+                activity.binding.tvCancelRequest.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToRequestProfile.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToRequestChat.setOnClickListener(this@FriendHolder)
+
+                activity.binding.tvCancelMyRequest.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToRequestMyProfile.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToRequestMyChat.setOnClickListener(this@FriendHolder)
             }
 
+        }
 
+        override fun onClick(p0: View?) {
+            when (p0?.id){
+                binding.ibFriendItemMenu.id -> {
+
+                }
+
+                activity.binding.tvGoToMyProfile.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    Log.e("Click", "Profile")
+                    // TODO:
+                }
+
+
+                activity.binding.tvSendFriendshipRequest.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    Log.e("Click", curFriend.name)
+                    friendsViewModel.sendRequest(curFriend.uuid)
+                }
+                activity.binding.tvGoToUnknownUserProfile.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    Log.e("Click", "Profile")
+                    // TODO:
+                }
+                activity.binding.tvGoToUnknownUserChat.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    Log.e("Click", "Chat")
+                    // TODO:
+                }
+
+
+                activity.binding.tvGoToFriendProfile.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    Log.e("Click", "Profile")
+                    // TODO:
+                }
+                activity.binding.tvGoToFriendChat.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    Log.e("Click", "Chat")
+                    // TODO:
+                }
+                activity.binding.tvDeleteFriend.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    friendsViewModel.deleteFriend(curFriend.uuid)
+                }
+
+
+                activity.binding.tvApplyRequest.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    friendsViewModel.applyRequest(curFriend.uuid)
+                }
+                activity.binding.tvCancelRequest.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    friendsViewModel.cancelRequest(curFriend.uuid)
+                }
+                activity.binding.tvGoToRequestProfile.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    // TODO:
+                }
+                activity.binding.tvGoToRequestChat.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    // TODO:
+                }
+
+
+                activity.binding.tvCancelMyRequest.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    friendsViewModel.cancelMyRequest(curFriend.uuid)
+                }
+                activity.binding.tvGoToRequestMyProfile.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    // TODO:
+                }
+                activity.binding.tvGoToRequestMyChat.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    // TODO:
+                }
+
+
+            }
         }
 
 

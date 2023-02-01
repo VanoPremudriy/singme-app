@@ -1,172 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/friendsFragmentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:context=".fragments.FriendsFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/friendsFragmentLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".fragments.FriendsFragment">
+        <ImageButton
+            android:id="@+id/ibWrapFriendRequests"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="#9839B5"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/arrow_down_float"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />
 
-            <ImageButton
-                android:id="@+id/ibWrapFriendRequests"
-                android:layout_width="30dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="16dp"
-                android:background="#9839B5"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@android:drawable/arrow_down_float"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />
+        <ImageButton
+            android:id="@+id/ibWrapMyFriendRequests"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="#9839B5"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/arrow_down_float"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rcMyFriendRequests" />
 
-            <ImageButton
-                android:id="@+id/ibWrapMyFriendRequests"
-                android:layout_width="30dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="16dp"
-                android:background="#9839B5"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@android:drawable/arrow_down_float"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rcMyFriendRequests" />
+        <View
+            android:id="@+id/view7"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/purple_200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rcMyFriendRequests" />
 
-            <View
-                android:id="@+id/view7"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="12dp"
-                android:background="@color/purple_200"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rcMyFriendRequests" />
+        <View
+            android:id="@+id/view8"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="120dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/purple_200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/view8"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="120dp"
-                android:layout_marginEnd="12dp"
-                android:background="@color/purple_200"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view9"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/purple_200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />
 
-            <View
-                android:id="@+id/view9"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="12dp"
-                android:background="@color/purple_200"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />
+        <TextView
+            android:id="@+id/tvMyFriendsInFriendsFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/my_friends"
+            app:layout_constraintStart_toStartOf="@+id/view7"
+            app:layout_constraintTop_toBottomOf="@+id/view7" />
 
-            <TextView
-                android:id="@+id/tvMyFriendsInFriendsFragment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/my_friends"
-                app:layout_constraintStart_toStartOf="@+id/view7"
-                app:layout_constraintTop_toBottomOf="@+id/view7" />
+        <TextView
+            android:id="@+id/tvMyRequests"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/requests"
+            app:layout_constraintStart_toStartOf="@+id/view8"
+            app:layout_constraintTop_toBottomOf="@+id/view8" />
 
-            <TextView
-                android:id="@+id/tvMyRequests"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/requests"
-                app:layout_constraintStart_toStartOf="@+id/view8"
-                app:layout_constraintTop_toBottomOf="@+id/view8" />
+        <TextView
+            android:id="@+id/tvRequests"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/my_requests"
+            app:layout_constraintStart_toStartOf="@+id/view9"
+            app:layout_constraintTop_toBottomOf="@+id/view9" />
 
-            <TextView
-                android:id="@+id/tvRequests"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/my_requests"
-                app:layout_constraintStart_toStartOf="@+id/view9"
-                app:layout_constraintTop_toBottomOf="@+id/view9" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcFriendRequests"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMyRequests">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcMyFriendRequests"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvRequests" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcMyFriends"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMyFriendsInFriendsFragment">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="TextView"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/rcMyFriends"
+            tools:layout_editor_absoluteX="177dp" />
+
+        <FrameLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcFriendRequests"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvMyRequests">
+                android:id="@+id/rcAllUsers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcMyFriendRequests"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvRequests" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcMyFriends"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvMyFriendsInFriendsFragment">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:text="TextView"
-                android:visibility="invisible"
-                app:layout_constraintTop_toBottomOf="@+id/rcMyFriends"
-                tools:layout_editor_absoluteX="177dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-    <View
-        android:id="@+id/view10"
-        android:layout_width="200dp"
-        android:layout_height="500dp"
-        android:layout_gravity="center_horizontal"
-        android:background="#191919"
-        android:elevation="10000dp"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="800dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</ScrollView>

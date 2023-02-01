@@ -111,13 +111,16 @@ class MainActivity : AppCompatActivity() {
                         binding.friendMenu.visibility = View.GONE
                         binding.requestMenu.visibility = View.GONE
                         binding.myRequestMenu.visibility = View.GONE
+                        binding.meMenu.visibility = View.GONE
+                        binding.unknownUserMenu.visibility = View.GONE
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.view15.visibility = View.GONE
                         binding.friendMenu.visibility = View.GONE
                         binding.requestMenu.visibility = View.GONE
                         binding.myRequestMenu.visibility = View.GONE
-
+                        binding.meMenu.visibility = View.GONE
+                        binding.unknownUserMenu.visibility = View.GONE
                     }
             }
             }
