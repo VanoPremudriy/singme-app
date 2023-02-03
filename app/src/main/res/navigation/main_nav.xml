@@ -168,4 +168,9 @@
         android:name="com.example.singmeapp.fragments.ChooseMemberFragment"
         android:label="fragment_choose_member"
         tools:layout="@layout/fragment_choose_member" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.singmeapp.fragments.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

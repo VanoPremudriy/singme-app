@@ -51,7 +51,7 @@ class FriendsViewModel: ViewModel() {
 
     fun getFriends(){
         var fbFriendAvatarUrl: String
-        database.reference.addValueEventListener(object : ValueEventListener {
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -164,26 +164,31 @@ class FriendsViewModel: ViewModel() {
     fun sendRequest(uuid: String){
         database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue("my request")
         database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue("request")
+        getFriends()
     }
 
     fun deleteFriend(uuid: String){
         database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue(null)
         database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue(null)
+        getFriends()
     }
 
     fun applyRequest(uuid: String){
         database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue("friend")
         database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue("friend")
+        getFriends()
     }
 
     fun cancelRequest(uuid: String){
         database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue(null)
         database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue(null)
+        getFriends()
     }
 
     fun cancelMyRequest(uuid: String){
         database.reference.child("user_has_friends/${auth.currentUser?.uid}/${uuid}").setValue(null)
         database.reference.child("user_has_friends/${uuid}/${auth.currentUser?.uid}").setValue(null)
+        getFriends()
     }
 
 

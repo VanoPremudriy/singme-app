@@ -89,7 +89,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     BottomSheetBehavior.STATE_HIDDEN ->{
-                        if (navController.currentDestination?.id?.equals(R.id.albumFragment) == false)
+                        if (navController.currentDestination?.id?.equals(R.id.albumFragment) == false
+                            && navController.currentDestination?.id?.equals(R.id.chatFragment) == false)
                         supportActionBar?.show()
                         binding.bNav.visibility = View.VISIBLE
                         bottomSheet.setClickable(false)
@@ -172,6 +173,12 @@ class MainActivity : AppCompatActivity() {
         super.onBackPressed()
         if (navController.currentDestination?.id != R.id.albumFragment){
             supportActionBar?.show()
+        }
+        if (navController.currentDestination?.id != R.id.chatFragment ){
+            binding.bNav.visibility = View.VISIBLE
+        }
+        if (binding.player.root.visibility == View.INVISIBLE){
+            binding.player.root.visibility = View.VISIBLE
         }
         when(navController.currentDestination?.id){
             R.id.homeFragment ->{
