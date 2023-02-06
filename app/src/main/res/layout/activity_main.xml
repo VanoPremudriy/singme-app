@@ -290,7 +290,7 @@
                 android:text="@string/cancel_my_request" />
 
             <TextView
-                android:id="@+id/tvGoToRequestMyProfile"
+                android:id="@+id/tvGoToMyRequestProfile"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"
@@ -300,7 +300,7 @@
                 android:text="@string/go_to_profile" />
 
             <TextView
-                android:id="@+id/tvGoToRequestMyChat"
+                android:id="@+id/tvGoToMyRequestChat"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackground"

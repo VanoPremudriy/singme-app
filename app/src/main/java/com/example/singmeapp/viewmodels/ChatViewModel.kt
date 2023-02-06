@@ -2,11 +2,14 @@ package com.example.singmeapp.viewmodels
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.singmeapp.api.Common.Common
 import com.example.singmeapp.api.interfaces.RetrofitServices
+import com.example.singmeapp.api.models.FileApiModel
+import com.example.singmeapp.api.models.SecondFileApiModel
 import com.example.singmeapp.items.ChatUser
 import com.example.singmeapp.items.Member
 import com.example.singmeapp.items.Message
@@ -17,6 +20,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.function.Consumer
 
 class ChatViewModel: ViewModel() {
@@ -68,4 +74,6 @@ class ChatViewModel: ViewModel() {
         var count = listMessages.value?.size
         database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}/${count}").setValue(message)
     }
+
+
 }

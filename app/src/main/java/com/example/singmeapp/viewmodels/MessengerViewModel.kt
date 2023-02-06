@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.singmeapp.api.Common.Common
 import com.example.singmeapp.api.interfaces.RetrofitServices
+import com.example.singmeapp.api.models.FileApiModel
+import com.example.singmeapp.api.models.SecondFileApiModel
 import com.example.singmeapp.items.ChatUser
 import com.example.singmeapp.items.Message
 import com.example.singmeapp.items.User
@@ -17,7 +19,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.util.function.Consumer
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MessengerViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
@@ -52,6 +56,9 @@ class MessengerViewModel: ViewModel() {
                     var friendSex = snapshot.child("users/${friendUuid}/profile/sex").value.toString()
                     var friendMail = snapshot.child("users/${friendUuid}/profile/mail").value.toString()
                     var friendshipStatus = snapshot.child("user_has_friends/${auth.currentUser?.uid}/${friendUuid}")?.value?.toString()
+                    var avatarExtension = snapshot.child("users/${friendUuid}/profile/avatar").value.toString()
+
+                    val fbAvatarUrl = "/storage/users/${friendUuid}/profile/avatar.${avatarExtension}"
 
                     var friend = User(
                         it.key.toString(),
@@ -62,8 +69,10 @@ class MessengerViewModel: ViewModel() {
                         ""
                     )
                     Log.e("mess", messages[messages.size-1].message.toString())
+                    getFilePath(fbAvatarUrl, "avatarChatUser", count)
                     arrayListChatUsers.add(ChatUser(friend, messages[messages.size-1]))
                     listChatUsers.value = arrayListChatUsers
+                    count++
                 }
             }
 
@@ -72,5 +81,52 @@ class MessengerViewModel: ViewModel() {
             }
 
         })
+    }
+
+    fun getFilePath(url: String, value: String, index: Int){
+        mService.getFile(url, authToken)
+            .enqueue(object : Callback<FileApiModel> {
+                override fun onResponse(
+                    call: Call<FileApiModel>,
+                    response: Response<FileApiModel>
+                ) {
+                    Log.e("Track", url)
+                    val filePath = (response.body() as FileApiModel).public_url
+                    getFileUrl(filePath,value, index)
+                }
+
+                override fun onFailure(call: Call<FileApiModel>, t: Throwable) {
+
+                }
+
+            })
+    }
+
+    fun getFileUrl(url: String, value: String, index: Int){
+        mService.getSecondFile(url, authToken)
+            .enqueue(object : Callback<SecondFileApiModel> {
+                override fun onResponse(
+                    call: Call<SecondFileApiModel>,
+                    response: Response<SecondFileApiModel>
+                ) {
+                    val fileUrl = (response.body() as SecondFileApiModel).href
+                    setList(fileUrl, value, index)
+                }
+
+                override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
+
+                }
+
+            })
+    }
+
+    fun setList(url: String, value: String, index: Int){
+        when(value){
+            "avatarChatUser" -> {
+                arrayListChatUsers[index].user.avatarUrl = url
+                listChatUsers.value = arrayListChatUsers
+            }
+
+        }
     }
 }

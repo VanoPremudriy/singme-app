@@ -1,25 +1,24 @@
 package com.example.singmeapp.adapters
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FriendItemBinding
 import com.example.singmeapp.fragments.FriendsFragment
-import com.example.singmeapp.items.Friend
+import com.example.singmeapp.items.ChatUser
 import com.example.singmeapp.items.User
 import com.example.singmeapp.viewmodels.FriendsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
-import kotlin.random.Random
 
 class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.FriendHolder>() {
 
@@ -82,8 +81,8 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 activity.binding.tvGoToRequestChat.setOnClickListener(this@FriendHolder)
 
                 activity.binding.tvCancelMyRequest.setOnClickListener(this@FriendHolder)
-                activity.binding.tvGoToRequestMyProfile.setOnClickListener(this@FriendHolder)
-                activity.binding.tvGoToRequestMyChat.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToMyRequestProfile.setOnClickListener(this@FriendHolder)
+                activity.binding.tvGoToMyRequestChat.setOnClickListener(this@FriendHolder)
             }
 
         }
@@ -95,7 +94,6 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                     Log.e("Click", "Profile")
                     // TODO:
                 }
-
 
                 activity.binding.tvSendFriendshipRequest.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
@@ -109,8 +107,10 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 }
                 activity.binding.tvGoToUnknownUserChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    Log.e("Click", "Chat")
-                    // TODO:
+                    val chatUser = ChatUser(curFriend, null)
+                    val bundle = Bundle()
+                    bundle.putSerializable("chatUser", chatUser)
+                    friendsFragment.findNavController().navigate(R.id.chatFragment, bundle)
                 }
 
 
@@ -121,8 +121,10 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 }
                 activity.binding.tvGoToFriendChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    Log.e("Click", "Chat")
-                    // TODO:
+                    val chatUser = ChatUser(curFriend, null)
+                    val bundle = Bundle()
+                    bundle.putSerializable("chatUser", chatUser)
+                    friendsFragment.findNavController().navigate(R.id.chatFragment, bundle)
                 }
                 activity.binding.tvDeleteFriend.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
@@ -144,7 +146,10 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 }
                 activity.binding.tvGoToRequestChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    // TODO:
+                    val chatUser = ChatUser(curFriend, null)
+                    val bundle = Bundle()
+                    bundle.putSerializable("chatUser", chatUser)
+                    friendsFragment.findNavController().navigate(R.id.chatFragment, bundle)
                 }
 
 
@@ -152,13 +157,16 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                     friendsViewModel.cancelMyRequest(curFriend.uuid)
                 }
-                activity.binding.tvGoToRequestMyProfile.id -> {
+                activity.binding.tvGoToMyRequestProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                     // TODO:
                 }
-                activity.binding.tvGoToRequestMyChat.id -> {
+                activity.binding.tvGoToMyRequestChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    // TODO:
+                    val chatUser = ChatUser(curFriend, null)
+                    val bundle = Bundle()
+                    bundle.putSerializable("chatUser", chatUser)
+                    friendsFragment.findNavController().navigate(R.id.chatFragment, bundle)
                 }
 
 

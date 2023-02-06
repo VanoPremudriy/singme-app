@@ -25,14 +25,13 @@ class ChatUserAdapter(var fragment: Fragment): RecyclerView.Adapter<ChatUserAdap
                 Picasso.get().load(chatUser.user.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivItemChatUserAvatar)
             }
             binding.tvChatUserName.text = chatUser.user.name
-            binding.tvChatUserLastMessage.text = chatUser.lastMessage.message
+            binding.tvChatUserLastMessage.text = chatUser.lastMessage?.message
 
             binding.chatUserItemLayout.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putSerializable("chatUser", chatUser)
                 messengerFragment.findNavController().navigate(R.id.chatFragment, bundle)
             }
-
         }
     }
 
