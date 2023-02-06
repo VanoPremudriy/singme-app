@@ -38,7 +38,10 @@ class FriendsFragment : Fragment(), MenuProvider {
         setHasOptionsMenu(true)
         val provider = ViewModelProvider(this)
         friendsViewModel = provider[FriendsViewModel::class.java]
-        friendsViewModel.getFriends()
+        if (arguments?.getSerializable("curUser") != null)
+            if ((arguments?.getSerializable("curUser") as User).uuid != friendsViewModel.auth.currentUser?.uid.toString()){
+                friendsViewModel.getOtherFriends((requireArguments().getSerializable("curUser") as User).uuid.toString())
+            }else friendsViewModel.getFriends()
         friendsViewModel.getAllUsers()
     }
 
@@ -50,6 +53,11 @@ class FriendsFragment : Fragment(), MenuProvider {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.title = getString(R.string.my_friends)
         binding = FragmentFriendsBinding.inflate(layoutInflater)
+
+        if ((arguments?.getSerializable("curUser") as User).uuid != friendsViewModel.auth.currentUser?.uid.toString()){
+            binding.tvMyRequests.text = getString(R.string.user_requests)
+            binding.tvMyFriendsInFriendsFragment.text = getString(R.string.friends)
+        }
 
 
         friendAdapter = FriendAdapter(this)

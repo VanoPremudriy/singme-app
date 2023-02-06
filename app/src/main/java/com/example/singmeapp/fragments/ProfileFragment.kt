@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentProfileBinding
+import com.example.singmeapp.items.User
 import com.example.singmeapp.viewmodels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -34,6 +35,12 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragActivity = activity as AppCompatActivity
+        val provider = ViewModelProvider(this)
+        profileViewModel = provider[ProfileViewModel::class.java]
+        if (arguments?.getSerializable("otherUser") != null){
+            profileViewModel.getOtherData((requireArguments().getSerializable("otherUser") as User).uuid.toString())
+        }
+        else profileViewModel.getData()
     }
 
     override fun onCreateView(
@@ -52,13 +59,16 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
     }
 
     private fun observe(){
-        val provider = ViewModelProvider(this)
-        profileViewModel = provider[ProfileViewModel::class.java]
+
         profileViewModel.currentUser.observe(viewLifecycleOwner){
             if (it.avatarUrl != "")
             Picasso.get().load(it.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivProfileAvatar)
             bundle.putSerializable("curUser", it)
             binding.textView.text = it.name
+            if (it.uuid != profileViewModel.auth.uid.toString()){
+                binding.tvMyBands.text = getString(R.string.projects)
+                binding.tvMyFriends.text = getString(R.string.friends)
+            }
         }
     }
 
@@ -100,7 +110,7 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
                 findNavController().navigate(R.id.loveBandsFragment, bundle)
             }
             binding.idMyFriends.id ->{
-                findNavController().navigate(R.id.friendsFragment)
+                findNavController().navigate(R.id.friendsFragment, bundle)
             }
         }
     }

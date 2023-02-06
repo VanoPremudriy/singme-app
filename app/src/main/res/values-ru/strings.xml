@@ -69,4 +69,6 @@
     <string name="delete_friend">Удалить друга</string>
     <string name="friendship_request">Отправить запрос на дружбу</string>
     <string name="choose_new_member">Выберите нового участника</string>
+    <string name="friends">Друзья</string>
+    <string name="user_requests">Заявки пользователя</string>
 </resources>

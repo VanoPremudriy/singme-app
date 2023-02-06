@@ -79,6 +79,7 @@ class FriendsViewModel: ViewModel() {
                         friendAge.toInt(),
                         friendSex,
                         friendshipStatus,
+                        friendshipStatus,
                         ""
                     )
 
@@ -115,6 +116,76 @@ class FriendsViewModel: ViewModel() {
         })
     }
 
+    fun getOtherFriends(uuid: String){
+        var fbFriendAvatarUrl: String
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("RestrictedApi")
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var friendCount = 0
+                var requestCount = 0
+                var myRequestCount = 0
+                arrayListFriends = ArrayList<User>()
+                arrayListRequests = ArrayList<User>()
+                arrayListMyRequests = ArrayList<User>()
+                listMyRequests.value = arrayListMyRequests
+                listFriends.value = arrayListFriends
+                listRequests.value = arrayListRequests
+                snapshot.child("/user_has_friends/${uuid}").children.forEach(Consumer { t ->
+                    val friendName = snapshot.child("users/${t.key}/profile/name").value.toString()
+                    val friendAge = snapshot.child("users/${t.key}/profile/age").value.toString()
+                    val friendSex = snapshot.child("users/${t.key}/profile/sex").value.toString()
+                    val avatarExtension = snapshot.child("users/${t.key}/profile/avatar").value.toString()
+                    val friendshipStatusForFragment = t.value.toString()
+                    val friendshipStatus = snapshot.child("/user_has_friends/${auth.currentUser?.uid}/${t.key}").value.toString()
+
+                    fbFriendAvatarUrl = "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
+
+                    val friend = User(
+                        t.key.toString(),
+                        friendName,
+                        friendAge.toInt(),
+                        friendSex,
+                        friendshipStatus,
+                        friendshipStatusForFragment,
+                        ""
+                    )
+
+                    if (friend.friendshipStatusForFragment == "friend"){
+                        arrayListFriends.add(friend)
+                        listFriends.value = arrayListFriends
+                        getFilePath(fbFriendAvatarUrl, "avatarFriend", friendCount)
+                        friendCount++
+                    }
+
+                    if (friend.friendshipStatusForFragment == "request"){
+                        arrayListRequests.add(friend)
+                        listRequests.value = arrayListRequests
+                        getFilePath(fbFriendAvatarUrl, "avatarRequest", requestCount)
+                        requestCount++
+                    }
+
+                    if (friend.friendshipStatusForFragment == "my request"){
+                        arrayListMyRequests.add(friend)
+                        listMyRequests.value = arrayListMyRequests
+                        getFilePath(fbFriendAvatarUrl, "avatarMyRequest", myRequestCount)
+                        myRequestCount++
+                    }
+
+
+                })
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+
+
 
     fun getAllUsers(){
         var fbAvatarUrl: String
@@ -141,6 +212,7 @@ class FriendsViewModel: ViewModel() {
                         userAge.toInt(),
                         userSex,
                         friendshipStatus = friendShipStatus ?: "unknown",
+                        friendshipStatusForFragment = friendShipStatus ?: "unknown",
                         ""
                     )
 

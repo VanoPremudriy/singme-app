@@ -66,6 +66,7 @@ class MessengerViewModel: ViewModel() {
                         friendAge.toInt(),
                         friendSex,
                         friendshipStatus = friendshipStatus ?: "unknown",
+                        friendshipStatusForFragment = friendshipStatus ?: "unknown",
                         ""
                     )
                     Log.e("mess", messages[messages.size-1].message.toString())

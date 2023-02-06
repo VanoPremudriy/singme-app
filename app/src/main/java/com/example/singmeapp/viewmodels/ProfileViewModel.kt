@@ -36,13 +36,12 @@ class ProfileViewModel: ViewModel() {
                 .permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
-        getData()
     }
 
     fun getData(){
         var fbAvatar: String
         if (auth.currentUser != null)
-        database.getReference("users/"+auth.currentUser?.uid + "/profile").addListenerForSingleValueEvent(object:
+        database.getReference("users/${auth.currentUser?.uid}/profile").addListenerForSingleValueEvent(object:
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val name = snapshot.child("name").value.toString()
@@ -52,7 +51,7 @@ class ProfileViewModel: ViewModel() {
                 //val imagePath = mService.getFile("storage/users/${auth.currentUser?.uid}/profile/avatar.jpg", authToken).execute().body()?.public_url
                 //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
                 fbAvatar = "storage/users/${auth.currentUser?.uid}/profile/avatar.${extension}"
-                user = User(auth.currentUser!!.uid,name, age.toInt(), sex, "", "")
+                user = User(auth.currentUser!!.uid,name, age.toInt(), sex, "", "", "")
                 currentUser.value = user
                 getFilePath(fbAvatar, "avatar")
             }
@@ -63,6 +62,31 @@ class ProfileViewModel: ViewModel() {
         }
 
         )
+    }
+
+    fun getOtherData(uuid: String){
+        var fbAvatar: String
+            database.getReference("users/${uuid}/profile").addListenerForSingleValueEvent(object:
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val name = snapshot.child("name").value.toString()
+                    val extension = snapshot.child("avatar").value.toString()
+                    val age = snapshot.child("age").value.toString()
+                    val sex = snapshot.child("sex").value.toString()
+                    //val imagePath = mService.getFile("storage/users/${auth.currentUser?.uid}/profile/avatar.jpg", authToken).execute().body()?.public_url
+                    //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
+                    fbAvatar = "storage/users/${uuid}/profile/avatar.${extension}"
+                    user = User(uuid, name, age.toInt(), sex, "", "", "")
+                    currentUser.value = user
+                    getFilePath(fbAvatar, "avatar")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            }
+
+            )
     }
 
     fun getFilePath(url: String, value: String){

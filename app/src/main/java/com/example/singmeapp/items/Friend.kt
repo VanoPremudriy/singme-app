@@ -5,4 +5,5 @@ data class Friend(var uuid: String,
                   var age: Int,
                   var sex: String,
                   var friendshipStatus: String,
+                  var friendshipStatusForFragment: String,
                   var avatarUrl: String)

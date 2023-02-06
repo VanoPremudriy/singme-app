@@ -78,4 +78,7 @@
     <string name="friendship_request">Send a friendship request</string>
     <string name="choose_new_member">Choose a new member</string>
 
+    <string name="friends">Friends</string>
+    <string name="user_requests">User requests</string>
+
 </resources>

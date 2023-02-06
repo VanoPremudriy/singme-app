@@ -58,6 +58,7 @@ class ChooseMemberViewModel: ViewModel() {
                             friendAge.toInt(),
                             friendSex,
                             friendshipStatus,
+                            friendshipStatus,
                             ""
                         )
 

@@ -91,8 +91,7 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
             when (p0?.id){
                 activity.binding.tvGoToMyProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    Log.e("Click", "Profile")
-                    // TODO:
+                    friendsFragment.findNavController().navigate(R.id.profileFragment)
                 }
 
                 activity.binding.tvSendFriendshipRequest.id -> {
@@ -102,8 +101,9 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 }
                 activity.binding.tvGoToUnknownUserProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    Log.e("Click", "Profile")
-                    // TODO:
+                    val bundle = Bundle()
+                    bundle.putSerializable("otherUser", curFriend)
+                    friendsFragment.findNavController().navigate(R.id.profileFragment, bundle)
                 }
                 activity.binding.tvGoToUnknownUserChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
@@ -116,8 +116,9 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
 
                 activity.binding.tvGoToFriendProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    Log.e("Click", "Profile")
-                    // TODO:
+                    val bundle = Bundle()
+                    bundle.putSerializable("otherUser", curFriend)
+                    friendsFragment.findNavController().navigate(R.id.profileFragment, bundle)
                 }
                 activity.binding.tvGoToFriendChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
@@ -142,7 +143,9 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 }
                 activity.binding.tvGoToRequestProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    // TODO:
+                    val bundle = Bundle()
+                    bundle.putSerializable("otherUser", curFriend)
+                    friendsFragment.findNavController().navigate(R.id.profileFragment, bundle)
                 }
                 activity.binding.tvGoToRequestChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
@@ -159,7 +162,9 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 }
                 activity.binding.tvGoToMyRequestProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    // TODO:
+                    val bundle = Bundle()
+                    bundle.putSerializable("otherUser", curFriend)
+                    friendsFragment.findNavController().navigate(R.id.profileFragment, bundle)
                 }
                 activity.binding.tvGoToMyRequestChat.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN

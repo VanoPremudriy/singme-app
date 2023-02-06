@@ -7,4 +7,5 @@ data class User(var uuid: String,
                 val age: Int,
                 val sex: String,
                 var friendshipStatus: String,
+                var friendshipStatusForFragment: String,
                 var avatarUrl: String): Serializable
