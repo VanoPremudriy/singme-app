@@ -70,11 +70,6 @@ class CreateBandViewModel: ViewModel() {
 
         })
 
-
-
-
-
-
     }
 
     fun createDir(url:String, file: RequestBody, name:String){

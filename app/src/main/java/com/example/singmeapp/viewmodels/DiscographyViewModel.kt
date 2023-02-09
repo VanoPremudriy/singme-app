@@ -12,6 +12,7 @@ import com.example.singmeapp.api.models.FileApiModel
 import com.example.singmeapp.api.models.SecondFileApiModel
 import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Band
+import com.example.singmeapp.items.Member
 import com.example.singmeapp.items.Track
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -40,13 +41,37 @@ class DiscographyViewModel: ViewModel() {
     var listSingle = MutableLiveData<List<Album>>()
     var arrayListSingle = ArrayList<Album>()
 
+    var listMemberUuid = MutableLiveData<List<String>>()
+    val arrayListMemberUuid = ArrayList<String>()
+
+
+    fun getMembers(currentBand: Band){
+        if (auth.currentUser != null){
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("RestrictedApi")
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.child("/bands_has_users/${currentBand.uuid}").children.forEach(
+                        Consumer { t ->
+                            arrayListMemberUuid.add(t.key.toString())
+                            listMemberUuid.value = arrayListMemberUuid
+                        })
+                }
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+    }
+
 
 
     fun getTracks(currentBand: Band){
         var fbTrackUrl: String
         var fbTrackImageUrl: String
         var count = 0
-        database.reference.addValueEventListener(object : ValueEventListener {
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -91,41 +116,43 @@ class DiscographyViewModel: ViewModel() {
         var fbAlbumImageUrl: String
         var albumCount = 0
         var singleCount = 0
-        database.reference.addValueEventListener(object : ValueEventListener {
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.child("/bands/${currentBand.uuid}/albums").children.forEach(Consumer { t ->
 
                     val albumName = snapshot.child("/albums/${t.value}/name").value.toString()
-                    val year = snapshot.child("/albums/${t.value}/year").value.toString().toInt()
+                    val year = snapshot.child("/albums/${t.value}/year").value?.toString()?.toInt()
                     val extension = snapshot.child("/albums/${t.value}/cover").value.toString()
                     val format = snapshot.child("/albums/${t.value}/format").value.toString()
                     Log.e("ed", albumName)
                     Log.e("ed", extension)
+                    if (albumName != null && year != null && extension != null && format != null) {
+                        fbAlbumImageUrl =
+                            "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
 
-                    fbAlbumImageUrl = "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
+                        val album = Album(
+                            t.value.toString(),
+                            albumName,
+                            currentBand.name,
+                            year,
+                            ""
+                        )
 
-                    val album = Album(
-                        t.value.toString(),
-                        albumName,
-                        currentBand.name,
-                        year,
-                        ""
-                    )
-
-                    if (format == "Album") {
-                        arrayListAlbum.add(album)
-                        listAlbum.value = arrayListAlbum
-                        Log.e("LOG", fbAlbumImageUrl)
-                        getFilePath(fbAlbumImageUrl, "albumImage", albumCount)
-                        albumCount++
-                    }
-                    if (format == "Single/EP"){
-                        arrayListSingle.add(album)
-                        listSingle.value = arrayListSingle
-                        getFilePath(fbAlbumImageUrl, "singleImage", singleCount)
-                        singleCount++
+                        if (format == "Album") {
+                            arrayListAlbum.add(album)
+                            listAlbum.value = arrayListAlbum
+                            Log.e("LOG", fbAlbumImageUrl)
+                            getFilePath(fbAlbumImageUrl, "albumImage", albumCount)
+                            albumCount++
+                        }
+                        if (format == "Single/EP") {
+                            arrayListSingle.add(album)
+                            listSingle.value = arrayListSingle
+                            getFilePath(fbAlbumImageUrl, "singleImage", singleCount)
+                            singleCount++
+                        }
                     }
                 })
 
@@ -147,8 +174,10 @@ class DiscographyViewModel: ViewModel() {
                     response: Response<FileApiModel>
                 ) {
                     Log.e("Track", "Three")
-                    val filePath = (response.body() as FileApiModel).public_url
-                    getFileUrl(filePath,value, index)
+                    if (response.body() != null) {
+                        val filePath = (response.body() as FileApiModel).public_url
+                        getFileUrl(filePath, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<FileApiModel>, t: Throwable) {
@@ -165,8 +194,10 @@ class DiscographyViewModel: ViewModel() {
                     call: Call<SecondFileApiModel>,
                     response: Response<SecondFileApiModel>
                 ) {
-                    val fileUrl = (response.body() as SecondFileApiModel).href
-                    setList(fileUrl, value, index)
+                    if (response.body() != null) {
+                        val fileUrl = (response.body() as SecondFileApiModel).href
+                        setList(fileUrl, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {

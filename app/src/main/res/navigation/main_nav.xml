@@ -173,4 +173,9 @@
         android:name="com.example.singmeapp.fragments.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/createAlbumFragment"
+        android:name="com.example.singmeapp.fragments.CreateAlbumFragment"
+        android:label="fragment_create_album"
+        tools:layout="@layout/fragment_create_album" />
 </navigation>

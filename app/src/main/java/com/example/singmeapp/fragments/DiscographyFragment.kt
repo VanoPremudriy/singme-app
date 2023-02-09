@@ -2,13 +2,11 @@ package com.example.singmeapp.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import android.widget.GridLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -25,7 +23,7 @@ import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.DiscographyViewModel
 
 
-class DiscographyFragment : Fragment() {
+class DiscographyFragment : Fragment(), MenuProvider {
 
     lateinit var binding: FragmentDiscographyBinding
     lateinit var fragmentActivity: AppCompatActivity
@@ -34,6 +32,7 @@ class DiscographyFragment : Fragment() {
     lateinit var singleAdapter: AlbumAdapter
     lateinit var discographyViewModel: DiscographyViewModel
     lateinit var band: Band
+    lateinit var optionsMenu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +45,7 @@ class DiscographyFragment : Fragment() {
         discographyViewModel = provider[DiscographyViewModel::class.java]
         discographyViewModel.getTracks(band)
         discographyViewModel.getAlbums(band)
+        discographyViewModel.getMembers(band)
     }
 
     override fun onCreateView(
@@ -65,6 +65,14 @@ class DiscographyFragment : Fragment() {
         albumAdapter = AlbumAdapter(this)
         singleAdapter = AlbumAdapter(this)
 
+
+        discographyViewModel.listMemberUuid.observe(viewLifecycleOwner){
+            it.forEach { it1 ->
+                if (it1 == discographyViewModel.auth.currentUser?.uid.toString()){
+                    fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
+                }
+            }
+        }
 
         discographyViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
@@ -93,6 +101,12 @@ class DiscographyFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
+
+        if (item.itemId == R.id.add_album){
+            val bundle = Bundle()
+            bundle.putSerializable("currentBand", band)
+            findNavController().navigate(R.id.createAlbumFragment, bundle)
+        }
         return true
     }
 
@@ -100,5 +114,14 @@ class DiscographyFragment : Fragment() {
 
         @JvmStatic
         fun newInstance() = DiscographyFragment()
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.discography_menu, menu)
+        optionsMenu = menu
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        TODO("Not yet implemented")
     }
 }

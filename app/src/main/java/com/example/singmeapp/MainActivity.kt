@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.homeFragment -> {navController.navigate(R.id.action_global_homeFragment)}
                 R.id.messengerFragment -> navController.navigate(R.id.action_global_messengerFragment)
-                R.id.catalogueFragment -> navController.navigate(R.id.createBandFragment)
+                R.id.catalogueFragment -> navController.navigate(R.id.createAlbumFragment)
             }
             true
         }
