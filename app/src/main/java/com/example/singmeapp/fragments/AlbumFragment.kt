@@ -27,7 +27,8 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     lateinit var binding: FragmentAlbumBinding
     lateinit var trackAdapter: TrackAdapter
     lateinit var albumViewModel: AlbumViewModel
-    lateinit var album: Album
+    //lateinit var album: Album
+    lateinit var albumUuid: String
 
     fun convert(value: Int):Int{
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics).toInt()
@@ -39,11 +40,13 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         fragmentActivity =  activity as AppCompatActivity
         fragmentActivity.supportActionBar?.hide()
 
-        album = arguments?.getSerializable("album") as Album
+        //album = arguments?.getSerializable("album") as Album
+        albumUuid = arguments?.getString("albumUuid").toString()
 
         val provider = ViewModelProvider(this)
         albumViewModel = provider[AlbumViewModel::class.java]
-        albumViewModel.getTracks(album)
+        albumViewModel.getAlbumData(albumUuid)
+        albumViewModel.getTracks(albumUuid)
 
     }
 
@@ -54,10 +57,10 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         binding = FragmentAlbumBinding.inflate(layoutInflater)
         buttonSets()
 
-        binding.tvAlbumName.text = album.name
+       /* binding.tvAlbumName.text = album.name
         binding.tvAlbumBandName.text = album.band
         if (album.imageUrl != "")
-        Picasso.get().load(album.imageUrl).fit().into(binding.ivAlbumCover)
+        Picasso.get().load(album.imageUrl).fit().into(binding.ivAlbumCover)*/
 
         binding.rcView.layoutManager = LinearLayoutManager(activity)
         trackAdapter = TrackAdapter(fragmentActivity, this)
@@ -66,7 +69,15 @@ class AlbumFragment : Fragment(), View.OnClickListener {
             binding.rcView.adapter = trackAdapter
         }
 
-        binding.textView9.text = album.name
+        albumViewModel.currentAlbum.observe(viewLifecycleOwner){
+            binding.tvAlbumName.text = it.name
+            binding.tvAlbumBandName.text = it.band
+            if (it.imageUrl != "")
+                Picasso.get().load(it.imageUrl).fit().into(binding.ivAlbumCover)
+            binding.textView9.text = it.name
+        }
+
+       // binding.textView9.text = album.name
         binding.albumScrollView.viewTreeObserver.addOnScrollChangedListener {
             if (binding.albumScrollView.scrollY > 150){
                 binding.llTopMenu.visibility = View.VISIBLE
@@ -74,6 +85,8 @@ class AlbumFragment : Fragment(), View.OnClickListener {
                 binding.llTopMenu.visibility = View.GONE
             }
         }
+
+
 
         return binding.root
     }

@@ -1,6 +1,5 @@
 package com.example.singmeapp.viewmodels
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
@@ -18,7 +17,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,7 +31,7 @@ class MyLibraryViewModel: ViewModel() {
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
     var listTrack = MutableLiveData<List<Track>>()
-    val arrayListTrack = ArrayList<Track>()
+    lateinit var arrayListTrack: ArrayList<Track>
     var url: String = "/users/Vtkal2hD2uRkpWBJfigYnvShhJu1/library/love_tracks"
 
     init {
@@ -48,11 +46,13 @@ class MyLibraryViewModel: ViewModel() {
     fun getTracks() {
         var fbTrackUrl: String
         var fbImageUrl: String
-        var count = 0
         if (auth.currentUser != null)
             database.reference.addValueEventListener(object : ValueEventListener {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    var count = 0
+                    arrayListTrack  = ArrayList<Track>()
+                    listTrack.value = arrayListTrack
                     snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
                         Consumer {
 
@@ -69,6 +69,12 @@ class MyLibraryViewModel: ViewModel() {
                                 snapshot.child("/albums/${album}").child("name").value.toString()
                             val extension = snapshot.child("/albums/${album}").child("cover").value.toString()
                             Log.e("sv", extension)
+                            var isTrackInLove = false
+
+                            snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
+                                Consumer { it1 ->
+                                    if (it1.value.toString() == it1.value.toString()) isTrackInLove = true
+                                })
 
 
                             fbTrackUrl =
@@ -81,9 +87,13 @@ class MyLibraryViewModel: ViewModel() {
                                 trackName,
                                 bandName,
                                 albumName,
+                                band,
+                                album,
                                 "",
-                                ""
+                                "",
+                                isTrackInLove
                             )
+                            Log.e("Is In Love", isTrackInLove.toString())
 
                             arrayListTrack.add(track)
                             listTrack.value = arrayListTrack

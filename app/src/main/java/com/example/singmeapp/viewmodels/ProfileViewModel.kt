@@ -129,6 +129,7 @@ class ProfileViewModel: ViewModel() {
     fun setUser(url: String, value: String){
         when(value){
             "avatar" -> {
+                Log.e("URL", url)
                 user.avatarUrl = url
                 currentUser.value = user
             }

@@ -37,8 +37,43 @@ class BandViewModel: ViewModel() {
     val isEdit = MutableLiveData<Boolean>()
     val editText = MutableLiveData<String>()
 
+    val currentBand = MutableLiveData<Band>()
+    lateinit var band: Band
 
-    fun getMembers(currentBand: Band){
+    fun getBandDate(bandUuid: String){
+        database.reference.child("bands/${bandUuid}").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var bandName = snapshot.child("name").value.toString()
+                var bandInfo = snapshot.child("info").value.toString()
+                var bandAvatarExtension = snapshot.child("avatar").value.toString()
+                var bandBackgroundExtension = snapshot.child("background").value.toString()
+
+                val fbBandAvatar = "storage/bands/${bandName}/profile/avatar.${bandAvatarExtension}"
+                val fbBandBack = "storage/bands/${bandName}/profile/avatar.${bandBackgroundExtension}"
+
+                band = Band(
+                    bandUuid,
+                    bandName,
+                    bandInfo,
+                    "",
+                    ""
+                )
+
+                getFilePath(fbBandAvatar, "bandAvatar", -1)
+                getFilePath(fbBandBack, "bandBack", -1)
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+
+    fun getMembers(bandUuid: String){
         var fbAvatarImageUrl: String
         var count = 0
         if (auth.currentUser != null){
@@ -46,7 +81,7 @@ class BandViewModel: ViewModel() {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/bands_has_users/${currentBand.uuid}").children.forEach(
+                    snapshot.child("/bands_has_users/${bandUuid}").children.forEach(
                         Consumer { t ->
 
                             val memberName = snapshot.child("/users/${t.key}/profile/name").value.toString()
@@ -133,21 +168,30 @@ class BandViewModel: ViewModel() {
                 arrayListMember[index].avatarUrl = url
                 listMember.value = arrayListMember
             }
+
+            "bandAvatar" -> {
+                band.imageUrl = url
+                currentBand.value = band
+            }
+            "bandBack" -> {
+                band.backgroundUrl = url
+                currentBand.value = band
+            }
         }
     }
 
-    fun editBandInfo(band: Band){
-        database.reference.child("bands/${band.uuid}/info").setValue(editText.value)
+    fun editBandInfo(bandUuid: String){
+        database.reference.child("bands/${bandUuid}/info").setValue(editText.value)
     }
 
-    fun changeImage(band: Band, file: RequestBody, extension: String, image: String){
+    fun changeImage(bandName:String, bandUuid: String, file: RequestBody, extension: String, image: String){
         if (image == "avatar") {
-            getFileUrl("storage/bands/${band.name}/profile/avatar.${extension}", file)
-            database.reference.child("bands/${band.uuid}/avatar").setValue(extension)
+            getFileUrl("storage/bands/${bandName}/profile/avatar.${extension}", file)
+            database.reference.child("bands/${bandUuid}/avatar").setValue(extension)
         }
         if (image == "back") {
-            getFileUrl("storage/bands/${band.name}/profile/back.${extension}", file)
-            database.reference.child("bands/${band.uuid}/background").setValue(extension)
+            getFileUrl("storage/bands/${bandName}/profile/back.${extension}", file)
+            database.reference.child("bands/${bandUuid}/background").setValue(extension)
         }
     }
 

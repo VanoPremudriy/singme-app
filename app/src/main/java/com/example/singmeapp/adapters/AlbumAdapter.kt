@@ -40,7 +40,7 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
 
                     val bundle = Bundle()
                     bundle.putInt("Back", R.id.loveAlbumsFragment)
-                    bundle.putSerializable("album", album)
+                    bundle.putSerializable("albumUuid", album.uuid)
                     NavHostFragment.findNavController(fragment).navigate(R.id.albumFragment, bundle)
                 }
                 else Toast.makeText(fragment.context, "Загрузка", Toast.LENGTH_SHORT).show()

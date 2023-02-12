@@ -71,4 +71,17 @@
     <string name="choose_new_member">Выберите нового участника</string>
     <string name="friends">Друзья</string>
     <string name="user_requests">Заявки пользователя</string>
+    <string name="enter_album_name">Введите название альбома</string>
+    <string name="album">Альбом</string>
+    <string name="single_ep">Сингл/EP</string>
+    <string name="choose_cover">Выберите обложку</string>
+    <string name="add_album_genres">Добавьте жанры альбома</string>
+    <string name="genres">Жанры</string>
+    <string name="add_album_tracks">Добавьте треки альбома</string>
+    <string name="tracks">Треки</string>
+    <string name="create_album">Создать альбом</string>
+    <string name="add_track">Добавить трек</string>
+    <string name="delete_track">Удалить трек</string>
+    <string name="go_to_band">Перейти к исполнителю</string>
+    <string name="go_to_album">Перейти к альбому</string>
 </resources>

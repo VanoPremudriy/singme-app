@@ -1,5 +1,6 @@
 package com.example.singmeapp.adapters
 
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,8 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
 
+
+
         }
     }
 
@@ -64,28 +67,12 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
                 view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
             }
         }
-        /*when (NavHostFragment.findNavController(fragment).currentDestination?.id){
-            R.id.myLibraryFragment -> {
-                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
-            }
-            R.id.discographyFragment -> {
-                Log.e("Is", "Discography")
-                Log.e("Frag", R.id.discographyFragment.toString())
-                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item_2, parent, false)
-            }
-            R.id.albumFragment -> {
-                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
-            }
-            R.id.playerPlaylistFragment ->{
-                Log.e("Is", "Playlist")
-                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
-            }
-        }*/
         return  TrackHolder(view, fragmentActivity)
     }
 
     override fun onBindViewHolder(holder: TrackHolder, position: Int) {
         holder.bind(trackList[position])
+        val mainActivity = fragmentActivity as MainActivity
         val provider = ViewModelProvider(fragmentActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
@@ -100,7 +87,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
                 }
 
                 playerPlaylistViewModel.currentTrackId.value = position
-                if ((fragmentActivity as MainActivity).bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN)
+                if (mainActivity.bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN)
                     fragmentActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 fragmentActivity.binding.player.tvSongNameUpMenu.text = trackList[position].name
                 fragmentActivity.binding.player.tvBandNameUpMenu.text = trackList[position].band
@@ -108,21 +95,64 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             else Toast.makeText(fragmentActivity.applicationContext, "Загрузка", Toast.LENGTH_SHORT).show()
         }
 
-        (fragmentActivity as MainActivity).binding.player.ibClose.setOnClickListener {
+        mainActivity.binding.player.ibClose.setOnClickListener {
             playerPlaylistViewModel.currentTrackId.value = null
             fragmentActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         playerPlaylistViewModel.isPlaying.observe(fragmentActivity){
             if (it){
-                (fragmentActivity as MainActivity).binding.player.ibPlayUpMenu.setImageResource(android.R.drawable.ic_media_pause)
+                mainActivity.binding.player.ibPlayUpMenu.setImageResource(android.R.drawable.ic_media_pause)
             }
-            else (fragmentActivity as MainActivity).binding.player.ibPlayUpMenu.setImageResource(android.R.drawable.ic_media_play)
+            else mainActivity.binding.player.ibPlayUpMenu.setImageResource(android.R.drawable.ic_media_play)
         }
 
-        (fragmentActivity as MainActivity).binding.player.ibPlayUpMenu.setOnClickListener{
+        mainActivity.binding.player.ibPlayUpMenu.setOnClickListener{
             playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value
         }
+
+        holder.binding.ibItemTrackMenu.setOnClickListener{
+            if (trackList[position].isInLove){
+                mainActivity.binding.tvAddTrackToLove.visibility = View.GONE
+                mainActivity.binding.tvDeleteTrackFromLove.visibility = View.VISIBLE
+            }
+            else {
+                mainActivity.binding.tvAddTrackToLove.visibility = View.VISIBLE
+                mainActivity.binding.tvDeleteTrackFromLove.visibility = View.GONE
+            }
+            mainActivity.binding.trackMenu.visibility = View.VISIBLE
+            fragmentActivity.binding.view15.visibility = View.VISIBLE
+            fragmentActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+
+
+            mainActivity.binding.tvAddTrackToLove.setOnClickListener {
+                playerPlaylistViewModel.addTrackToLove(trackList[position])
+                fragmentActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+
+            mainActivity.binding.tvDeleteTrackFromLove.setOnClickListener {
+                playerPlaylistViewModel.deleteTrackFromLove(trackList[position])
+                fragmentActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+
+            mainActivity.binding.tvGoToBandProfile.setOnClickListener {
+                fragmentActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                val bundle = Bundle()
+                bundle.putString("bandUuid", trackList[position].bandUuid)
+                NavHostFragment.findNavController(fragment).navigate(R.id.bandFragment, bundle)
+            }
+
+            mainActivity.binding.tvGoToAlbum.setOnClickListener {
+                fragmentActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                val bundle = Bundle()
+                bundle.putString("albumUuid", trackList[position].albumUuid)
+                NavHostFragment.findNavController(fragment).navigate(R.id.albumFragment, bundle)
+            }
+        }
+
+
+
+
 
 
     }

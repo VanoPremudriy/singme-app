@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.singmeapp.PathConverter
+import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentCreateAlbumBinding
 import com.example.singmeapp.items.Band
 import com.example.singmeapp.viewmodels.CreateAlbumViewModel
@@ -180,7 +182,29 @@ class CreateAlbumFragment : Fragment(), View.OnClickListener {
             }
 
             binding.bCreateAlbum.id -> {
-                createAlbumViewModel.createAlbum(binding.addAlbumName.text.toString(), currentBand, albumFormat!!, albumCoverRequestBody!!, albumCoverExtension, audioRequestBodyList, audioFileNamesList)
+                if (
+                    binding.addAlbumName.text.toString() != ""
+                    && binding.addAlbumName.text.toString() != null
+                    && currentBand != null
+                    && albumFormat != ""
+                    && albumFormat != null
+                    && albumCoverRequestBody != null
+                    && albumCoverExtension != ""
+                    && albumCoverExtension != null
+                    && audioRequestBodyList.size != 0
+                    && audioFileNamesList.size != 0
+                ) {
+                    createAlbumViewModel.createAlbum(
+                        binding.addAlbumName.text.toString(),
+                        currentBand,
+                        albumFormat!!,
+                        albumCoverRequestBody!!,
+                        albumCoverExtension,
+                        audioRequestBodyList,
+                        audioFileNamesList
+                    )
+                }
+                else Toast.makeText(context, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
             }
         }
     }

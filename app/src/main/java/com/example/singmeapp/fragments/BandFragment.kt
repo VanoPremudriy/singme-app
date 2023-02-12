@@ -2,12 +2,12 @@ package com.example.singmeapp.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Binder
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -37,6 +37,7 @@ import okhttp3.RequestBody
 import java.io.File
 import java.io.FileNotFoundException
 
+
 class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
 
     private val REQUEST_EXTERNAL_STORAGE = 1
@@ -49,6 +50,7 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
     lateinit var memberAdapter: MemberAdapter
     lateinit var bandViewModel: BandViewModel
     lateinit var band: Band
+    lateinit var bandUuid:String
     lateinit var fragmentActivity: AppCompatActivity
     var isMenuProvider = false
     lateinit var optionsMenu: Menu
@@ -58,8 +60,9 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
     var backRequestBody: RequestBody? = null
     lateinit var avatarExtension: String
     lateinit var backExtension: String
+    var progress: ProgressDialog? = null
 
-    fun verifyStoragePermissions() {
+    private fun verifyStoragePermissions() {
         // Check if we have write permission
         val permission = ActivityCompat.checkSelfPermission(
             requireActivity(),
@@ -85,7 +88,7 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
                 val f = File(getRealPathFromURI(imageUri!!))
                 avatarExtension = f.extension
                 avatarRequestBody = RequestBody.create(MediaType.parse("image/*"), f)
-                bandViewModel.changeImage(band, avatarRequestBody!!, avatarExtension, "avatar")
+                bandViewModel.changeImage(binding.tvBandNameBandFragment.text.toString(), bandUuid, avatarRequestBody!!, avatarExtension, "avatar")
                 Picasso.get().load(imageUri).fit().noPlaceholder().noFade().centerCrop().into(binding.ivBandAvatar)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
@@ -93,14 +96,14 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         }
     }
 
-    val getBandBack = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private val getBandBack = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             try {
                 var imageUri = it.data?.data
                 val f = File(getRealPathFromURI(imageUri!!))
                 backExtension = f.extension
                 backRequestBody = RequestBody.create(MediaType.parse("image/*"), f)
-                bandViewModel.changeImage(band, backRequestBody!!, backExtension, "back")
+                bandViewModel.changeImage(binding.tvBandNameBandFragment.text.toString(), bandUuid,  backRequestBody!!, backExtension, "back")
                 Picasso.get().load(imageUri).fit().noPlaceholder().noFade().centerCrop().into(binding.ivBandBack)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
@@ -108,10 +111,10 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         }
     }
 
-    fun getRealPathFromURI(contentUri: Uri): String? {
+    private fun getRealPathFromURI(contentUri: Uri): String? {
         var path: String? = null
         val proj = arrayOf(MediaStore.MediaColumns.DATA)
-        val cursor: Cursor = context?.getContentResolver()?.query(contentUri, proj, null, null, null)!!
+        val cursor: Cursor = context?.contentResolver?.query(contentUri, proj, null, null, null)!!
         if (cursor.moveToFirst()) {
             val column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
             path = cursor.getString(column_index)
@@ -126,13 +129,14 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
 
         setHasOptionsMenu(true)
 
-        band = arguments?.getSerializable("band") as Band
+        bandUuid = arguments?.getString("bandUuid").toString()
         val provider = ViewModelProvider(this)
         bandViewModel = provider[BandViewModel::class.java]
-        bandViewModel.getMembers(band)
+        bandViewModel.getMembers(bandUuid)
+        bandViewModel.getBandDate(bandUuid)
 
     }
-    fun convert(value: Int):Int{
+    private fun convert(value: Int):Int{
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics).toInt()
     }
 
@@ -141,14 +145,14 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         savedInstanceState: Bundle?
     ): View? {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        fragmentActivity.title = band.name
+
 
 
         binding = FragmentBandBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
         setButtons()
 
-        binding.tvBandNameBandFragment.text = band.name
+       /* binding.tvBandNameBandFragment.text = band.name
         if (band.imageUrl != ""){
             Picasso.get().load(band.imageUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivBandAvatar)
         }
@@ -156,7 +160,7 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
             Picasso.get().load(band.backgroundUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivBandBack)
         }
 
-        binding.tvBandInfoInBandFragment.text = band.info
+        binding.tvBandInfoInBandFragment.text = band.info*/
 
         binding.rcVievMembers.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         memberAdapter = MemberAdapter(this)
@@ -174,10 +178,23 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
             }
         }
 
+        bandViewModel.currentBand.observe(viewLifecycleOwner){
+            band = it
+            binding.tvBandNameBandFragment.text = it.name
+            binding.tvBandInfoInBandFragment.text = it.info
+            fragmentActivity.title = it.name
+            if (it.imageUrl != ""){
+                Picasso.get().load(it.imageUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivBandAvatar)
+            }
+            if (it.backgroundUrl != ""){
+                Picasso.get().load(it.backgroundUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivBandBack)
+            }
+        }
+
 
         bandViewModel.editText.observe(viewLifecycleOwner){
             if (binding.tvBandInfoInBandFragment.text != it){
-                bandViewModel.editBandInfo(band)
+                bandViewModel.editBandInfo(bandUuid)
             }
         }
 
@@ -260,13 +277,13 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
     private fun wrap(wrapItem: View){
         if (wrapItem.height == convert(24)) {
             Log.e("efs", "YES")
-            var params = wrapItem.layoutParams
+            val params = wrapItem.layoutParams
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT
             binding.rcVievMembers.adapter = memberAdapter
             wrapItem.layoutParams = params
         }
         else {
-            var params = wrapItem.layoutParams
+            val params = wrapItem.layoutParams
             params.height = convert(24)
             wrapItem.layoutParams = params
         }
@@ -321,7 +338,7 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
 
 
 
-    fun editBandInfoClick(){
+    private fun editBandInfoClick(){
         if (binding.etBandInfoInBandFragment.visibility == View.GONE){
           beginEditBandInfo()
         }
@@ -330,14 +347,14 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         }
     }
 
-    fun beginEditBandInfo(){
+    private fun beginEditBandInfo(){
         binding.etBandInfoInBandFragment.setText(binding.tvBandInfoInBandFragment.text.toString(), TextView.BufferType.EDITABLE)
         binding.etBandInfoInBandFragment.visibility = View.VISIBLE
         binding.tvBandInfoInBandFragment.visibility = View.GONE
         binding.ibEditBandInfo.setImageResource(android.R.drawable.checkbox_on_background)
     }
 
-    fun endEditBandInfo(){
+    private fun endEditBandInfo(){
         bandViewModel.editText.value = binding.etBandInfoInBandFragment.text.toString()
         binding.tvBandInfoInBandFragment.text = bandViewModel.editText.value
         binding.etBandInfoInBandFragment.visibility = View.GONE

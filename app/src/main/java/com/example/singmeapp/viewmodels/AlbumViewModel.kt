@@ -30,8 +30,11 @@ class AlbumViewModel: ViewModel() {
 
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
-    var listTrack = MutableLiveData<List<Track>>()
-    val arrayListTrack = ArrayList<Track>()
+    var listTrack: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
+    lateinit var arrayListTrack: ArrayList<Track>
+
+    val currentAlbum = MutableLiveData<Album>()
+    lateinit var album: Album
 
     init {
         val SDK_INT = Build.VERSION.SDK_INT
@@ -42,31 +45,76 @@ class AlbumViewModel: ViewModel() {
         }
     }
 
-    fun getTracks(currentAlbum:Album){
+    fun getAlbumData(albumUuid: String){
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val albumName = snapshot.child("albums/${albumUuid}/name").value.toString()
+                val albumBandUuid  = snapshot.child("albums/${albumUuid}/band").value.toString()
+                val albumBandName = snapshot.child("bands/${albumBandUuid}/name").value.toString()
+                val albumYear = snapshot.child("albums/${albumUuid}/year").value.toString().toInt()
+                val albumCoverExtension = snapshot.child("albums/${albumUuid}/cover").value.toString()
+
+                val fbAlbumCover = "storage/bands/${albumBandName}/albums/${albumName}/cover.${albumCoverExtension}"
+
+                album = Album(
+                    albumUuid,
+                    albumName,
+                    albumBandName,
+                    albumYear,
+                    ""
+                )
+
+                currentAlbum.value = album
+                getFilePath(fbAlbumCover, "albumCover", -1)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun getTracks(albumUuid: String){
         var fbTrackUrl: String
-        var count = 0
+        var fbImageUrl: String
             database.reference.addValueEventListener(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/albums/${currentAlbum.uuid}/tracks").children.forEach(Consumer { t ->
+                    var count = 0
+                    arrayListTrack = ArrayList<Track>()
+                    listTrack.value = arrayListTrack
+                    snapshot.child("/albums/${albumUuid}/tracks").children.forEach(Consumer { t ->
 
                         val trackName = snapshot.child("/tracks/${t.value}/name").value.toString()
+                        val bandUuuid = snapshot.child("albums/${albumUuid}/band").value.toString()
+                        val bandName = snapshot.child("/bands/${bandUuuid}/name").value.toString()
+                        val albumName = snapshot.child("/albums/${albumUuid}/name").value.toString()
 
-                        fbTrackUrl = "/storage/bands/${currentAlbum.band}/albums/${currentAlbum.name}/${trackName}.mp3"
+                        val albumCoverExtension = snapshot.child("/albums/${albumUuid}/cover").value.toString()
+
+                        fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${albumCoverExtension}"
+                        fbTrackUrl = "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
+
 
                         val track = Track(
-                            snapshot.value.toString(),
+                            t.value.toString(),
                             trackName,
-                            currentAlbum.band,
-                            currentAlbum.name,
-                            currentAlbum.imageUrl,
-                            ""
+                            bandName,
+                            albumName,
+                            bandUuuid,
+                            albumUuid,
+                            "",
+                            "",
+                            false
                         )
 
                         arrayListTrack.add(track)
                         listTrack.value = arrayListTrack
                         getFilePath(fbTrackUrl, "track", count)
+                        getFilePath(fbImageUrl, "trackImage", count)
                         count++
                     })
 
@@ -86,8 +134,10 @@ class AlbumViewModel: ViewModel() {
                     call: Call<FileApiModel>,
                     response: Response<FileApiModel>
                 ) {
-                    val filePath = (response.body() as FileApiModel).public_url
-                    getFileUrl(filePath,value, index)
+                    if (response.body() != null) {
+                        val filePath = (response.body() as FileApiModel).public_url
+                        getFileUrl(filePath, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<FileApiModel>, t: Throwable) {
@@ -104,8 +154,10 @@ class AlbumViewModel: ViewModel() {
                     call: Call<SecondFileApiModel>,
                     response: Response<SecondFileApiModel>
                 ) {
-                    val fileUrl = (response.body() as SecondFileApiModel).href
-                    setList(fileUrl, value, index)
+                    if (response.body() != null) {
+                        val fileUrl = (response.body() as SecondFileApiModel).href
+                        setList(fileUrl, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
@@ -120,6 +172,16 @@ class AlbumViewModel: ViewModel() {
             "track" -> {
                 arrayListTrack[index].trackUrl = url
                 listTrack.value = arrayListTrack
+            }
+
+            "trackImage" -> {
+                arrayListTrack[index].imageUrl = url
+                listTrack.value = arrayListTrack
+            }
+
+            "albumCover" ->{
+                album.imageUrl = url
+                currentAlbum.value = album
             }
         }
     }

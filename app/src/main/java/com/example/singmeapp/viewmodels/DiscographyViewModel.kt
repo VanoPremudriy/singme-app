@@ -82,6 +82,11 @@ class DiscographyViewModel: ViewModel() {
                     val trackAlbumName = snapshot.child("/albums/${trackAlbum}/name").value.toString()
                     val extension = snapshot.child("/albums/${trackAlbum}/cover").value.toString()
 
+                    var isInLove = false
+                    snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
+                        if (it1.value.toString() == t.value.toString()) isInLove = true
+                    }
+
                     fbTrackUrl = "/storage/bands/${currentBand.name}/albums/${trackAlbumName}/${trackName}.mp3"
                     fbTrackImageUrl = "/storage/bands/${currentBand.name}/albums/${trackAlbumName}/cover.${extension}"
 
@@ -90,14 +95,17 @@ class DiscographyViewModel: ViewModel() {
                         trackName,
                         currentBand.name,
                         trackAlbumName,
+                        currentBand.uuid,
+                        trackAlbum,
                         "",
-                        ""
+                        "",
+                        isInLove
                     )
+
+                    Log.e("Discography Is In Love", isInLove.toString())
 
                     arrayListTrack.add(track)
                     listTrack.value = arrayListTrack
-                    Log.e("LOG", fbTrackImageUrl)
-                    Log.e("LOG", fbTrackUrl)
                     getFilePath(fbTrackUrl, "track", count)
                     getFilePath(fbTrackImageUrl, "trackImage", count)
                     count++
@@ -126,8 +134,6 @@ class DiscographyViewModel: ViewModel() {
                     val year = snapshot.child("/albums/${t.value}/year").value?.toString()?.toInt()
                     val extension = snapshot.child("/albums/${t.value}/cover").value.toString()
                     val format = snapshot.child("/albums/${t.value}/format").value.toString()
-                    Log.e("ed", albumName)
-                    Log.e("ed", extension)
                     if (albumName != null && year != null && extension != null && format != null) {
                         fbAlbumImageUrl =
                             "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
@@ -143,7 +149,6 @@ class DiscographyViewModel: ViewModel() {
                         if (format == "Album") {
                             arrayListAlbum.add(album)
                             listAlbum.value = arrayListAlbum
-                            Log.e("LOG", fbAlbumImageUrl)
                             getFilePath(fbAlbumImageUrl, "albumImage", albumCount)
                             albumCount++
                         }
@@ -173,7 +178,6 @@ class DiscographyViewModel: ViewModel() {
                     call: Call<FileApiModel>,
                     response: Response<FileApiModel>
                 ) {
-                    Log.e("Track", "Three")
                     if (response.body() != null) {
                         val filePath = (response.body() as FileApiModel).public_url
                         getFileUrl(filePath, value, index)

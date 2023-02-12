@@ -38,7 +38,7 @@ class BandAdapter(val fragment: Fragment): RecyclerView.Adapter<BandAdapter.Band
                 if (band.imageUrl != "") {
                     val bundle = Bundle()
                     bundle.putInt("Back", R.id.loveBandsFragment)
-                    bundle.putSerializable("band", band)
+                    bundle.putSerializable("bandUuid", band.uuid)
                     NavHostFragment.findNavController(fragment).navigate(R.id.bandFragment, bundle)
                 }
                 else Toast.makeText(fragment.context, "Загрузка", Toast.LENGTH_SHORT).show()
