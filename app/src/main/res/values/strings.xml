@@ -93,6 +93,7 @@
     <string name="delete_track">Delete track</string>
     <string name="go_to_band">Go to band</string>
     <string name="go_to_album">Go to album</string>
+    <string name="album_exist">This album already exists with this band</string>
 
 
 </resources>

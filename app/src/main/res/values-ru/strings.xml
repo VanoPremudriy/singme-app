@@ -84,4 +84,5 @@
     <string name="delete_track">Удалить трек</string>
     <string name="go_to_band">Перейти к исполнителю</string>
     <string name="go_to_album">Перейти к альбому</string>
+    <string name="album_exist">Этот альбом уже существует у данной группы</string>
 </resources>

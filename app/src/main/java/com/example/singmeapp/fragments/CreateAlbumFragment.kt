@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -16,10 +17,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.PathConverter
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentCreateAlbumBinding
@@ -132,6 +135,12 @@ class CreateAlbumFragment : Fragment(), View.OnClickListener {
         binding = FragmentCreateAlbumBinding.inflate(layoutInflater)
 
         setButtons()
+        
+        createAlbumViewModel.isExist.observe(viewLifecycleOwner){
+            if (it == true){
+                Toast.makeText(context, getString(R.string.album_exist), Toast.LENGTH_SHORT).show()
+            }
+        }
 
         return binding.root
     }
@@ -207,5 +216,21 @@ class CreateAlbumFragment : Fragment(), View.OnClickListener {
                 else Toast.makeText(context, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home){
+            Log.e("Back", "home")
+            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+
+            if (count == 0) {
+                (activity as AppCompatActivity).supportActionBar?.show()
+                activity?.onBackPressed()
+            } else {
+                (activity as AppCompatActivity).supportActionBar?.show()
+                findNavController().popBackStack()
+            }
+        }
+        return true
     }
 }

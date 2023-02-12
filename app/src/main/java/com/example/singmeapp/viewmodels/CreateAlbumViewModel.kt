@@ -3,6 +3,7 @@ package com.example.singmeapp.viewmodels
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.singmeapp.api.Common.Common
 import com.example.singmeapp.api.interfaces.RetrofitServices
@@ -44,6 +45,8 @@ class CreateAlbumViewModel: ViewModel() {
 
     var albumsCount: Long = 0
 
+    val isExist = MutableLiveData<Boolean>()
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createAlbum(_name:String,
@@ -63,14 +66,36 @@ class CreateAlbumViewModel: ViewModel() {
         audioRequestBodyList = _audioRequestBodyList
         audioFileNames = _audioFileNames
 
+        database.reference.child("album_exist/${band.uuid}").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.child(albumName).exists()){
+                    isExist.value = true
+                } else {
+                    createAlbum()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createAlbum(){
         val datetime = LocalDateTime.now()
+        database.reference.child("album_exist/${band.uuid}/${albumName}/uuid").setValue(albumUuid)
+        database.reference.child("album_exist/${band.uuid}/${albumName}/format").setValue(albumFormat)
         database.reference.child("/albums/${albumUuid}/band").setValue(band.uuid)
         database.reference.child("/albums/${albumUuid}/cover").setValue(albumCoverExtension)
         database.reference.child("/albums/${albumUuid}/format").setValue(albumFormat)
         database.reference.child("/albums/${albumUuid}/name").setValue(albumName)
         database.reference.child("/albums/${albumUuid}/year").setValue(datetime.year.toString())
 
-         database.reference.child("/bands/${band.uuid}/albums").addListenerForSingleValueEvent(object : ValueEventListener{
+        database.reference.child("/bands/${band.uuid}/albums").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 albumsCount = snapshot.childrenCount
                 createDir("/storage/bands/${band.name}/albums",albumCoverRequestBody,"cover.${albumCoverExtension}")
@@ -102,7 +127,6 @@ class CreateAlbumViewModel: ViewModel() {
             }
 
         })
-
     }
 
     fun createDir(url:String, file: RequestBody, name:String){
