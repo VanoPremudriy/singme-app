@@ -18,6 +18,8 @@ import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.MyLibraryViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MyLibraryFragment : Fragment(), View.OnClickListener {
@@ -49,7 +51,9 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         binding = FragmentMyLibraryBinding.inflate(layoutInflater)
 
         buttonSets()
-        binding.rcView.layoutManager = LinearLayoutManager(activity)
+        val linearLayoutManager = LinearLayoutManager(activity)
+        binding.rcView.layoutManager = linearLayoutManager
+
         trackAdapter = TrackAdapter(fragmentActivity, this)
         myLibraryViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track>

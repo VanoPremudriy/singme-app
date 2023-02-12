@@ -50,7 +50,7 @@ class MyLibraryViewModel: ViewModel() {
             database.reference.addValueEventListener(object : ValueEventListener {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var count = 0
+                    var count = snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").childrenCount - 1
                     arrayListTrack  = ArrayList<Track>()
                     listTrack.value = arrayListTrack
                     snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
@@ -95,11 +95,11 @@ class MyLibraryViewModel: ViewModel() {
                             )
                             Log.e("Is In Love", isTrackInLove.toString())
 
-                            arrayListTrack.add(track)
+                            arrayListTrack.add(0,track)
                             listTrack.value = arrayListTrack
                             getFilePath(fbImageUrl, "image", count)
                             getFilePath(fbTrackUrl, "track", count)
-                            count++
+                            count--
                         })
 
                 }
@@ -112,7 +112,7 @@ class MyLibraryViewModel: ViewModel() {
 
     }
 
-    fun getFilePath(url: String, value: String, index: Int){
+    fun getFilePath(url: String, value: String, index: Long){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {
                 override fun onResponse(
@@ -131,7 +131,7 @@ class MyLibraryViewModel: ViewModel() {
             })
     }
 
-    fun getFileUrl(url: String, value: String, index: Int){
+    fun getFileUrl(url: String, value: String, index: Long){
         mService.getSecondFile(url, authToken)
             .enqueue(object : Callback<SecondFileApiModel> {
                 override fun onResponse(
@@ -149,14 +149,14 @@ class MyLibraryViewModel: ViewModel() {
             })
     }
 
-    fun setList(url: String, value: String, index: Int){
+    fun setList(url: String, value: String, index: Long){
         when(value){
             "image" -> {
-                arrayListTrack[index].imageUrl = url
+                arrayListTrack[index.toInt()].imageUrl = url
                 listTrack.value = arrayListTrack
             }
             "track" -> {
-                arrayListTrack[index].trackUrl = url
+                arrayListTrack[index.toInt()].trackUrl = url
                 listTrack.value = arrayListTrack
             }
         }

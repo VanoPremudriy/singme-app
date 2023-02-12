@@ -112,6 +112,19 @@ class AlbumFragment : Fragment(), View.OnClickListener {
                     findNavController().popBackStack()
                 }
             }
+
+            binding.ibBack2.id ->{
+                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+
+                if (count == 0) {
+                    (activity as AppCompatActivity).supportActionBar?.show()
+                    activity?.onBackPressed()
+
+                } else {
+                    (activity as AppCompatActivity).supportActionBar?.show()
+                    findNavController().popBackStack()
+                }
+            }
         }
     }
 
@@ -134,6 +147,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     fun buttonSets(){
         binding.apply {
            ibBack.setOnClickListener(this@AlbumFragment)
+            ibBack2.setOnClickListener(this@AlbumFragment)
         }
     }
 
