@@ -85,4 +85,7 @@
     <string name="go_to_band">Перейти к исполнителю</string>
     <string name="go_to_album">Перейти к альбому</string>
     <string name="album_exist">Этот альбом уже существует у данной группы</string>
+    <string name="add_album">Добавить альбом</string>
+    <string name="delete_album_from_love">Удалить из любимых</string>
+    <string name="delete_album">Удалить альбом</string>
 </resources>

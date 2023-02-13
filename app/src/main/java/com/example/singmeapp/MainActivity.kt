@@ -114,6 +114,8 @@ class MainActivity : AppCompatActivity() {
                         binding.myRequestMenu.visibility = View.GONE
                         binding.meMenu.visibility = View.GONE
                         binding.unknownUserMenu.visibility = View.GONE
+                        binding.inAlbumMenu.visibility = View.GONE
+                        binding.trackMenu.visibility = View.GONE
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.view15.visibility = View.GONE
@@ -122,6 +124,8 @@ class MainActivity : AppCompatActivity() {
                         binding.myRequestMenu.visibility = View.GONE
                         binding.meMenu.visibility = View.GONE
                         binding.unknownUserMenu.visibility = View.GONE
+                        binding.inAlbumMenu.visibility = View.GONE
+                        binding.trackMenu.visibility = View.GONE
                     }
             }
             }

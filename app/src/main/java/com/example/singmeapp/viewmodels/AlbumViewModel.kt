@@ -33,7 +33,14 @@ class AlbumViewModel: ViewModel() {
     var listTrack: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
     lateinit var arrayListTrack: ArrayList<Track>
 
+    val bandUuid = MutableLiveData<String>()
+
     val currentAlbum = MutableLiveData<Album>()
+
+    val isAuthor = MutableLiveData<Boolean>()
+
+    val isLove  = MutableLiveData<Boolean>()
+
     lateinit var album: Album
 
     init {
@@ -56,11 +63,19 @@ class AlbumViewModel: ViewModel() {
 
                 val fbAlbumCover = "storage/bands/${albumBandName}/albums/${albumName}/cover.${albumCoverExtension}"
 
+                var isInLove = false
+                snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
+                    if (it1.value.toString() == albumUuid) isInLove = true
+                }
+
+                isLove.value = isInLove
+
                 album = Album(
                     albumUuid,
                     albumName,
                     albumBandName,
                     albumYear,
+                    isInLove,
                     ""
                 )
 
@@ -79,7 +94,7 @@ class AlbumViewModel: ViewModel() {
     fun getTracks(albumUuid: String){
         var fbTrackUrl: String
         var fbImageUrl: String
-            database.reference.addValueEventListener(object : ValueEventListener {
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -98,6 +113,12 @@ class AlbumViewModel: ViewModel() {
                         fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${albumCoverExtension}"
                         fbTrackUrl = "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
 
+                        var isInLove = false
+                        snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
+                            if (it1.value.toString() == t.value.toString()) isInLove = true
+                        }
+
+                        bandUuid.value = bandUuuid
 
                         val track = Track(
                             t.value.toString(),
@@ -108,7 +129,7 @@ class AlbumViewModel: ViewModel() {
                             albumUuid,
                             "",
                             "",
-                            false
+                            isInLove
                         )
 
                         arrayListTrack.add(track)
@@ -185,4 +206,125 @@ class AlbumViewModel: ViewModel() {
             }
         }
     }
+
+
+
+    fun addAlbumInLove(albumUuid: String){
+        database.reference.child("/users/${auth.currentUser?.uid}/library/love_albums").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val albumCount = snapshot.childrenCount
+                database.reference.child("/users/${auth.currentUser?.uid}/library/love_albums/${albumCount}").setValue(albumUuid)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun deleteAlbumFromLove(albumUuid: String){
+        var uuidList = ArrayList<String>()
+        database.reference.child("/users/${auth.currentUser?.uid}/library/love_albums").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                snapshot.children.forEach { t2->
+                    uuidList.add(t2.value.toString())
+                }
+
+                uuidList = uuidList.filter {
+                    it != albumUuid
+                } as ArrayList<String>
+
+
+                database.reference.child("/users/${auth.currentUser?.uid}/library/love_albums").setValue(uuidList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun getAuthors(albumUuid: String){
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val bandUuid = snapshot.child("albums/${albumUuid}/band").value.toString()
+                val isExist = snapshot.child("bands_has_users/${bandUuid}/${auth.currentUser?.uid}").value
+                isAuthor.value = isExist != null
+                Log.e("is", isExist.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun deleteAlbum(albumUuid: String){
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val bandUuid = snapshot.child("/albums/${albumUuid}/band").value.toString()
+                val albumName = snapshot.child("/albums/${albumUuid}/name").value.toString()
+
+                val tracksUuids = ArrayList<String>()
+                val userLoveTracksUuids = ArrayList<String>()
+                val userLoveAlbumsUuids = ArrayList<String>()
+                val bandTracksUuids = ArrayList<String>()
+
+                snapshot.child("albums/${albumUuid}/tracks").children.forEach {
+                    tracksUuids.add(it.value.toString())
+                }
+
+                snapshot.child("/users").children.forEach { user ->
+                    user.child("/library/love_tracks").children.forEach{ userLoveTrack ->
+                        userLoveTracksUuids.add(userLoveTrack.value.toString())
+                    }
+                    if (userLoveTracksUuids.removeAll(HashSet<String>(tracksUuids)))
+                    database.reference.child("users/${user.key}/library/love_tracks").setValue(userLoveTracksUuids)
+
+                    user.child("/library/love_albums").children.forEach{userLoveAlbum ->
+                        userLoveAlbumsUuids.add(userLoveAlbum.value.toString())
+                    }
+                    if (userLoveAlbumsUuids.remove(albumUuid))
+                    database.reference.child("users/${user.key.toString()}/library/love_albums").setValue(userLoveAlbumsUuids)
+                }
+
+                snapshot.child("/tracks").children.forEach { track ->
+                    if (tracksUuids.contains(track.key.toString())){
+                        database.reference.child("tracks/${track.key.toString()}").setValue(null)
+                    }
+                }
+
+                snapshot.child("/bands/${bandUuid}/tracks").children.forEach { track ->
+                    bandTracksUuids.add(track.value.toString())
+                }
+
+                if (bandTracksUuids.removeAll(HashSet<String>(tracksUuids))){
+                    database.reference.child("/bands/${bandUuid}/tracks").setValue(bandTracksUuids)
+                }
+
+                snapshot.child("/bands/${bandUuid}/albums").children.forEach { album ->
+                    if (album.value.toString() == albumUuid){
+                        database.reference.child("/bands/${bandUuid}/albums/${album.key.toString()}").setValue(null)
+                    }
+                }
+
+                database.reference.child("album_exist/${bandUuid}/${albumName}").setValue(null)
+
+                database.reference.child("albums/${albumUuid}").setValue(null)
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
 }

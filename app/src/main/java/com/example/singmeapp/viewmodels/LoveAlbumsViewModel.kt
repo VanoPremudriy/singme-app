@@ -66,11 +66,17 @@ class LoveAlbumsViewModel: ViewModel() {
 
                         fbAlbumImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
 
+                        var isInLove = false
+                        snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
+                            if (it1.value.toString() == t.value.toString()) isInLove = true
+                        }
+
                         val album = Album(
                             t.value.toString(),
                             albumName,
                             bandName,
                             year,
+                            isInLove,
                             "",
                         )
 

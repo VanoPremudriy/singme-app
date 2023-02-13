@@ -120,8 +120,10 @@ class MyLibraryViewModel: ViewModel() {
                     response: Response<FileApiModel>
                 ) {
                     Log.e("Track", "Three")
-                    val filePath = (response.body() as FileApiModel).public_url
-                    getFileUrl(filePath,value, index)
+                    if (response.body() != null) {
+                        val filePath = (response.body() as FileApiModel).public_url
+                        getFileUrl(filePath, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<FileApiModel>, t: Throwable) {
@@ -138,8 +140,10 @@ class MyLibraryViewModel: ViewModel() {
                     call: Call<SecondFileApiModel>,
                     response: Response<SecondFileApiModel>
                 ) {
-                    val fileUrl = (response.body() as SecondFileApiModel).href
-                    setList(fileUrl, value, index)
+                    if (response.body() != null){
+                        val fileUrl = (response.body() as SecondFileApiModel).href
+                        setList(fileUrl, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
