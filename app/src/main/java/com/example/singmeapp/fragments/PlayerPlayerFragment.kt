@@ -13,13 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.example.singmeapp.MainActivity
+import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentPlayerPlayerBinding
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Delay
 
-class PlayerPlayerFragment : Fragment(), View.OnClickListener {
+class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCompletionListener {
 
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
     lateinit var fragActivity: AppCompatActivity
@@ -53,6 +58,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
                     currentTrack = playerPlaylistViewModel.trackList.value!![it!!]
                     if (previousTrack == null) {
                         mPlayer = MediaPlayer()
+                        mPlayer.setOnCompletionListener(this@PlayerPlayerFragment)
                         mPlayer.setDataSource(currentTrack.trackUrl)
                         mPlayer.prepare()
                         mPlayer.start()
@@ -65,6 +71,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
                         if (previousTrack == currentTrack && !currentList.equals(playerPlaylistViewModel.trackList.value)) {
                             mPlayer.stop()
                             mPlayer = MediaPlayer()
+                            mPlayer.setOnCompletionListener(this@PlayerPlayerFragment)
                             mPlayer.setDataSource(currentTrack.trackUrl)
                             mPlayer.prepare()
                             mPlayer.start()
@@ -86,6 +93,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
                             } else if (previousTrack != currentTrack) {
                                 mPlayer.stop()
                                 mPlayer = MediaPlayer()
+                                mPlayer.setOnCompletionListener(this@PlayerPlayerFragment)
                                 mPlayer.setDataSource(currentTrack.trackUrl)
                                 mPlayer.prepare()
                                 mPlayer.start()
@@ -132,8 +140,6 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
             }
 
         })
-
-
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -148,11 +154,17 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
     }
 
     fun initializeButtonsClickListeners(){
+        val mainActivity = activity as MainActivity
+
         binding.ibPlay.setOnClickListener(this@PlayerPlayerFragment)
-
         binding.ibMusicRight.setOnClickListener(this@PlayerPlayerFragment)
-
         binding.ibMusicLeft.setOnClickListener(this@PlayerPlayerFragment)
+        binding.ibTrackMenu.setOnClickListener(this@PlayerPlayerFragment)
+
+        mainActivity.binding.tvAddTrackToLoveInPLayer.setOnClickListener(this@PlayerPlayerFragment)
+        mainActivity.binding.tvDeleteTrackFromLoveInPlayer.setOnClickListener(this@PlayerPlayerFragment)
+        mainActivity.binding.tvGoToBandProfileInPlayer.setOnClickListener(this@PlayerPlayerFragment)
+        mainActivity.binding.tvGoToAlbumInPlayer.setOnClickListener(this@PlayerPlayerFragment)
     }
 
     fun initializeCover(coverUrl: String){
@@ -187,6 +199,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
+        val mainActivity = activity as MainActivity
         when(p0?.id){
             binding.ibPlay.id -> {
                 if (!mPlayer.isPlaying) {
@@ -210,8 +223,8 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
                         1
                     )
                 }
-
             }
+
             binding.ibMusicRight.id ->{
                 if (playerPlaylistViewModel.currentTrackId.value?.plus(1) == playerPlaylistViewModel.trackList.value?.size)
                     playerPlaylistViewModel.currentTrackId.value = 0
@@ -220,7 +233,57 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener {
                         1
                     )
             }
+
+            binding.ibTrackMenu.id -> {
+                if (currentTrack.isInLove){
+                    mainActivity.binding.tvAddTrackToLoveInPLayer.visibility = View.GONE
+                    mainActivity.binding.tvDeleteTrackFromLoveInPlayer.visibility = View.VISIBLE
+                }
+                else {
+                    mainActivity.binding.tvAddTrackToLoveInPLayer.visibility = View.VISIBLE
+                    mainActivity.binding.tvDeleteTrackFromLoveInPlayer.visibility = View.GONE
+                }
+
+                mainActivity.binding.playerTrackMenu.visibility = View.VISIBLE
+                mainActivity.binding.view15.visibility = View.VISIBLE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            mainActivity.binding.tvAddTrackToLoveInPLayer.id -> {
+                playerPlaylistViewModel.addTrackToLove(currentTrack)
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+
+            mainActivity.binding.tvDeleteTrackFromLoveInPlayer.id -> {
+                playerPlaylistViewModel.deleteTrackFromLove(currentTrack)
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+
+            mainActivity.binding.tvGoToBandProfileInPlayer.id -> {
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                mainActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                val bundle = Bundle()
+                bundle.putString("bandUuid", currentTrack.bandUuid)
+                findNavController().navigate(R.id.bandFragment, bundle)
+            }
+
+            mainActivity.binding.tvGoToAlbumInPlayer.id -> {
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                mainActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                val bundle = Bundle()
+                bundle.putString("albumUuid", currentTrack.albumUuid)
+                findNavController().navigate(R.id.albumFragment, bundle)
+            }
         }
+    }
+
+    override fun onCompletion(p0: MediaPlayer?) {
+        if (playerPlaylistViewModel.currentTrackId.value?.plus(1) == playerPlaylistViewModel.trackList.value?.size)
+            playerPlaylistViewModel.currentTrackId.value = 0
+        else
+            playerPlaylistViewModel.currentTrackId.value = playerPlaylistViewModel.currentTrackId.value?.plus(
+                1
+            )
     }
 
 }
