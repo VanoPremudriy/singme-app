@@ -85,10 +85,21 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                 activity.binding.tvGoToMyRequestChat.setOnClickListener(this@FriendHolder)
             }
 
+            binding.ibFriendItemChat.setOnClickListener(this@FriendHolder)
+
         }
 
         override fun onClick(p0: View?) {
             when (p0?.id){
+
+                binding.ibFriendItemChat.id -> {
+                    activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    val chatUser = ChatUser(curFriend, null)
+                    val bundle = Bundle()
+                    bundle.putSerializable("chatUser", chatUser)
+                    friendsFragment.findNavController().navigate(R.id.chatFragment, bundle)
+                }
+
                 activity.binding.tvGoToMyProfile.id -> {
                     activity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                     friendsFragment.findNavController().navigate(R.id.profileFragment)

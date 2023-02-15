@@ -51,9 +51,11 @@
 
         <ImageButton
             android:id="@+id/ibItemTrackMenu"
-            android:layout_width="20dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="3dp"
             app:srcCompat="@android:drawable/ic_dialog_dialer" />
 
     </LinearLayout>
