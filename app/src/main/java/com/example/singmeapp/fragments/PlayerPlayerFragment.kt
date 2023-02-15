@@ -160,6 +160,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
         binding.ibMusicRight.setOnClickListener(this@PlayerPlayerFragment)
         binding.ibMusicLeft.setOnClickListener(this@PlayerPlayerFragment)
         binding.ibTrackMenu.setOnClickListener(this@PlayerPlayerFragment)
+        binding.tvPlayerBandName.setOnClickListener(this@PlayerPlayerFragment)
 
         mainActivity.binding.tvAddTrackToLoveInPLayer.setOnClickListener(this@PlayerPlayerFragment)
         mainActivity.binding.tvDeleteTrackFromLoveInPlayer.setOnClickListener(this@PlayerPlayerFragment)
@@ -273,6 +274,14 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
                 val bundle = Bundle()
                 bundle.putString("albumUuid", currentTrack.albumUuid)
                 findNavController().navigate(R.id.albumFragment, bundle)
+            }
+
+            binding.tvPlayerBandName.id -> {
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                mainActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                val bundle = Bundle()
+                bundle.putString("bandUuid", currentTrack.bandUuid)
+                findNavController().navigate(R.id.bandFragment, bundle)
             }
         }
     }
