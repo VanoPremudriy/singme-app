@@ -1,14 +1,22 @@
 package com.example.singmeapp
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.findFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,6 +25,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.singmeapp.adapters.PlayerPagerAdapter
 import com.example.singmeapp.databinding.ActivityMainBinding
 import com.example.singmeapp.fragments.AlbumFragment
+import com.example.singmeapp.fragments.PlayerPlayerFragment
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
@@ -37,8 +46,34 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var viewPager: ViewPager2
     lateinit var  tabLayout: TabLayout
+    lateinit var notificationManagerCompat: NotificationManagerCompat
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createChannel(){
+        val channel = NotificationChannel(CreateNotification().CHANNEL_ID, "KOD DEV", NotificationManager.IMPORTANCE_LOW)
+        notificationManagerCompat = this.let { NotificationManagerCompat.from(it) }!!
+        notificationManagerCompat.createNotificationChannel(channel)
+    }
+
+    val broadcastReceiver = object: BroadcastReceiver(){
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            when (p1?.getStringExtra("actionname")){
+                CreateNotification().ACTION_PLAY -> {
+                    Log.e("ACTION", "PLAY")
+                }
+                CreateNotification().ACTION_NEXT -> {
+                    Log.e("ACTION", "NEXT")
+                }
+                CreateNotification().ACTION_PREVIOUS -> {
+                    Log.e("ACTION", "PREVIOUS")
+                }
+            }
+        }
+
+    }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +81,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
         super.onPostResume()
+        createChannel()
+        /*registerReceiver(broadcastReceiver, IntentFilter("TRACKSTRACKS"))
+        startService(Intent(baseContext, OnClearFromRecentService::class.java))*/
 
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
