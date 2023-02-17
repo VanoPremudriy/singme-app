@@ -23,7 +23,7 @@ import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.DiscographyViewModel
 
 
-class DiscographyFragment : Fragment(), MenuProvider {
+class DiscographyFragment : Fragment(), MenuProvider, View.OnClickListener {
 
     lateinit var binding: FragmentDiscographyBinding
     lateinit var fragmentActivity: AppCompatActivity
@@ -89,6 +89,10 @@ class DiscographyFragment : Fragment(), MenuProvider {
             binding.rcViewDiscographySingles.adapter = singleAdapter
         }
 
+        binding.tvAllTopTracks.setOnClickListener(this@DiscographyFragment)
+        binding.tvAllAlbums.setOnClickListener(this@DiscographyFragment)
+        binding.tvAllSingles.setOnClickListener(this@DiscographyFragment)
+
         return binding.root
     }
 
@@ -123,5 +127,28 @@ class DiscographyFragment : Fragment(), MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         TODO("Not yet implemented")
+    }
+
+    override fun onClick(p0: View?) {
+        when (p0?.id){
+            binding.tvAllTopTracks.id -> {
+                val bundle = Bundle()
+                bundle.putSerializable("band", band)
+                bundle.putString("whatIs", "tracks")
+                findNavController().navigate(R.id.discographyAllFragment, bundle)
+            }
+            binding.tvAllAlbums.id -> {
+                val bundle = Bundle()
+                bundle.putSerializable("band", band)
+                bundle.putString("whatIs", "albums")
+                findNavController().navigate(R.id.discographyAllFragment, bundle)
+            }
+            binding.tvAllSingles.id -> {
+                val bundle = Bundle()
+                bundle.putSerializable("band", band)
+                bundle.putString("whatIs", "singles")
+                findNavController().navigate(R.id.discographyAllFragment, bundle)
+            }
+        }
     }
 }

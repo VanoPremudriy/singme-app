@@ -152,7 +152,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
 
 
         mainActivity.binding.player.ibClose.setOnClickListener {
-            if (prevId!! < trackList.size && trackList[prevId!!].imageUrl != "")
+            if (prevId != null && prevId!! < trackList.size && trackList[prevId!!].imageUrl != "")
                 prevItem?.binding?.ivPlayPauseTrackItem?.visibility = View.GONE
             closePlayer()
         }

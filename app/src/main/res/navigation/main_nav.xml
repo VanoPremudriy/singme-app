@@ -178,4 +178,9 @@
         android:name="com.example.singmeapp.fragments.CreateAlbumFragment"
         android:label="fragment_create_album"
         tools:layout="@layout/fragment_create_album" />
+    <fragment
+        android:id="@+id/discographyAllFragment"
+        android:name="com.example.singmeapp.fragments.DiscographyAllFragment"
+        android:label="fragment_discography_all"
+        tools:layout="@layout/fragment_discography_all" />
 </navigation>
