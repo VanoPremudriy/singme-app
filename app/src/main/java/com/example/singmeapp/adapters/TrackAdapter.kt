@@ -104,8 +104,8 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
                 if (prevId == null){
                     prevId = playerPlaylistViewModel.prevId.value
                     prevItem = playerPlaylistViewModel.prevItem.value
-                    holder.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
-                    holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_pause)
+                    prevItem?.binding?.ivPlayPauseTrackItem?.visibility = View.VISIBLE
+                    prevItem?.binding?.ivPlayPauseTrackItem?.setImageResource(R.drawable.ic_pause)
                 }
             }
             if (it != null) {
@@ -197,6 +197,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
     }
 
     fun setTrack(position: Int){
+        CreateNotification().createNotification(fragmentActivity, trackList[position], R.drawable.ic_pause)
         if (trackList[position].trackUrl != "") {
             if (playerPlaylistViewModel.trackList.value == null || playerPlaylistViewModel.trackList.value?.equals(
                     trackList
