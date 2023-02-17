@@ -1,5 +1,6 @@
 package com.example.singmeapp.adapters
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -15,9 +16,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +45,10 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
     lateinit var curTrack: Track
     val mainActivity = fragmentActivity as MainActivity
+    var prevItem:TrackHolder? = null
+
+    var prevId: Int? = null
+
 
 
     class TrackHolder(item: View, private val fragmentActivity: AppCompatActivity): RecyclerView.ViewHolder(item){
@@ -58,9 +65,6 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             Picasso.get().load(track.imageUrl).fit().into(ivItemTrackCover)
             val provider = ViewModelProvider(fragmentActivity)
             playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
-
-
-
 
         }
     }
@@ -84,28 +88,86 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
         return  TrackHolder(view, fragmentActivity)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: TrackHolder, position: Int) {
+        holder.bind(trackList[position])
+
         fragmentActivity.registerReceiver(broadcastReceiver, IntentFilter("TRACKSTRACKS"))
         fragmentActivity.startService(Intent(fragmentActivity, OnClearFromRecentService::class.java))
-
-        holder.bind(trackList[position])
 
         val provider = ViewModelProvider(fragmentActivity)
         playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
-        holder.binding.SongLayout.setOnClickListener {
-            setTrack(position)
+
+        playerPlaylistViewModel.currentTrackId.observe(fragment.viewLifecycleOwner){
+            if (fragment.javaClass == PlayerPlaylistFragment::class.java){
+                if (prevId == null){
+                    prevId = playerPlaylistViewModel.prevId.value
+                    prevItem = playerPlaylistViewModel.prevItem.value
+                    holder.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
+                    holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_pause)
+                }
+            }
+            if (it != null) {
+                Log.e(
+                    "position",
+                    "position=${position?.toString()} prevId=${prevId?.toString()} currentTrackId=${it?.toString()}"
+                )
+                if (it != prevId && prevItem != null && prevId != null) {
+                    prevItem?.binding?.ivPlayPauseTrackItem?.visibility = View.GONE
+                    holder.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
+                    holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_pause)
+                    prevId = position
+                    prevItem = holder
+                } else if (it == prevId && position == it) {
+                    holder.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
+                    if (playerPlaylistViewModel.isPlaying.value == true) {
+                        holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_pause)
+                    }
+                    else holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_play)
+                    prevId = position
+                    prevItem = holder
+                }
+            } else {
+                if (position < trackList.size)
+                    holder.binding.ivPlayPauseTrackItem.visibility = View.GONE
+            }
+
+            playerPlaylistViewModel.prevItem.value = prevItem
+            playerPlaylistViewModel.prevId.value = prevId
         }
 
+        holder.binding.SongLayout.setOnClickListener {
+            setTrack(position)
+            holder.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
+            if (playerPlaylistViewModel.isPlaying.value == true)
+                holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_pause)
+            else holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_play)
+            prevId = position
+            prevItem = holder
+            playerPlaylistViewModel.prevItem.value = prevItem
+            playerPlaylistViewModel.prevId.value = prevId
+        }
+
+
+
         mainActivity.binding.player.ibClose.setOnClickListener {
+            if (prevId!! < trackList.size && trackList[prevId!!].imageUrl != "")
+                prevItem?.binding?.ivPlayPauseTrackItem?.visibility = View.GONE
             closePlayer()
         }
 
-        playerPlaylistViewModel.isPlaying.observe(fragmentActivity){
+
+        playerPlaylistViewModel.isPlaying.observe(fragment.viewLifecycleOwner){
             if (it){
+                prevItem?.binding?.ivPlayPauseTrackItem?.setImageResource(R.drawable.ic_pause)
                 mainActivity.binding.player.ibPlayUpMenu.setImageResource(android.R.drawable.ic_media_pause)
             }
-            else mainActivity.binding.player.ibPlayUpMenu.setImageResource(android.R.drawable.ic_media_play)
+            else {
+                prevItem?.binding?.ivPlayPauseTrackItem?.setImageResource(R.drawable.ic_play)
+                mainActivity.binding.player.ibPlayUpMenu.setImageResource(android.R.drawable.ic_media_play)
+            }
+
         }
 
         mainActivity.binding.player.ibPlayUpMenu.setOnClickListener{
@@ -141,6 +203,8 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
                 ) == false
             ) {
                 playerPlaylistViewModel.trackList.value = trackList
+                prevId = null
+                prevItem = null
 
             }
 
@@ -220,5 +284,11 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
        return trackList.size
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 }

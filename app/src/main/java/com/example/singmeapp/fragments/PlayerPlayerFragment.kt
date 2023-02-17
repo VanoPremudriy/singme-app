@@ -57,7 +57,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPlayerPlayerBinding.inflate(layoutInflater)
         fragActivity = activity as AppCompatActivity
         mainActivity = activity as MainActivity
@@ -67,7 +67,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
         playerPlaylistViewModel.currentTrackId.observeForever{it ->
             try{
                 if (playerPlaylistViewModel.trackList.value != null && it != null) {
-                    currentTrack = playerPlaylistViewModel.trackList.value!![it!!]
+                    currentTrack = playerPlaylistViewModel.trackList.value!![it]
                     if (previousTrack == null) {
                         mPlayer = MediaPlayer()
                         mPlayer.setOnCompletionListener(this@PlayerPlayerFragment)
@@ -171,7 +171,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
         mPlayer.stop()
     }
 
-    fun initializeButtonsClickListeners(){
+    private fun initializeButtonsClickListeners(){
         val mainActivity = activity as MainActivity
 
         binding.ibPlay.setOnClickListener(this@PlayerPlayerFragment)
@@ -186,11 +186,11 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
         mainActivity.binding.tvGoToAlbumInPlayer.setOnClickListener(this@PlayerPlayerFragment)
     }
 
-    fun initializeCover(coverUrl: String){
+    private fun initializeCover(coverUrl: String){
         Picasso.get().load(coverUrl).fit().into(binding.ivCover)
     }
 
-    fun initializeSeekBar() {
+    private fun initializeSeekBar() {
         binding.seekBar.max = mPlayer.seconds
 
         runnable = Runnable {
@@ -201,12 +201,12 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
     }
 
     // Creating an extension property to get the media player time duration in seconds
-    val MediaPlayer.seconds:Int
+    private val MediaPlayer.seconds:Int
         get() {
             return this.duration / 1000
         }
     // Creating an extension property to get media player current position in seconds
-    val MediaPlayer.currentSeconds:Int
+    private val MediaPlayer.currentSeconds:Int
         get() {
             return this.currentPosition/1000
         }
@@ -330,7 +330,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
             )
     }
 
-    val broadcastReceiver = object: BroadcastReceiver(){
+    private val broadcastReceiver = object: BroadcastReceiver(){
         override fun onReceive(p0: Context?, p1: Intent?) {
             when (p1?.getStringExtra("actionname")){
                 CreateNotification().ACTION_PLAY -> {

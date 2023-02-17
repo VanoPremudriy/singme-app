@@ -3,6 +3,7 @@ package com.example.singmeapp.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.singmeapp.adapters.TrackAdapter
 import com.example.singmeapp.api.Common.Common
 import com.example.singmeapp.api.interfaces.RetrofitServices
 import com.example.singmeapp.items.Band
@@ -25,6 +26,9 @@ class PlayerPlaylistViewModel : ViewModel(){
     var url = MutableLiveData<String>()
     var currentTrackId = MutableLiveData<Int>()
     var isPlaying = MutableLiveData<Boolean>()
+
+    var prevItem = MutableLiveData<TrackAdapter.TrackHolder>()
+    var prevId = MutableLiveData<Int>()
 
     var curBand = MutableLiveData<Band>()
 

@@ -22,6 +22,10 @@ class PlayerPlaylistFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fragActivity = activity as AppCompatActivity
+        val provider = ViewModelProvider(fragActivity)
+        playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
+        trackAdapter = TrackAdapter(fragActivity, this@PlayerPlaylistFragment)
 
     }
 
@@ -29,12 +33,10 @@ class PlayerPlaylistFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragActivity = activity as AppCompatActivity
+
         Log.e("PlaylistFrag", this.id.toString())
-        trackAdapter = TrackAdapter(fragActivity, this@PlayerPlaylistFragment)
+
         binding = FragmentPlayerPlaylistBinding.inflate(layoutInflater)
-        val provider = ViewModelProvider(fragActivity)
-        playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
         binding.rcView.layoutManager = LinearLayoutManager(activity)
         playerPlaylistViewModel.trackList.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track>
@@ -46,7 +48,6 @@ class PlayerPlaylistFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() = PlayerPlaylistFragment()
-
     }
 
 

@@ -14,7 +14,7 @@ class PlayerPagerAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapt
     override fun createFragment(position: Int): Fragment {
         return when(position){
             0 -> PlayerPlayerFragment.newInstance()
-            1 -> PlayerPlaylistFragment.newInstance()
+            1 -> PlayerPlaylistFragment.newInstance()//PlayerPlaylistFragment.newInstance(null)
             else -> PlayerPlayerFragment()//{throw Resources.NotFoundException("PositionNotFound")}
         }
     }

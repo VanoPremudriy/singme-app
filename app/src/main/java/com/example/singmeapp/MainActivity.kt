@@ -26,6 +26,7 @@ import com.example.singmeapp.adapters.PlayerPagerAdapter
 import com.example.singmeapp.databinding.ActivityMainBinding
 import com.example.singmeapp.fragments.AlbumFragment
 import com.example.singmeapp.fragments.PlayerPlayerFragment
+import com.example.singmeapp.fragments.PlayerPlaylistFragment
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout

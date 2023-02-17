@@ -28,7 +28,6 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
-
         setHasOptionsMenu(true)
 
         val provider = ViewModelProvider(this)

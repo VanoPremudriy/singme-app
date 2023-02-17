@@ -38,6 +38,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         myLibraryViewModel = provider[MyLibraryViewModel::class.java]
         myLibraryViewModel.getTracks()
         Log.e("LifeCycle", "onCreate")
+        trackAdapter = TrackAdapter(fragmentActivity, this)
     }
 
     override fun onCreateView(
@@ -54,13 +55,14 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         val linearLayoutManager = LinearLayoutManager(activity)
         binding.rcView.layoutManager = linearLayoutManager
 
-        trackAdapter = TrackAdapter(fragmentActivity, this)
+
         myLibraryViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track>
             binding.rcView.adapter = trackAdapter
         }
         return binding.root
     }
+
 
     companion object {
         @JvmStatic
