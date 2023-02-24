@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/ibBack2"
+            android:id="@+id/ibAlbumBack2"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -61,7 +61,7 @@
             tools:context=".fragments.AlbumFragment">
 
             <ImageButton
-                android:id="@+id/ibBack"
+                android:id="@+id/ibAlbumBack"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
@@ -80,11 +80,11 @@
                 android:layout_marginEnd="16dp"
                 android:background="#00FFFFFF"
                 android:src="@android:drawable/ic_dialog_dialer"
-                app:layout_constraintBottom_toBottomOf="@+id/ibBack"
+                app:layout_constraintBottom_toBottomOf="@+id/ibAlbumBack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/ibBack"
-                app:layout_constraintTop_toTopOf="@+id/ibBack"
+                app:layout_constraintStart_toEndOf="@+id/ibAlbumBack"
+                app:layout_constraintTop_toTopOf="@+id/ibAlbumBack"
                 app:layout_constraintVertical_bias="1.0" />
 
             <ImageView

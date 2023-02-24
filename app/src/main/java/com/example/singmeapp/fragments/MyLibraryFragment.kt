@@ -77,7 +77,8 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
                 findNavController().navigate(R.id.loveBandsFragment, bundle)
             }
             binding.idPlaylists.id -> {
-                Snackbar.make(p,"Playlist",Snackbar.LENGTH_SHORT).show()
+                //Snackbar.make(p,"Playlist",Snackbar.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.myPlaylistsFragment)
             }
             binding.idAlbums.id -> {
                 val bundle = Bundle()

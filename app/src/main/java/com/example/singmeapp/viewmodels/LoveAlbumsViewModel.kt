@@ -71,12 +71,15 @@ class LoveAlbumsViewModel: ViewModel() {
                             if (it1.value.toString() == t.value.toString()) isInLove = true
                         }
 
+                        val isAuthor = snapshot.child("bands_has_users/${band}/${auth.currentUser?.uid}").value != null
+
                         val album = Album(
                             t.value.toString(),
                             albumName,
                             bandName,
                             year,
                             isInLove,
+                            isAuthor,
                             "",
                         )
 

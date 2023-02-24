@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/llTopMenu"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#FFFFFF"
+            android:elevation="10000dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/ibAPlaylistBack2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:clickable="true"
+                android:src="?attr/actionModeCloseDrawable" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:text="TextView" />
+
+            <ImageButton
+                android:id="@+id/ibPlaylistMenu2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:src="@android:drawable/ic_dialog_dialer" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/playlistScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.PlaylistFragment">
+
+        <ImageButton
+            android:id="@+id/ibEditPlaylistCover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-30dp"
+            android:background="#BDB8B8"
+            android:elevation="100000dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/ivPlaylistCover"
+            app:layout_constraintTop_toTopOf="@+id/ivPlaylistCover"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/ibPlaylistBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="#00FFFFFF"
+            android:clickable="true"
+            android:src="?attr/actionModeCloseDrawable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ibPlaylistMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="#00FFFFFF"
+            android:src="@android:drawable/ic_dialog_dialer"
+            app:layout_constraintBottom_toBottomOf="@+id/ibPlaylistBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/ibPlaylistBack"
+            app:layout_constraintTop_toTopOf="@+id/ibPlaylistBack"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <ImageView
+            android:id="@+id/ivPlaylistCover"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="72dp"
+            android:src="@drawable/back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvPlaylistName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="@+id/ivPlaylistCover"
+            app:layout_constraintStart_toStartOf="@+id/ivPlaylistCover"
+            app:layout_constraintTop_toBottomOf="@+id/ivPlaylistCover" />
+
+        <TextView
+            android:id="@+id/tvPlaylistAuthorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="@+id/ivPlaylistCover"
+            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintStart_toStartOf="@+id/ivPlaylistCover"
+            app:layout_constraintTop_toBottomOf="@+id/tvPlaylistName" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ibAddTrackInPlaylist" />
+
+        <ImageButton
+            android:id="@+id/ibAddOrChangePlaylist"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@android:drawable/ic_input_add"
+            app:layout_constraintBottom_toBottomOf="@+id/bPlayPlaylist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/bPlayPlaylist"
+            app:layout_constraintTop_toTopOf="@+id/bPlayPlaylist"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/ibAddTrackInPlaylist"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="32dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@android:drawable/ic_input_add"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bPlayPlaylist" />
+
+        <Button
+            android:id="@+id/bPlayPlaylist"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="16dp"
+            android:drawableLeft="@android:drawable/ic_media_play"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="Слушать"
+            android:textSize="12sp"
+            app:iconPadding="3dp"
+            app:layout_constraintEnd_toStartOf="@+id/ibAddOrChangePlaylist"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPlaylistAuthorName" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="TextView"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/rcView"
+            tools:layout_editor_absoluteX="177dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

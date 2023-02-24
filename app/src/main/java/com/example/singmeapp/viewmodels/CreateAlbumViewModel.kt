@@ -87,8 +87,8 @@ class CreateAlbumViewModel: ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun createAlbum(){
         val datetime = LocalDateTime.now()
-        database.reference.child("album_exist/${band.uuid}/${albumName}/uuid").setValue(albumUuid)
-        database.reference.child("album_exist/${band.uuid}/${albumName}/format").setValue(albumFormat)
+        database.reference.child("album_exist/${band.uuid}/${albumName}").setValue(albumUuid)
+        //database.reference.child("album_exist/${band.uuid}/${albumName}/format").setValue(albumFormat)
         database.reference.child("/albums/${albumUuid}/band").setValue(band.uuid)
         database.reference.child("/albums/${albumUuid}/cover").setValue(albumCoverExtension)
         database.reference.child("/albums/${albumUuid}/format").setValue(albumFormat)

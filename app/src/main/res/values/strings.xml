@@ -97,6 +97,13 @@
     <string name="add_album">Add album</string>
     <string name="delete_album_from_love">Delete from love</string>
     <string name="delete_album">Delete album</string>
+    <string name="change_playlist">Change playlist</string>
+    <string name="delete_playlist">Delete playlist</string>
+    <string name="delete_playlist_from_love">Delete playlist from love</string>
+    <string name="add_playlist_to_love">Add playlist to love</string>
+    <string name="enter_playlist_name">Enter the name of the playlist</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="delete_from_playlist">Delete from playlist</string>
 
 
 </resources>

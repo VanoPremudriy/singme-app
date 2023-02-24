@@ -43,7 +43,6 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
             Picasso.get().load(album.imageUrl).fit().into(ivItemAlbumCover)
             val provider = ViewModelProvider(fragment)
             albumViewModel = provider[AlbumViewModel::class.java]
-            albumViewModel.getAuthors(album.uuid)
             LinearLayoutCompat.setOnClickListener{
                 if (album.imageUrl != "") {
 
@@ -57,10 +56,8 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
 
 
             ibItemAlbumMenu.setOnClickListener {
-                albumViewModel.getAuthors(album.uuid)
-                if (albumViewModel.isAuthor.value == true) {
-                    mainActivity.binding.tvDeleteAlbum.visibility = View.VISIBLE
-                } else mainActivity.binding.tvDeleteAlbum.visibility = View.GONE
+                if (album.isAuthor) mainActivity.binding.tvDeleteAlbum.visibility = View.VISIBLE
+                else mainActivity.binding.tvDeleteAlbum.visibility = View.GONE
 
                 if (album.isInLove){
                     mainActivity.binding.tvDeleteAlbumFromLove.visibility = View.VISIBLE

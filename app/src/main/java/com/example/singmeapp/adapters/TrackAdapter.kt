@@ -23,18 +23,17 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.CreateNotification
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.OnClearFromRecentService
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.TrackItemBinding
-import com.example.singmeapp.fragments.AlbumFragment
-import com.example.singmeapp.fragments.DiscographyFragment
-import com.example.singmeapp.fragments.MyLibraryFragment
-import com.example.singmeapp.fragments.PlayerPlaylistFragment
+import com.example.singmeapp.fragments.*
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
+import com.example.singmeapp.viewmodels.PlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 
@@ -49,6 +48,9 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
 
     var prevId: Int? = null
 
+
+    val playlistViewModelProvider = ViewModelProvider(fragment)
+    val playlistViewModel = playlistViewModelProvider[PlaylistViewModel::class.java]
 
 
     class TrackHolder(item: View, private val fragmentActivity: AppCompatActivity): RecyclerView.ViewHolder(item){
@@ -192,6 +194,12 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             mainActivity.binding.tvGoToAlbum.setOnClickListener {
                 goToAlbum(position)
             }
+            mainActivity.binding.tvAddToPlaylist.setOnClickListener{
+                addToPlaylist(position)
+            }
+            mainActivity.binding.tvDeleteFromPlaylist.setOnClickListener{
+                deleteFromPlaylist(position)
+            }
         }
 
     }
@@ -261,9 +269,29 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             mainActivity.binding.tvAddTrackToLove.visibility = View.VISIBLE
             mainActivity.binding.tvDeleteTrackFromLove.visibility = View.GONE
         }
+        if (fragment.javaClass == PlaylistFragment::class.java){
+            mainActivity.binding.tvDeleteFromPlaylist.visibility = View.VISIBLE
+            mainActivity.binding.tvAddToPlaylist.visibility = View.GONE
+        }
+        else {
+            mainActivity.binding.tvDeleteFromPlaylist.visibility = View.GONE
+            mainActivity.binding.tvAddToPlaylist.visibility = View.VISIBLE
+        }
         mainActivity.binding.trackMenu.visibility = View.VISIBLE
         mainActivity.binding.view15.visibility = View.VISIBLE
         mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    fun addToPlaylist(position: Int){
+        val bundle = Bundle()
+        bundle.putString("trackUuid", trackList[position].uuid)
+        fragment.findNavController().navigate(R.id.choosePlaylistForTrackFragment, bundle)
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    fun deleteFromPlaylist(position: Int){
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+        playlistViewModel.deleteTrack(trackList[position].uuid)
     }
 
 

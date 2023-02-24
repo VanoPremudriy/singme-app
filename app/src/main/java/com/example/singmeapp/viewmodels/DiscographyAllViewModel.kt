@@ -143,12 +143,15 @@ class DiscographyAllViewModel: ViewModel() {
                                 if (it1.value.toString() == t.value.toString()) isInLove = true
                             }
 
+                            val isAuthor = snapshot.child("bands_has_users/${currentBand.uuid}/${auth.currentUser?.uid}").value != null
+
                             val album = Album(
                                 t.value.toString(),
                                 albumName,
                                 currentBand.name,
                                 year,
                                 isInLove,
+                                isAuthor,
                                 ""
                             )
 
@@ -193,12 +196,15 @@ class DiscographyAllViewModel: ViewModel() {
                                 if (it1.value.toString() == t.value.toString()) isInLove = true
                             }
 
+                            val isAuthor = snapshot.child("bands_has_users/${currentBand.uuid}/${auth.currentUser?.uid}").value != null
+
                             val album = Album(
                                 t.value.toString(),
                                 albumName,
                                 currentBand.name,
                                 year,
                                 isInLove,
+                                isAuthor,
                                 ""
                             )
 

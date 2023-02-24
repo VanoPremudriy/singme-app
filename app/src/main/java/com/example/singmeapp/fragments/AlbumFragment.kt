@@ -56,6 +56,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         albumViewModel.getTracks(albumUuid)
         albumViewModel.getAuthors(albumUuid)
 
+        trackAdapter = TrackAdapter(fragmentActivity, this)
     }
 
     override fun onCreateView(
@@ -65,13 +66,15 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         binding = FragmentAlbumBinding.inflate(layoutInflater)
         buttonSets()
 
-       /* binding.tvAlbumName.text = album.name
-        binding.tvAlbumBandName.text = album.band
-        if (album.imageUrl != "")
-        Picasso.get().load(album.imageUrl).fit().into(binding.ivAlbumCover)*/
-
         binding.rcView.layoutManager = LinearLayoutManager(activity)
-        trackAdapter = TrackAdapter(fragmentActivity, this)
+
+
+        observes()
+
+        return binding.root
+    }
+
+    private fun observes(){
         albumViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track>
             binding.rcView.adapter = trackAdapter
@@ -97,7 +100,6 @@ class AlbumFragment : Fragment(), View.OnClickListener {
             isInLove = it
         }
 
-       // binding.textView9.text = album.name
         binding.albumScrollView.viewTreeObserver.addOnScrollChangedListener {
             if (binding.albumScrollView.scrollY > 150){
                 binding.llTopMenu.visibility = View.VISIBLE
@@ -105,10 +107,6 @@ class AlbumFragment : Fragment(), View.OnClickListener {
                 binding.llTopMenu.visibility = View.GONE
             }
         }
-
-
-
-        return binding.root
     }
 
     override fun onResume() {
@@ -117,50 +115,20 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     }
     override fun onClick(p0: View?) {
         when(p0?.id){
-            binding.ibBack.id -> {
-                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-
-                if (count == 0) {
-                    (activity as AppCompatActivity).supportActionBar?.show()
-                    activity?.onBackPressed()
-
-                } else {
-                    (activity as AppCompatActivity).supportActionBar?.show()
-                    findNavController().popBackStack()
-                }
+            binding.ibAlbumBack.id -> {
+               back()
             }
 
-            binding.ibBack2.id ->{
-                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-
-                if (count == 0) {
-                    fragmentActivity.supportActionBar?.show()
-                    activity?.onBackPressed()
-
-                } else {
-                    fragmentActivity.supportActionBar?.show()
-                    findNavController().popBackStack()
-                }
+            binding.ibAlbumBack2.id ->{
+               back()
             }
 
             binding.ibAlbumMenu.id -> {
-                if (isAuthor){
-                    mainActivity.binding.tvDeleteAlbum.visibility = View.VISIBLE
-                } else {
-                    mainActivity.binding.tvDeleteAlbum.visibility = View.GONE
-                }
+               menu()
+            }
 
-                if (isInLove){
-                    mainActivity.binding.tvDeleteAlbumFromLove.visibility = View.VISIBLE
-                    mainActivity.binding.tvAddAlbumInLove.visibility = View.GONE
-                } else {
-                    mainActivity.binding.tvDeleteAlbumFromLove.visibility = View.GONE
-                    mainActivity.binding.tvAddAlbumInLove.visibility = View.VISIBLE
-                }
-
-                mainActivity.binding.inAlbumMenu.visibility = View.VISIBLE
-                mainActivity.binding.view15.visibility = View.VISIBLE
-                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.ibAlbumMenu2.id -> {
+                menu()
             }
 
             mainActivity.binding.tvAddAlbumInLove.id -> {
@@ -183,16 +151,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
             }
 
             mainActivity.binding.tvDeleteAlbum.id -> {
-                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-
-                if (count == 0) {
-                    fragmentActivity.supportActionBar?.show()
-                    activity?.onBackPressed()
-                } else {
-                    fragmentActivity.supportActionBar?.show()
-                    findNavController().popBackStack()
-                }
-
+                back()
                 albumViewModel.deleteAlbum(albumUuid)
             }
         }
@@ -200,16 +159,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
-            Log.e("Back", "home")
-            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-
-            if (count == 0) {
-                fragmentActivity.supportActionBar?.show()
-                activity?.onBackPressed()
-            } else {
-                fragmentActivity.supportActionBar?.show()
-                findNavController().popBackStack()
-            }
+            back()
         }
         return true
     }
@@ -217,9 +167,10 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     fun buttonSets(){
         val mainActivity = fragmentActivity as MainActivity
         binding.apply {
-            ibBack.setOnClickListener(this@AlbumFragment)
-            ibBack2.setOnClickListener(this@AlbumFragment)
+            ibAlbumBack.setOnClickListener(this@AlbumFragment)
+            ibAlbumBack2.setOnClickListener(this@AlbumFragment)
             ibAlbumMenu.setOnClickListener(this@AlbumFragment)
+            ibAlbumMenu2.setOnClickListener(this@AlbumFragment)
         }
 
         mainActivity.binding.tvAddAlbumInLove.setOnClickListener(this@AlbumFragment)
@@ -228,9 +179,38 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         mainActivity.binding.tvDeleteAlbum.setOnClickListener(this@AlbumFragment)
     }
 
+    fun back(){
+        val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
 
+        if (count == 0) {
+            fragmentActivity.supportActionBar?.show()
+            activity?.onBackPressed()
 
+        } else {
+            fragmentActivity.supportActionBar?.show()
+            findNavController().popBackStack()
+        }
+    }
 
+    fun menu(){
+        if (isAuthor){
+            mainActivity.binding.tvDeleteAlbum.visibility = View.VISIBLE
+        } else {
+            mainActivity.binding.tvDeleteAlbum.visibility = View.GONE
+        }
+
+        if (isInLove){
+            mainActivity.binding.tvDeleteAlbumFromLove.visibility = View.VISIBLE
+            mainActivity.binding.tvAddAlbumInLove.visibility = View.GONE
+        } else {
+            mainActivity.binding.tvDeleteAlbumFromLove.visibility = View.GONE
+            mainActivity.binding.tvAddAlbumInLove.visibility = View.VISIBLE
+        }
+
+        mainActivity.binding.inAlbumMenu.visibility = View.VISIBLE
+        mainActivity.binding.view15.visibility = View.VISIBLE
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 
 
     companion object {

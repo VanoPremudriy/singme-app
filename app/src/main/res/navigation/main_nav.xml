@@ -183,4 +183,24 @@
         android:name="com.example.singmeapp.fragments.DiscographyAllFragment"
         android:label="fragment_discography_all"
         tools:layout="@layout/fragment_discography_all" />
+    <fragment
+        android:id="@+id/myPlaylistsFragment"
+        android:name="com.example.singmeapp.fragments.MyPlaylistsFragment"
+        android:label="fragment_my_playlists"
+        tools:layout="@layout/fragment_my_playlists" />
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.example.singmeapp.fragments.PlaylistFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" />
+    <fragment
+        android:id="@+id/chooseTrackForPlaylistFragment"
+        android:name="com.example.singmeapp.fragments.ChooseTrackForPlaylistFragment"
+        android:label="fragment_choose_track_for_playlist"
+        tools:layout="@layout/fragment_choose_track_for_playlist" />
+    <fragment
+        android:id="@+id/choosePlaylistForTrackFragment"
+        android:name="com.example.singmeapp.fragments.ChoosePlaylistForTrackFragment"
+        android:label="fragment_choose_playlist_for_track"
+        tools:layout="@layout/fragment_choose_playlist_for_track" />
 </navigation>

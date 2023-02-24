@@ -72,5 +72,4 @@ class PlayerPlaylistViewModel : ViewModel(){
 
     }
 
-
 }

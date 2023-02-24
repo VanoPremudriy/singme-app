@@ -58,6 +58,116 @@
         tools:ignore="PrivateResource">
 
         <LinearLayout
+            android:id="@+id/playlistMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_swipe_background"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/swipeLine10"
+                android:layout_width="100dp"
+                android:layout_height="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/bottom_swipe_background"
+                android:backgroundTint="#4F1578" />
+
+            <TextView
+                android:id="@+id/tvChangePlaylist"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/change_playlist" />
+
+            <TextView
+                android:id="@+id/tvAddPlaylisToLove"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/add_playlist_to_love" />
+
+            <TextView
+                android:id="@+id/tvDeletePlaylistFromLove"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/delete_playlist_from_love" />
+
+            <TextView
+                android:id="@+id/tvDeletePlaylist"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/delete_playlist" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/AddPlaylistMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_swipe_background"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/swipeLine9"
+                android:layout_width="100dp"
+                android:layout_height="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/bottom_swipe_background"
+                android:backgroundTint="#4F1578" />
+
+            <TextView
+                android:id="@+id/tvAddPlaylistName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_playlist_name" />
+
+            <EditText
+                android:id="@+id/etPlaylistName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/name"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/tvAddPlaylist"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/add" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/meMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -353,6 +463,26 @@
                 android:text="@string/delete_track" />
 
             <TextView
+                android:id="@+id/tvAddToPlaylist"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/add_to_playlist" />
+
+            <TextView
+                android:id="@+id/tvDeleteFromPlaylist"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/delete_from_playlist" />
+
+            <TextView
                 android:id="@+id/tvGoToBandProfile"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -477,6 +607,16 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:text="@string/delete_track" />
+
+            <TextView
+                android:id="@+id/tvAddToPlaylistFromPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="add_to_playlist" />
 
             <TextView
                 android:id="@+id/tvGoToBandProfileInPlayer"

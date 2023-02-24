@@ -7,4 +7,5 @@ data class Album(val uuid: String,
                  val band: String,
                  val year: Int,
                  val isInLove: Boolean,
+                 val isAuthor: Boolean,
                  var imageUrl: String): Serializable
