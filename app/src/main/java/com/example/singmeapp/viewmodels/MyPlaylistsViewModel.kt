@@ -69,6 +69,7 @@ class MyPlaylistsViewModel: ViewModel() {
         database.reference.child("albums/${playlistUuid}/format").setValue("Playlist")
         database.reference.child("albums/${playlistUuid}/name").setValue(playlistName)
         database.reference.child("/albums/${playlistUuid}/year").setValue(datetime.year.toString())
+        database.reference.child("/albums/${playlistUuid}/created_at").setValue(datetime.toString())
 
         database.reference.child("users/${auth.currentUser?.uid}/library/playlists").addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -136,6 +137,7 @@ class MyPlaylistsViewModel: ViewModel() {
                                 getFilePath(fbAlbumImageUrl, "image", count)
                                 count++
                             }
+
 
                         })
 

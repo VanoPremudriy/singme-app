@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.homeFragment -> {navController.navigate(R.id.action_global_homeFragment)}
                 R.id.messengerFragment -> navController.navigate(R.id.action_global_messengerFragment)
-                R.id.catalogueFragment -> navController.navigate(R.id.createAlbumFragment)
+                R.id.catalogueFragment -> navController.navigate(R.id.catalogueFragment)
             }
             true
         }
@@ -253,6 +253,5 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         notificationManagerCompat.cancelAll()
     }
-
 
 }

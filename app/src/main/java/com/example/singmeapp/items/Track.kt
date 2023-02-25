@@ -1,5 +1,7 @@
 package com.example.singmeapp.items
 
+import java.time.LocalDateTime
+
 data class Track(var uuid: String,
                  var name: String,
                  var band: String,
@@ -8,5 +10,6 @@ data class Track(var uuid: String,
                  var albumUuid: String,
                  var imageUrl: String,
                  var trackUrl: String,
-                 var isInLove: Boolean
+                 var isInLove: Boolean,
+                 val date: LocalDateTime? = null
                  )
