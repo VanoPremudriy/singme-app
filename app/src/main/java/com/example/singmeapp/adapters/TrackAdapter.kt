@@ -89,6 +89,9 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             CatalogueNewsFragment::class.java -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.track_item_2, parent, false)
             }
+            CataloguePopularFragment::class.java -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.track_item_2, parent, false)
+            }
         }
         return  TrackHolder(view, fragmentActivity)
     }

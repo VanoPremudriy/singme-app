@@ -48,7 +48,8 @@ class CatalogueFragment : Fragment() {
         binding.catalogueViewPager.isUserInputEnabled = false
         TabLayoutMediator(binding.catalogueTabLayout, binding.catalogueViewPager){ tab, index ->
             tab.text = when(index){
-                0 ->  "News"
+                0 ->  getString(R.string.news)
+                1 -> getString(R.string.popular)
                 else -> {throw Resources.NotFoundException("14")}
             }
         }.attach()
