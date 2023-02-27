@@ -2,6 +2,7 @@ package com.example.singmeapp.viewmodels
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,6 +40,7 @@ class CataloguePopularViewModel: ViewModel() {
         var fbTrackUrl = ""
         var fbTrackImageUrl = ""
         var count = 0
+        var listeningCounters = HashMap<String, Int>()
         var fbTrackUrls = HashMap<String, String>()
         var fbTrackImageUrls = HashMap<String, String>()
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -54,11 +56,21 @@ class CataloguePopularViewModel: ViewModel() {
                     val bandName = snapshot.child("bands/${bandUuid}/name").value.toString()
                     val extension = snapshot.child("/albums/${trackAlbumUuid}/cover").value.toString()
                     val date = t.child("created_at").value.toString()
+
+
                     var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         LocalDateTime.parse(date)
                     } else {
                         TODO("VERSION.SDK_INT < O")
                     }
+
+                    val listeningCounter = t.child("listening_counter").value.toString()
+                    if (listeningCounter != "null"){
+                        listeningCounters.put(t.key.toString(), listeningCounter.toInt())
+                    } else {
+                        listeningCounters.put(t.key.toString(), 0)
+                    }
+                    //Log.e("listening counter", listeningCounters.get(t.key.toString()).toString())
 
                     var isInLove = false
                     snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
@@ -76,7 +88,7 @@ class CataloguePopularViewModel: ViewModel() {
                         bandName,
                         trackAlbumName,
                         bandUuid,
-                        trackAlbumName,
+                        trackAlbumUuid,
                         "",
                         "",
                         isInLove,
@@ -86,8 +98,9 @@ class CataloguePopularViewModel: ViewModel() {
 
                     arrayListPopularTrack.add(track)
                 }
-                //arrayListPopularTrack.sortBy { track -> track.date }
-                //arrayListPopularTrack = arrayListPopularTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+
+                arrayListPopularTrack.sortBy { track -> listeningCounters.get(track.uuid) }
+                arrayListPopularTrack = arrayListPopularTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
                 listPopularTrack.value = arrayListPopularTrack
                 arrayListPopularTrack.forEach {
                     getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
@@ -106,8 +119,9 @@ class CataloguePopularViewModel: ViewModel() {
     }
 
     fun getAlbums(){
-        var fbAlbumImageUrl = ""
+        var fbAlbumImageUrl: String
         var count = 0
+        var listeningCounters = HashMap<String, Int>()
         var fbAlbumImageUrls = HashMap<String, String>()
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
@@ -123,6 +137,13 @@ class CataloguePopularViewModel: ViewModel() {
                         val extension = t.child("cover").value.toString()
                         val date = t.child("created_at").value.toString()
                         if (albumName != "null" && year != null && extension != "null" && format != "null") {
+
+                            val listeningCounter = t.child("listening_counter").value.toString()
+                            if (listeningCounter != "null"){
+                                listeningCounters.put(t.key.toString(), listeningCounter.toInt())
+                            } else {
+                                listeningCounters.put(t.key.toString(), 0)
+                            }
 
                             var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 LocalDateTime.parse(date)
@@ -157,8 +178,9 @@ class CataloguePopularViewModel: ViewModel() {
                         }
                     }
                 }
-                //arrayListPopularAlbum.sortBy { album ->  album.date}
-                //arrayListPopularAlbum = arrayListPopularAlbum.reversed() as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+
+                arrayListPopularAlbum.sortBy { album -> listeningCounters.get(album.uuid) }
+                arrayListPopularAlbum = arrayListPopularAlbum.reversed() as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                 listPopularAlbum.value = arrayListPopularAlbum
                 arrayListPopularAlbum.forEach {
                     getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "albumImage", count)

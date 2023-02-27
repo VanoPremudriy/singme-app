@@ -45,7 +45,8 @@ class PlayerPlaylistViewModel : ViewModel(){
 
     var isListTrackChanged = MutableLiveData<Boolean>(false)
 
-    fun updateListeningCounter(trackUuid: String){
+    fun updateListeningCounter(trackUuid: String, albumUuid: String){
+        Log.e("Uuids", "${trackUuid}, ${albumUuid}")
         database.reference.child("tracks/${trackUuid}/listening_counter").addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 var counter = 0
@@ -54,6 +55,22 @@ class PlayerPlaylistViewModel : ViewModel(){
                 }
                 counter++
                 database.reference.child("tracks/${trackUuid}/listening_counter").setValue(counter)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        database.reference.child("albums/${albumUuid}/listening_counter").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var counter = 0
+                if (snapshot.value != null){
+                    counter = snapshot.value.toString().toInt()
+                }
+                counter++
+                database.reference.child("albums/${albumUuid}/listening_counter").setValue(counter)
             }
 
             override fun onCancelled(error: DatabaseError) {

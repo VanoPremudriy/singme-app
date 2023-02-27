@@ -79,7 +79,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
                         previousTrack = currentTrack
                         currentList = playerPlaylistViewModel.trackList.value as ArrayList<Track>
                         Log.e("is", "One")
-                        playerPlaylistViewModel.updateListeningCounter(currentTrack.uuid)
+                        playerPlaylistViewModel.updateListeningCounter(currentTrack.uuid, currentTrack.albumUuid)
                     } else {
                         if (previousTrack == currentTrack && !currentList.equals(playerPlaylistViewModel.trackList.value)) {
                             mPlayer.stop()
@@ -115,7 +115,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
                                 mPlayer.start()
                                 binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
                                 playerPlaylistViewModel.isPlaying.value = true
-                                playerPlaylistViewModel.updateListeningCounter(currentTrack.uuid)
+                                playerPlaylistViewModel.updateListeningCounter(currentTrack.uuid, currentTrack.albumUuid)
                                 Log.e("is", "four")
                             }
                         currentList = playerPlaylistViewModel.trackList.value as ArrayList<Track>

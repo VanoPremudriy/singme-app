@@ -54,6 +54,25 @@ class AlbumViewModel: ViewModel() {
         }
     }
 
+
+    /*fun updateListeningCounter(albumUuid: String){
+        database.reference.child("albums/${albumUuid}/listening_counter").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var counter = 0
+                if (snapshot.value != null){
+                    counter = snapshot.value.toString().toInt()
+                }
+                counter++
+                database.reference.child("albums/${albumUuid}/listening_counter").setValue(counter)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }*/
+
     fun getAlbumData(albumUuid: String){
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -99,14 +118,16 @@ class AlbumViewModel: ViewModel() {
     fun getTracks(albumUuid: String){
         var fbTrackUrl: String
         var fbImageUrl: String
+        var count = 0
+        var fbTrackUrls = HashMap<String, String>()
+        var fbImageUrls = HashMap<String, String>()
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var count = 0
-                    arrayListTrack = ArrayList<Track>()
+                    arrayListTrack.clear()
                     listTrack.value = arrayListTrack
-                    snapshot.child("/albums/${albumUuid}/tracks").children.forEach(Consumer { t ->
+                    snapshot.child("/albums/${albumUuid}/tracks").children.forEach{ t ->
 
                         val trackName = snapshot.child("/tracks/${t.value}/name").value.toString()
                         val bandUuuid = snapshot.child("albums/${albumUuid}/band").value.toString()
@@ -117,6 +138,9 @@ class AlbumViewModel: ViewModel() {
 
                         fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${albumCoverExtension}"
                         fbTrackUrl = "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
+
+                        fbImageUrls.put(t.value.toString(), fbImageUrl)
+                        fbTrackUrls.put(t.value.toString(), fbTrackUrl)
 
                         var isInLove = false
                         snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
@@ -138,12 +162,14 @@ class AlbumViewModel: ViewModel() {
                         )
 
                         arrayListTrack.add(track)
-                        listTrack.value = arrayListTrack
-                        getFilePath(fbTrackUrl, "track", count)
-                        getFilePath(fbImageUrl, "trackImage", count)
-                        count++
-                    })
+                    }
 
+                    listTrack.value = arrayListTrack
+                    arrayListTrack.forEach {
+                        getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                        getFilePath(fbImageUrls.get(it.uuid)!!, "trackImage", count)
+                        count++
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
