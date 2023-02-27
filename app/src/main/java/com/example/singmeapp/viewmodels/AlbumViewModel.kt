@@ -41,6 +41,8 @@ class AlbumViewModel: ViewModel() {
 
     val isLove  = MutableLiveData<Boolean>()
 
+    var isLoveAlbumsListChanged = MutableLiveData<Boolean>(false)
+
     lateinit var album: Album
 
     init {
@@ -217,6 +219,7 @@ class AlbumViewModel: ViewModel() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val albumCount = snapshot.childrenCount
                 database.reference.child("/users/${auth.currentUser?.uid}/library/love_albums/${albumCount}").setValue(albumUuid)
+                isLoveAlbumsListChanged.value = !isLoveAlbumsListChanged.value!!
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -241,6 +244,7 @@ class AlbumViewModel: ViewModel() {
 
 
                 database.reference.child("/users/${auth.currentUser?.uid}/library/love_albums").setValue(uuidList)
+                isLoveAlbumsListChanged.value = !isLoveAlbumsListChanged.value!!
             }
 
             override fun onCancelled(error: DatabaseError) {

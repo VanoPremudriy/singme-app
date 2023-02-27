@@ -101,7 +101,6 @@ class DiscographyAllViewModel: ViewModel() {
                         isInLove
                     )
 
-                    Log.e("Discography Is In Love", isInLove.toString())
 
                     arrayListTrack.add(track)
                     listTrack.value = arrayListTrack

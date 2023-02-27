@@ -46,7 +46,6 @@ class CatalogueNewsViewModel: ViewModel() {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.child("tracks").children.forEach{ t ->
-
                     val trackName = t.child("name").value.toString()
                     val trackAlbumUuid = t.child("album").value.toString()
                     val trackAlbumName = snapshot.child("/albums/${trackAlbumUuid}/name").value.toString()
@@ -62,7 +61,7 @@ class CatalogueNewsViewModel: ViewModel() {
 
                     var isInLove = false
                     snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
-                        if (it1.value.toString() == t.value.toString()) isInLove = true
+                        if (it1.value.toString() == t.key.toString()) isInLove = true
                     }
 
                     fbTrackUrl = "/storage/bands/${bandName}/albums/${trackAlbumName}/${trackName}.mp3"

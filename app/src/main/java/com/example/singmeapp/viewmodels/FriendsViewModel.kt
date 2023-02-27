@@ -185,8 +185,6 @@ class FriendsViewModel: ViewModel() {
     }
 
 
-
-
     fun getAllUsers(){
         var fbAvatarUrl: String
 

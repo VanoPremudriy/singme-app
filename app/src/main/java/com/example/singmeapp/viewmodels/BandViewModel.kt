@@ -75,23 +75,20 @@ class BandViewModel: ViewModel() {
 
     fun getMembers(bandUuid: String){
         var fbAvatarImageUrl: String
+        var fbAvatarImageUrls = HashMap<String, String>()
         var count = 0
         if (auth.currentUser != null){
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/bands_has_users/${bandUuid}").children.forEach(
-                        Consumer { t ->
-
+                    snapshot.child("/bands_has_users/${bandUuid}").children.forEach{ t ->
                             val memberName = snapshot.child("/users/${t.key}/profile/name").value.toString()
                             var extension = snapshot.child("/users/${t.key}/profile/avatar").value.toString()
                             var memberRoles = t.value.toString()
-                            /*t.children.forEach(Consumer { t ->
-                                memberRoles += "${t.value.toString()}, "
-                            })*/
 
                             fbAvatarImageUrl = "/storage/users/${t.key}/profile/avatar.${extension}"
+                            fbAvatarImageUrls.put(t.key.toString(), fbAvatarImageUrl)
 
                             val member = Member(
                                 t.key.toString(),
@@ -101,10 +98,12 @@ class BandViewModel: ViewModel() {
                             )
 
                             arrayListMember.add(member)
-                            listMember.value = arrayListMember
-                            getFilePath(fbAvatarImageUrl, "avatar", count)
-                            count++
-                        })
+                        }
+                    listMember.value = arrayListMember
+                    arrayListMember.forEach {
+                        getFilePath(fbAvatarImageUrls.get(it.uuid)!!, "avatar", count)
+                        count++
+                    }
 
                 }
 

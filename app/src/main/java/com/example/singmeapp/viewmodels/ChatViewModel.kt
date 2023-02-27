@@ -35,14 +35,12 @@ class ChatViewModel: ViewModel() {
     lateinit var arrayListMessages: ArrayList<Message>
 
     fun getMessages(chatUser: ChatUser){
-        database.reference.addValueEventListener(object : ValueEventListener {
+        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}").addValueEventListener(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 arrayListMessages = ArrayList<Message>()
-
-                snapshot.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}").children.forEach(
-                    Consumer { t ->
+                snapshot.children.forEach{ t ->
                        val message = Message(
                            t.child("message").value.toString(),
                            t.child("senderUuid").value.toString()
@@ -50,7 +48,7 @@ class ChatViewModel: ViewModel() {
 
                         arrayListMessages.add(message)
                         listMessages.value = arrayListMessages
-                    })
+                    }
 
             }
 

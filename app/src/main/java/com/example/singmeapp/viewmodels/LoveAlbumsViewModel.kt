@@ -47,13 +47,16 @@ class LoveAlbumsViewModel: ViewModel() {
 
     fun getAlbums(){
         var fbAlbumImageUrl: String
-        var count = 0
+        var fbAlbumImageUrls = HashMap<String, String>()
         if (auth.currentUser != null){
-            database.reference.addValueEventListener(object : ValueEventListener {
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_albums").children.forEach(Consumer { t ->
+                    var count = 0
+                    arrayListAlbum.clear()
+                    listAlbum.value = arrayListAlbum
+                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_albums").children.forEach{ t ->
                         val band = snapshot.child("/albums/${t.value}").child("band").value.toString()
 
                         val bandName = snapshot.child("/bands/${band}").child("name").value.toString()
@@ -61,10 +64,9 @@ class LoveAlbumsViewModel: ViewModel() {
                         val year = snapshot.child("/albums/${t.value}").child("year").value.toString().toInt()
                         val extension = snapshot.child("/albums/${t.value}").child("cover").value.toString()
 
-                        //val imagePath = mService.getFile("/storage/bands/${bandName}/albums/${albumName}/cover.jpg", authToken).execute().body()?.public_url
-                        //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
 
                         fbAlbumImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
+                        fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
                         var isInLove = false
                         snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
@@ -84,10 +86,14 @@ class LoveAlbumsViewModel: ViewModel() {
                         )
 
                         arrayListAlbum.add(album)
+
+                    }
+
+                    arrayListAlbum.forEach {
                         listAlbum.value = arrayListAlbum
-                        getFilePath(fbAlbumImageUrl, "image", count)
+                        getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "image", count)
                         count++
-                    })
+                    }
 
                 }
 

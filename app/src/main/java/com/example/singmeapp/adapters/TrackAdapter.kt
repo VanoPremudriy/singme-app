@@ -54,9 +54,6 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
 
 
     class TrackHolder(item: View, private val fragmentActivity: AppCompatActivity): RecyclerView.ViewHolder(item){
-
-
-        lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
         val binding = TrackItemBinding.bind(item)
 
 
@@ -65,8 +62,6 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             tvItemTrackBandName.text = track.band
             if (track.imageUrl!="")
             Picasso.get().load(track.imageUrl).fit().into(ivItemTrackCover)
-            val provider = ViewModelProvider(fragmentActivity)
-            playerPlaylistViewModel = provider[PlayerPlaylistViewModel::class.java]
 
         }
     }
@@ -117,11 +112,15 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
                 }
             }
             if (it != null) {
-                Log.e(
+                /*Log.e(
                     "position",
                     "position=${position?.toString()} prevId=${prevId?.toString()} currentTrackId=${it?.toString()}"
-                )
+                )*/
+               /* if (it != prevId && position != it){
+                    playerPlaylistViewModel.updateListeningCounter(trackList[it].uuid)
+                }*/
                 if (it != prevId && prevItem != null && prevId != null) {
+
                     prevItem?.binding?.ivPlayPauseTrackItem?.visibility = View.GONE
                     holder.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
                     holder.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_pause)
@@ -136,16 +135,17 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
                     prevId = position
                     prevItem = holder
                 }
+
             } else {
                 if (position < trackList.size)
                     holder.binding.ivPlayPauseTrackItem.visibility = View.GONE
             }
-
             playerPlaylistViewModel.prevItem.value = prevItem
             playerPlaylistViewModel.prevId.value = prevId
         }
 
         holder.binding.SongLayout.setOnClickListener {
+            //playerPlaylistViewModel.updateListeningCounter(trackList[position].uuid)
             setTrack(position)
             holder.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
             if (playerPlaylistViewModel.isPlaying.value == true)
@@ -211,25 +211,41 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
     }
 
     fun setTrack(position: Int){
-        CreateNotification().createNotification(fragmentActivity, trackList[position], R.drawable.ic_pause)
-        if (trackList[position].trackUrl != "") {
-            if (playerPlaylistViewModel.trackList.value == null || playerPlaylistViewModel.trackList.value?.equals(
-                    trackList
-                ) == false
-            ) {
-                playerPlaylistViewModel.trackList.value = trackList
-                prevId = null
-                prevItem = null
+            if (trackList[position].trackUrl != "") {
+                CreateNotification().createNotification(
+                    fragmentActivity,
+                    trackList[position],
+                    R.drawable.ic_pause
+                )
+                if (playerPlaylistViewModel.trackList.value == null || playerPlaylistViewModel.trackList.value?.equals(
+                        trackList
+                    ) == false
+                ) {
+                    if (playerPlaylistViewModel.trackList.value != null){
+                    (playerPlaylistViewModel.trackList.value as ArrayList<Track>).clear()
+                    (playerPlaylistViewModel.trackList.value as ArrayList<Track>).addAll(trackList)
+                        playerPlaylistViewModel.trackList.value = playerPlaylistViewModel.trackList.value
+                    } else {
+                        playerPlaylistViewModel.trackList.value = ArrayList<Track>()
+                        (playerPlaylistViewModel.trackList.value as ArrayList<Track>).addAll(trackList)
+                        playerPlaylistViewModel.trackList.value = playerPlaylistViewModel.trackList.value
+                    }
+                    prevId = null
+                    prevItem = null
 
-            }
+                }
 
-            playerPlaylistViewModel.currentTrackId.value = position
-            if (mainActivity.bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN)
-                mainActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            mainActivity.binding.player.tvSongNameUpMenu.text = trackList[position].name
-            mainActivity.binding.player.tvBandNameUpMenu.text = trackList[position].band
-        }
-        else Toast.makeText(fragmentActivity.applicationContext, "Загрузка", Toast.LENGTH_SHORT).show()
+                playerPlaylistViewModel.currentTrackId.value = position
+                if (mainActivity.bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN)
+                    mainActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                mainActivity.binding.player.tvSongNameUpMenu.text = trackList[position].name
+                mainActivity.binding.player.tvBandNameUpMenu.text = trackList[position].band
+            } else Toast.makeText(
+                fragmentActivity.applicationContext,
+                "Загрузка",
+                Toast.LENGTH_SHORT
+            ).show()
+
     }
 
     fun playFromUpMenu(){
@@ -248,8 +264,16 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
     }
 
     fun deleteTrackFromLove(position: Int){
-        playerPlaylistViewModel.deleteTrackFromLove(trackList[position])
         mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+        val track = trackList[position]
+        playerPlaylistViewModel.deleteTrackFromLove(track)
+        //if (fragment.javaClass == MyLibraryFragment::class.java)
+        //setTrack(position)
+         if (fragment.javaClass == MyLibraryFragment::class.java) {
+            val frag = fragment as MyLibraryFragment
+             frag.trackAdapter.trackList.remove(track)
+             frag.binding.rcView.adapter = frag.trackAdapter
+        }
     }
 
     fun goToBandProfile(position: Int){
@@ -298,6 +322,8 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
     fun deleteFromPlaylist(position: Int){
         mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
         playlistViewModel.deleteTrack(trackList[position].uuid)
+        //val uuid = (fragment as PlaylistFragment).playlistUuid
+        //(fragment as PlaylistFragment).playlistViewModel.getTracks(uuid)
     }
 
 

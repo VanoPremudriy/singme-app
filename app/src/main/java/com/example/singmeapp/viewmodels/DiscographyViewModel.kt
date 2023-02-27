@@ -70,12 +70,16 @@ class DiscographyViewModel: ViewModel() {
     fun getTracks(currentBand: Band){
         var fbTrackUrl: String
         var fbTrackImageUrl: String
+
+        var fbTrackUrls = HashMap<String, String>()
+        var fbTrackImageUrls = HashMap<String, String>()
+
         var count = 0
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.child("/bands/${currentBand.uuid}/tracks").children.forEach(Consumer { t ->
+                snapshot.child("/bands/${currentBand.uuid}/tracks").children.forEach{ t ->
 
                     val trackName = snapshot.child("/tracks/${t.value}/name").value.toString()
                     val trackAlbum = snapshot.child("/tracks/${t.value}/album").value.toString()
@@ -90,6 +94,9 @@ class DiscographyViewModel: ViewModel() {
                     fbTrackUrl = "/storage/bands/${currentBand.name}/albums/${trackAlbumName}/${trackName}.mp3"
                     fbTrackImageUrl = "/storage/bands/${currentBand.name}/albums/${trackAlbumName}/cover.${extension}"
 
+                    fbTrackUrls.put(t.value.toString(), fbTrackUrl)
+                    fbTrackImageUrls.put(t.value.toString(), fbTrackImageUrl)
+
                     val track = Track(
                         t.value.toString(),
                         trackName,
@@ -102,14 +109,15 @@ class DiscographyViewModel: ViewModel() {
                         isInLove
                     )
 
-                    Log.e("Discography Is In Love", isInLove.toString())
-
                     arrayListTrack.add(track)
-                    listTrack.value = arrayListTrack
-                    getFilePath(fbTrackUrl, "track", count)
-                    getFilePath(fbTrackImageUrl, "trackImage", count)
+                }
+
+                listTrack.value = arrayListTrack
+                arrayListTrack.forEach {
+                    getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                    getFilePath(fbTrackImageUrls.get(it.uuid)!!, "trackImage", count)
                     count++
-                })
+                }
 
             }
 

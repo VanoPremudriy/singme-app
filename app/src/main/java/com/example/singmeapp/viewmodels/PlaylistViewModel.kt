@@ -35,6 +35,8 @@ class PlaylistViewModel: ViewModel() {
     val curPlaylist = MutableLiveData<Album>()
     lateinit var playlist: Album
 
+    var isUserPlaylistsChanged = MutableLiveData<Boolean>(false)
+
     fun getPlaylistData(playlistUuid: String){
         database.reference.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -76,7 +78,7 @@ class PlaylistViewModel: ViewModel() {
     fun getTracks(playlistUuid: String){
         var fbTrackUrl: String
         var fbImageUrl: String
-        database.reference.addValueEventListener(object: ValueEventListener{
+        database.reference.addListenerForSingleValueEvent(object: ValueEventListener{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 var count = 0
@@ -142,17 +144,16 @@ class PlaylistViewModel: ViewModel() {
                 database.reference.child("albums/${playlistUuid}").setValue(null)
                 database.reference.child("album_exist/${auth.currentUser?.uid}/${playlistName}").setValue(null)
 
-                snapshot.child("users").children.forEach { user ->
+                snapshot.child("users").children.forEachIndexed {index,  user ->
                     user.child("library/playlists").children.forEach{
                         usersHavePLaylistUuids.add(it.value.toString())
                     }
                     if (usersHavePLaylistUuids.remove(playlistUuid)){
                         database.reference.child("users/${user.key}/library/playlists").setValue(usersHavePLaylistUuids)
+                        isUserPlaylistsChanged.value = !isUserPlaylistsChanged.value!!
                     }
+
                 }
-
-
-
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -240,6 +241,7 @@ class PlaylistViewModel: ViewModel() {
                 }
                 if (tracksUuids.remove(trackUuid)){
                     database.reference.child("albums/${curPlaylist.value?.uuid}/tracks").setValue(tracksUuids)
+                    getTracks(curPlaylist.value!!.uuid)
                 }
             }
 

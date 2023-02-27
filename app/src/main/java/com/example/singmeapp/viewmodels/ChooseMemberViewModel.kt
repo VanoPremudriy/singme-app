@@ -31,44 +31,56 @@ class ChooseMemberViewModel: ViewModel() {
 
 
     var listChooseMembers = MutableLiveData<List<User>>()
-    lateinit var arrayListChooseMembers: ArrayList<User>
+    var arrayListChooseMembers =  ArrayList<User>()
 
     fun getChooseMembers() {
         var fbFriendAvatarUrl: String
+        var fbFriendAvatarUrls = HashMap<String, String>()
+        var count = 0
         if (auth.currentUser != null) {
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var count = 0
-                    arrayListChooseMembers = ArrayList<User>()
+                    arrayListChooseMembers.clear()
                     listChooseMembers.value = arrayListChooseMembers
-                    snapshot.child("/user_has_friends/${auth.currentUser?.uid}").children.forEach(Consumer { t ->
-                        val friendName = snapshot.child("users/${t.key}/profile/name").value.toString()
-                        val friendAge = snapshot.child("users/${t.key}/profile/age").value.toString()
-                        val friendSex = snapshot.child("users/${t.key}/profile/sex").value.toString()
-                        val avatarExtension = snapshot.child("users/${t.key}/profile/avatar").value.toString()
+                    snapshot.child("/user_has_friends/${auth.currentUser?.uid}").children.forEach{ t ->
                         val friendshipStatus = t.value.toString()
+                        if (friendshipStatus == "friend") {
+                            val friendName =
+                                snapshot.child("users/${t.key}/profile/name").value.toString()
+                            val friendAge =
+                                snapshot.child("users/${t.key}/profile/age").value.toString()
+                            val friendSex =
+                                snapshot.child("users/${t.key}/profile/sex").value.toString()
+                            val avatarExtension =
+                                snapshot.child("users/${t.key}/profile/avatar").value.toString()
 
-                        fbFriendAvatarUrl = "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
 
-                        val friend = User(
-                            t.key.toString(),
-                            friendName,
-                            friendAge.toInt(),
-                            friendSex,
-                            friendshipStatus,
-                            friendshipStatus,
-                            ""
-                        )
+                            fbFriendAvatarUrl =
+                                "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
+                            fbFriendAvatarUrls.put(t.key.toString(), fbFriendAvatarUrl)
 
-                        if (friend.friendshipStatus == "friend"){
+                            val friend = User(
+                                t.key.toString(),
+                                friendName,
+                                friendAge.toInt(),
+                                friendSex,
+                                friendshipStatus,
+                                friendshipStatus,
+                                ""
+                            )
+
                             arrayListChooseMembers.add(friend)
-                            listChooseMembers.value = arrayListChooseMembers
-                            getFilePath(fbFriendAvatarUrl, "avatar", count)
+                        }
+
+                        listChooseMembers.value = arrayListChooseMembers
+
+                        arrayListChooseMembers.forEach {
+                            getFilePath(fbFriendAvatarUrls.get(it.uuid)!!, "avatar", count)
                             count++
                         }
-                    })
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

@@ -14,6 +14,7 @@ import com.example.singmeapp.R
 import com.example.singmeapp.adapters.AlbumAdapter
 import com.example.singmeapp.databinding.FragmentLoveAlbumsBinding
 import com.example.singmeapp.items.Album
+import com.example.singmeapp.viewmodels.AlbumViewModel
 import com.example.singmeapp.viewmodels.LoveAlbumsViewModel
 import com.example.singmeapp.viewmodels.MyLibraryViewModel
 
@@ -22,6 +23,8 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
 
     lateinit var binding: FragmentLoveAlbumsBinding
     lateinit var loveAlbumsViewModel: LoveAlbumsViewModel
+    lateinit var albumViewModel: AlbumViewModel
+
     lateinit var albumAdapter: AlbumAdapter
     lateinit var fragmentActivity: AppCompatActivity
 
@@ -31,7 +34,10 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
         setHasOptionsMenu(true)
 
         val provider = ViewModelProvider(this)
+        val albumProvider = ViewModelProvider(this)
+        albumViewModel = albumProvider[AlbumViewModel::class.java]
         loveAlbumsViewModel = provider[LoveAlbumsViewModel::class.java]
+        albumAdapter = AlbumAdapter(this)
         loveAlbumsViewModel.getAlbums()
     }
 
@@ -45,10 +51,16 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
         binding = FragmentLoveAlbumsBinding.inflate(layoutInflater)
 
         binding.rcView.layoutManager = LinearLayoutManager(activity)
-        albumAdapter = AlbumAdapter(this)
+
+
         loveAlbumsViewModel.listAlbum.observe(viewLifecycleOwner){
-            albumAdapter.albumList = it as ArrayList<Album>
+            albumAdapter.albumList.clear()
+            albumAdapter.albumList.addAll(it as ArrayList<Album>)
             binding.rcView.adapter = albumAdapter
+        }
+
+        albumViewModel.isLoveAlbumsListChanged.observe(viewLifecycleOwner){
+            loveAlbumsViewModel.getAlbums()
         }
 
         return binding.root

@@ -31,8 +31,8 @@ class MyLibraryViewModel: ViewModel() {
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
     var listTrack = MutableLiveData<List<Track>>()
-    lateinit var arrayListTrack: ArrayList<Track>
-    var url: String = "/users/Vtkal2hD2uRkpWBJfigYnvShhJu1/library/love_tracks"
+    var arrayListTrack =  ArrayList<Track>()
+    //var url: String = "/users/Vtkal2hD2uRkpWBJfigYnvShhJu1/library/love_tracks"
 
     init {
         val SDK_INT = Build.VERSION.SDK_INT
@@ -46,16 +46,17 @@ class MyLibraryViewModel: ViewModel() {
     fun getTracks() {
         var fbTrackUrl: String
         var fbImageUrl: String
+        var fbTrackUrls = HashMap<String, String>()
+        var fbImageUrls = HashMap<String, String>()
+        var count = 0
         if (auth.currentUser != null)
-            database.reference.addValueEventListener(object : ValueEventListener {
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var count = snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").childrenCount - 1
-                    arrayListTrack  = ArrayList<Track>()
+                    //snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").childrenCount - 1
+                    arrayListTrack.clear()
                     listTrack.value = arrayListTrack
-                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
-                        Consumer {
-
+                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").children.forEach{
                             val band =
                                 snapshot.child("/tracks/${it.value}").child("band").value.toString()
                             val album = snapshot.child("/tracks/${it.value}")
@@ -81,6 +82,9 @@ class MyLibraryViewModel: ViewModel() {
                                 "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
                             fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
 
+                            fbTrackUrls.put(it.value.toString(), fbTrackUrl)
+                            fbImageUrls.put(it.value.toString(), fbImageUrl)
+
 
                             val track = Track(
                                 it.value.toString(),
@@ -95,12 +99,19 @@ class MyLibraryViewModel: ViewModel() {
                             )
                             Log.e("Is In Love", isTrackInLove.toString())
 
-                            arrayListTrack.add(0,track)
-                            listTrack.value = arrayListTrack
-                            getFilePath(fbImageUrl, "image", count)
-                            getFilePath(fbTrackUrl, "track", count)
-                            count--
-                        })
+                            //arrayListTrack.add(0,track)
+                        arrayListTrack.add(track)
+
+                        }
+
+                    arrayListTrack.reverse()
+                    listTrack.value = arrayListTrack
+                    arrayListTrack.forEach {
+                        getFilePath(fbImageUrls.get(it.uuid)!!, "image", count)
+                        getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                        count++
+                    }
+
 
                 }
 
@@ -112,7 +123,7 @@ class MyLibraryViewModel: ViewModel() {
 
     }
 
-    fun getFilePath(url: String, value: String, index: Long){
+    fun getFilePath(url: String, value: String, index: Int){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {
                 override fun onResponse(
@@ -133,7 +144,7 @@ class MyLibraryViewModel: ViewModel() {
             })
     }
 
-    fun getFileUrl(url: String, value: String, index: Long){
+    fun getFileUrl(url: String, value: String, index: Int){
         mService.getSecondFile(url, authToken)
             .enqueue(object : Callback<SecondFileApiModel> {
                 override fun onResponse(
@@ -153,15 +164,17 @@ class MyLibraryViewModel: ViewModel() {
             })
     }
 
-    fun setList(url: String, value: String, index: Long){
+    fun setList(url: String, value: String, index: Int){
         when(value){
             "image" -> {
                 arrayListTrack[index.toInt()].imageUrl = url
                 listTrack.value = arrayListTrack
+                //(listTrack.value as ArrayList<Track>)[index].imageUrl = url//arrayListTrack
             }
             "track" -> {
                 arrayListTrack[index.toInt()].trackUrl = url
                 listTrack.value = arrayListTrack
+                //(listTrack.value as ArrayList<Track>)[index].trackUrl = url
             }
         }
 

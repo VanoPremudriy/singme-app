@@ -22,14 +22,19 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
     lateinit var bingind: FragmentMyPlaylistsBinding
     lateinit var fragmentActivity: AppCompatActivity
     lateinit var playlistAdapter: PlaylistAdapter
+
     lateinit var myPlaylistsViewModel: MyPlaylistsViewModel
+    lateinit var playlistViewModel: PlaylistViewModel
+
     lateinit var optionsMenu: Menu
     lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val provider = ViewModelProvider(this)
+        val playlistProvider = ViewModelProvider(this)
         myPlaylistsViewModel = provider[MyPlaylistsViewModel::class.java]
+        playlistViewModel = playlistProvider[PlaylistViewModel::class.java]
         playlistAdapter = PlaylistAdapter(this)
         setHasOptionsMenu(true)
         mainActivity = activity as MainActivity
@@ -48,8 +53,13 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
         bingind.rcPlaylists.layoutManager = LinearLayoutManager(context)
 
         myPlaylistsViewModel.listPlaylists.observe(viewLifecycleOwner){
-            playlistAdapter.playlistList = it as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+            playlistAdapter.playlistList.clear()
+            playlistAdapter.playlistList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
             bingind.rcPlaylists.adapter = playlistAdapter
+        }
+
+        playlistViewModel.isUserPlaylistsChanged.observe(viewLifecycleOwner){
+            myPlaylistsViewModel.getPlaylists()
         }
 
         mainActivity.binding.tvAddPlaylist.setOnClickListener(this)

@@ -38,8 +38,12 @@ class PlayerPlaylistFragment : Fragment() {
 
         binding = FragmentPlayerPlaylistBinding.inflate(layoutInflater)
         binding.rcView.layoutManager = LinearLayoutManager(activity)
+
+
         playerPlaylistViewModel.trackList.observe(viewLifecycleOwner){
-            trackAdapter.trackList = it as ArrayList<Track>
+            Log.e("PlaylistFrag", "change")
+            trackAdapter.trackList.clear()
+            trackAdapter.trackList.addAll(it as ArrayList<Track>)
             binding.rcView.adapter = trackAdapter
         }
         return binding.root

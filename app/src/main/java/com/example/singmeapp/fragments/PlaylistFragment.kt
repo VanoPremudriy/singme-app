@@ -109,8 +109,7 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
         Log.e("ds", playlistUuid)
         val provider = ViewModelProvider(this)
         playlistViewModel = provider[PlaylistViewModel::class.java]
-        playlistViewModel.getPlaylistData(playlistUuid)
-        playlistViewModel.getTracks(playlistUuid)
+
         trackAdapter = TrackAdapter(activity as AppCompatActivity, this)
 
     }
@@ -120,6 +119,8 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         fragmentActivity.supportActionBar?.hide()
+        playlistViewModel.getPlaylistData(playlistUuid)
+        playlistViewModel.getTracks(playlistUuid)
         binding = FragmentPlaylistBinding.inflate(layoutInflater)
         isEdit = false
         binding.llTopMenu.visibility = View.GONE

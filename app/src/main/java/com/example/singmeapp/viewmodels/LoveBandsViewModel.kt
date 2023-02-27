@@ -35,41 +35,46 @@ class LoveBandsViewModel: ViewModel() {
     var url: String = "/users/${auth.currentUser?.uid}/library/love_bands"
 
     fun getBands(){
-        var fbBandImageUrl = ""
-        var fbBandBackUrl = ""
+        var fbBandImageUrl: String
+        var fbBandBackUrl: String
+        var fbBandImageUrls = HashMap<String, String>()
+        var fbBandBackUrls = HashMap<String, String>()
         var count = 0
         if (auth.currentUser != null){
-            //if (user.)
-            database.reference.addValueEventListener(object : ValueEventListener {
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_bands").children.forEach(
-                        Consumer { t ->
+                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_bands").children.forEach{ t ->
 
-                            val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
-                            var extension = snapshot.child("/bands/${t.value}").child("avatar").value.toString()
-                            var info = snapshot.child("/bands/${t.value}").child("info").value.toString()
-                            var backExtension = snapshot.child("/bands/${t.value}").child("background").value.toString()
+                        val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
+                        var extension = snapshot.child("/bands/${t.value}").child("avatar").value.toString()
+                        var info = snapshot.child("/bands/${t.value}").child("info").value.toString()
+                        var backExtension = snapshot.child("/bands/${t.value}").child("background").value.toString()
 
-                            fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
-                            fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
+                        fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
+                        fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
 
-                            val band = Band(
-                                t.value.toString(),
-                                bandName,
-                                info,
-                            "",
-                                ""
-                            )
+                        fbBandBackUrls.put(t.value.toString(), fbBandBackUrl)
+                        fbBandImageUrls.put(t.value.toString(), fbBandImageUrl)
 
-                            arrayListBand.add(band)
-                            listBand.value = arrayListBand
-                            getFilePath(fbBandImageUrl, "image", count)
-                            getFilePath(fbBandBackUrl, "back", count)
-                            count++
-                        }
-                    )
+                        val band = Band(
+                            t.value.toString(),
+                            bandName,
+                            info,
+                        "",
+                            ""
+                        )
+
+                        arrayListBand.add(band)
+
+                    }
+                    listBand.value = arrayListBand
+                    arrayListBand.forEach {
+                        getFilePath(fbBandImageUrls.get(it.uuid)!!, "image", count)
+                        getFilePath(fbBandBackUrls.get(it.uuid)!!, "back", count)
+                        count++
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

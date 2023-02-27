@@ -25,6 +25,7 @@ import java.time.LocalDateTime
 import java.util.*
 import java.util.function.Consumer
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MyPlaylistsViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
@@ -75,6 +76,7 @@ class MyPlaylistsViewModel: ViewModel() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val count = snapshot.childrenCount
                 database.reference.child("users/${auth.currentUser?.uid}/library/playlists/${count}").setValue(playlistUuid)
+                getPlaylists()
                 createDir("/storage/users/${auth.currentUser?.uid}/playlists", playlistName)
             }
 
@@ -87,16 +89,16 @@ class MyPlaylistsViewModel: ViewModel() {
 
     fun getPlaylists(userUuid: String? = null){
         var fbAlbumImageUrl: String
+        var fbAlbumImageUrls = HashMap<String, String>()
+        var count = 0
         if (auth.currentUser != null){
-            database.reference.addValueEventListener(object : ValueEventListener {
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var count = 0
                     arrayListPlaylists.clear()
                     listPlaylists.value = arrayListPlaylists
-                    snapshot.child("/users/${userUuid?: auth.currentUser?.uid}/library/playlists").children.forEach(
-                        Consumer { t ->
+                    snapshot.child("/users/${userUuid?: auth.currentUser?.uid}/library/playlists").children.forEach { t ->
                             val authorUuid = snapshot.child("/albums/${t.value}").child("band").value.toString()
                             val authorName = snapshot.child("/users/${authorUuid}/profile/name").value.toString()
                             val playlistsName = snapshot.child("/albums/${t.value}").child("name").value.toString()
@@ -115,6 +117,7 @@ class MyPlaylistsViewModel: ViewModel() {
 
                                 fbAlbumImageUrl =
                                     "/storage/users/${userUuid ?: auth.currentUser?.uid}/playlists/${playlistsName}/cover.${extension}"
+                                fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
                                 var isInLove = false
                                 snapshot.child("users/${auth.currentUser?.uid}/library/playlists").children.forEach { it1 ->
@@ -133,13 +136,15 @@ class MyPlaylistsViewModel: ViewModel() {
                                 )
 
                                 arrayListPlaylists.add(album)
-                                listPlaylists.value = arrayListPlaylists
-                                getFilePath(fbAlbumImageUrl, "image", count)
-                                count++
                             }
+                        }
 
-
-                        })
+                    listPlaylists.value = arrayListPlaylists
+                    arrayListPlaylists.forEach {
+                        getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "image", count)
+                        Log.e("Image", fbAlbumImageUrls.get(it.uuid).toString())
+                        count++
+                    }
 
                 }
 

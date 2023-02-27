@@ -79,6 +79,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
                         previousTrack = currentTrack
                         currentList = playerPlaylistViewModel.trackList.value as ArrayList<Track>
                         Log.e("is", "One")
+                        playerPlaylistViewModel.updateListeningCounter(currentTrack.uuid)
                     } else {
                         if (previousTrack == currentTrack && !currentList.equals(playerPlaylistViewModel.trackList.value)) {
                             mPlayer.stop()
@@ -103,6 +104,9 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
                             Log.e("is", "Tree")
                             Log.e("Size", playerPlaylistViewModel.trackList.value!!.size.toString())
                             } else if (previousTrack != currentTrack) {
+                            Log.e("current track", currentTrack.name)
+                            if (previousTrack != null)
+                            Log.e("previous track", previousTrack!!.name)
                                 mPlayer.stop()
                                 mPlayer = MediaPlayer()
                                 mPlayer.setOnCompletionListener(this@PlayerPlayerFragment)
@@ -111,7 +115,8 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
                                 mPlayer.start()
                                 binding.ibPlay.setImageResource(android.R.drawable.ic_media_pause)
                                 playerPlaylistViewModel.isPlaying.value = true
-                            Log.e("is", "four")
+                                playerPlaylistViewModel.updateListeningCounter(currentTrack.uuid)
+                                Log.e("is", "four")
                             }
                         currentList = playerPlaylistViewModel.trackList.value as ArrayList<Track>
 
