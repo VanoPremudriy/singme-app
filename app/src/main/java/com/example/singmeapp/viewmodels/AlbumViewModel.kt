@@ -31,7 +31,7 @@ class AlbumViewModel: ViewModel() {
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database = Firebase.database
     var listTrack: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
-    lateinit var arrayListTrack: ArrayList<Track>
+    var arrayListTrack =  ArrayList<Track>()
 
     val bandUuid = MutableLiveData<String>()
 

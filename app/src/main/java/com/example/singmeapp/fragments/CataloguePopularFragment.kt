@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -64,6 +65,17 @@ class CataloguePopularFragment : Fragment() {
         cataloguePopularViewModel.listPopularAlbum.observe(viewLifecycleOwner){
             newAlbumAdapter.albumList = it as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
             binding.rvCataloguePopularAlbums.adapter = newAlbumAdapter
+        }
+
+        binding.tvAllPopularTracks.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("whatIs", "popularTracks")
+            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+        }
+        binding.tvAllPopularAlbums.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("whatIs", "popularAlbums")
+            findNavController().navigate(R.id.catalogueAllFragment, bundle)
         }
         return binding.root
     }

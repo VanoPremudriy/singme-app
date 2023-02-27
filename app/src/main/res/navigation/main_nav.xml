@@ -203,4 +203,9 @@
         android:name="com.example.singmeapp.fragments.ChoosePlaylistForTrackFragment"
         android:label="fragment_choose_playlist_for_track"
         tools:layout="@layout/fragment_choose_playlist_for_track" />
+    <fragment
+        android:id="@+id/catalogueAllFragment"
+        android:name="com.example.singmeapp.fragments.CatalogueAllFragment"
+        android:label="fragment_catalogue_all"
+        tools:layout="@layout/fragment_catalogue_all" />
 </navigation>

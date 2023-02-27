@@ -12,54 +12,59 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.singmeapp.R
 import com.example.singmeapp.adapters.AlbumAdapter
+import com.example.singmeapp.adapters.PlaylistAdapter
 import com.example.singmeapp.adapters.TrackAdapter
-import com.example.singmeapp.databinding.FragmentDiscographyAllBinding
+import com.example.singmeapp.databinding.FragmentCatalogueAllBinding
 import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
+import com.example.singmeapp.viewmodels.CatalogueAllViewModel
 import com.example.singmeapp.viewmodels.DiscographyAllViewModel
 
 
-class DiscographyAllFragment : Fragment() {
+class CatalogueAllFragment : Fragment() {
 
     lateinit var fragmentActivity: AppCompatActivity
-    lateinit var  binding: FragmentDiscographyAllBinding
+    lateinit var binding: FragmentCatalogueAllBinding
     lateinit var tracksAdapter: TrackAdapter
     lateinit var albumsAdapter: AlbumAdapter
-    lateinit var singlesAdapter: AlbumAdapter
-    lateinit var discographyAllViewModel: DiscographyAllViewModel
-    lateinit var band: Band
+    lateinit var playlistAdapter: PlaylistAdapter
+    lateinit var catalogueAllViewModel: CatalogueAllViewModel
     lateinit var whatIs: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentActivity =  activity as AppCompatActivity
+        fragmentActivity = activity as AppCompatActivity
         fragmentActivity.supportActionBar?.show()
         setHasOptionsMenu(true)
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-        band = arguments?.getSerializable("band") as Band
         val provider = ViewModelProvider(this)
-        discographyAllViewModel = provider[DiscographyAllViewModel::class.java]
-        discographyAllViewModel.getMembers(band)
+        catalogueAllViewModel = provider[CatalogueAllViewModel::class.java]
+
         whatIs = arguments?.getString("whatIs").toString()
         when(whatIs){
-            "tracks" -> {
+            "newTracks" -> {
                 fragmentActivity.title = getString(R.string.tracks)
-                discographyAllViewModel.getTracks(band)
+                catalogueAllViewModel.getNewTracks()
                 tracksAdapter = TrackAdapter(activity as AppCompatActivity, this)
             }
-            "albums" -> {
+            "popularTracks" -> {
+                fragmentActivity.title = getString(R.string.tracks)
+                catalogueAllViewModel.getPopularTracks()
+                tracksAdapter = TrackAdapter(activity as AppCompatActivity, this)
+            }
+            "newAlbums" -> {
                 fragmentActivity.title = getString(R.string.albums)
-                discographyAllViewModel.getAlbums(band)
+                catalogueAllViewModel.getNewAlbums()
                 albumsAdapter = AlbumAdapter(this)
             }
-            "singles" -> {
-                fragmentActivity.title = getString(R.string.singles_ep)
-                discographyAllViewModel.getSingles(band)
-                singlesAdapter = AlbumAdapter(this)
+            "popularAlbums" -> {
+                fragmentActivity.title = getString(R.string.albums)
+                catalogueAllViewModel.getPopularAlbums()
+                albumsAdapter = AlbumAdapter(this)
             }
+
         }
 
     }
@@ -68,34 +73,36 @@ class DiscographyAllFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentDiscographyAllBinding.inflate(layoutInflater)
+        binding = FragmentCatalogueAllBinding.inflate(layoutInflater)
 
-        binding.rcDiscographyAll.layoutManager = LinearLayoutManager(context)
+        binding.rvCatalogueAll.layoutManager = LinearLayoutManager(context)
 
-        when(whatIs){
-            "tracks" -> {
-                discographyAllViewModel.listTrack.observe(viewLifecycleOwner){
+        when (whatIs) {
+            "newTracks", "popularTracks" -> {
+                catalogueAllViewModel.listTrack.observe(viewLifecycleOwner) {
                     tracksAdapter.trackList.clear()
                     tracksAdapter.trackList.addAll(it as ArrayList<Track>) /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
-                    binding.rcDiscographyAll.adapter = tracksAdapter
+                    binding.rvCatalogueAll.adapter = tracksAdapter
                 }
             }
-            "albums" -> {
-                discographyAllViewModel.listAlbum.observe(viewLifecycleOwner){
+
+
+            "newAlbums", "popularAlbums" -> {
+                catalogueAllViewModel.listAlbum.observe(viewLifecycleOwner) {
                     albumsAdapter.albumList.clear()
                     albumsAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
-                    binding.rcDiscographyAll.adapter = albumsAdapter
+                    binding.rvCatalogueAll.adapter = albumsAdapter
                 }
             }
-            "singles" -> {
-                discographyAllViewModel.listSingle.observe(viewLifecycleOwner){
-                    singlesAdapter.albumList.clear()
-                    singlesAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
-                    binding.rcDiscographyAll.adapter = singlesAdapter
-                }
-            }
+
         }
         return binding.root
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance() = CatalogueAllFragment()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -111,9 +118,5 @@ class DiscographyAllFragment : Fragment() {
         return true
     }
 
-    companion object {
 
-        @JvmStatic
-        fun newInstance() = DiscographyAllFragment()
-    }
 }

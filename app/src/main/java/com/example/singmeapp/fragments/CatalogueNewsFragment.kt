@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,6 +62,18 @@ class CatalogueNewsFragment : Fragment() {
         catalogueNewsViewModel.listNewAlbum.observe(viewLifecycleOwner){
             newAlbumAdapter.albumList = it as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
             binding.rvCatalogueNewAlbums.adapter = newAlbumAdapter
+        }
+
+        binding.tvAllNewTracks.setOnClickListener{
+            val bundle = Bundle()
+            bundle.putString("whatIs", "newTracks")
+            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+        }
+
+        binding.tvAllNewAlbums.setOnClickListener{
+            val bundle = Bundle()
+            bundle.putString("whatIs", "newAlbums")
+            findNavController().navigate(R.id.catalogueAllFragment, bundle)
         }
 
         return binding.root
