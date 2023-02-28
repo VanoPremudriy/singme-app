@@ -32,7 +32,8 @@ class MyLibraryViewModel: ViewModel() {
     private var database = Firebase.database
     var listTrack = MutableLiveData<List<Track>>()
     var arrayListTrack =  ArrayList<Track>()
-    //var url: String = "/users/Vtkal2hD2uRkpWBJfigYnvShhJu1/library/love_tracks"
+
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
 
     init {
         val SDK_INT = Build.VERSION.SDK_INT
@@ -104,12 +105,18 @@ class MyLibraryViewModel: ViewModel() {
 
                         }
 
-                    arrayListTrack.reverse()
-                    listTrack.value = arrayListTrack
-                    arrayListTrack.forEach {
-                        getFilePath(fbImageUrls.get(it.uuid)!!, "image", count)
-                        getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
-                        count++
+                    if (arrayListTrack.size != 0) {
+                        arrayListTrack.reverse()
+                        listTrack.value = arrayListTrack
+                        arrayListTrack.forEach {
+                            getFilePath(fbImageUrls.get(it.uuid)!!, "image", count)
+                            getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("image", true)
+                        isAlready.value?.put("track", true)
+                        isAlready.value = isAlready.value
                     }
 
 
@@ -169,13 +176,19 @@ class MyLibraryViewModel: ViewModel() {
             "image" -> {
                 arrayListTrack[index.toInt()].imageUrl = url
                 listTrack.value = arrayListTrack
-                //(listTrack.value as ArrayList<Track>)[index].imageUrl = url//arrayListTrack
             }
             "track" -> {
                 arrayListTrack[index.toInt()].trackUrl = url
                 listTrack.value = arrayListTrack
-                //(listTrack.value as ArrayList<Track>)[index].trackUrl = url
             }
+        }
+        if (index == arrayListTrack.size -1 && value == "image"){
+            isAlready.value?.put("image", true)
+            isAlready.value = isAlready.value
+        }
+        if (index == arrayListTrack.size -1 && value == "track"){
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
         }
 
     }

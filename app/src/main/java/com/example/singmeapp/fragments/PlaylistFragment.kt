@@ -151,6 +151,12 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
             binding.rcView.adapter = trackAdapter
         }
 
+        playlistViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["track"] == true && it["trackImage"] == true && it["playlistCover"] == true){
+                binding.playlistProgressLayout.visibility = View.GONE
+            }
+        }
+
         binding.ibAddOrChangePlaylist.setOnClickListener(this@PlaylistFragment)
         binding.ibEditPlaylistCover.setOnClickListener(this@PlaylistFragment)
         binding.ibAddTrackInPlaylist.setOnClickListener(this@PlaylistFragment)

@@ -36,6 +36,8 @@ class LoveAlbumsViewModel: ViewModel() {
 
     var url: String = "tracks/user_tracks/${auth.currentUser?.uid}/albums"
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     init {
         val SDK_INT = Build.VERSION.SDK_INT
         if (SDK_INT > 8) {
@@ -89,10 +91,15 @@ class LoveAlbumsViewModel: ViewModel() {
 
                     }
 
-                    arrayListAlbum.forEach {
+                    if (arrayListAlbum.size != 0) {
                         listAlbum.value = arrayListAlbum
-                        getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "image", count)
-                        count++
+                        arrayListAlbum.forEach {
+                            getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "image", count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("image", true)
+                        isAlready.value = isAlready.value
                     }
 
                 }
@@ -148,6 +155,11 @@ class LoveAlbumsViewModel: ViewModel() {
                 arrayListAlbum[index].imageUrl= url
                 listAlbum.value = arrayListAlbum
             }
+        }
+
+        if (index == arrayListAlbum.size -1 && value == "image"){
+            isAlready.value?.put("image", true)
+            isAlready.value = isAlready.value
         }
     }
 }

@@ -62,20 +62,25 @@ class LoveBandsFragment : Fragment(), MenuProvider {
         binding.rcView.layoutManager = GridLayoutManager(context, 3)
         bandAdapter = BandAdapter(this)
         loveBandsViewModel.listBand.observe(viewLifecycleOwner){
-            bandAdapter.bandList = it as ArrayList<Band> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+            bandAdapter.bandList.clear()
+            bandAdapter.bandList.addAll(it as ArrayList<Band>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
             binding.rcView.adapter = bandAdapter
+        }
+
+        loveBandsViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["back"] == true && it["image"] == true){
+                binding.loveBandsProgressLayout.visibility = View.GONE
+            }
         }
         return binding.root
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
-           // findNavController().navigate(R.id.myLibraryFragment)
             val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
 
             if (count == 0) {
                 activity?.onBackPressed()
-                //additional code
             } else {
                 findNavController().popBackStack()
             }

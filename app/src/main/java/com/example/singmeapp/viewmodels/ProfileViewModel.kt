@@ -29,6 +29,8 @@ class ProfileViewModel: ViewModel() {
     var mService: RetrofitServices = Common.retrofitService
     lateinit var user: User
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     init {
         val SDK_INT = Build.VERSION.SDK_INT
         if (SDK_INT > 8) {
@@ -50,7 +52,11 @@ class ProfileViewModel: ViewModel() {
                 val sex = snapshot.child("sex").value.toString()
                 //val imagePath = mService.getFile("storage/users/${auth.currentUser?.uid}/profile/avatar.jpg", authToken).execute().body()?.public_url
                 //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
-                fbAvatar = "storage/users/${auth.currentUser?.uid}/profile/avatar.${extension}"
+                if (extension != "null") {
+                    fbAvatar = "storage/users/${auth.currentUser?.uid}/profile/avatar.${extension}"
+                } else {
+                    fbAvatar = "storage/default_images/cover.png"
+                }
                 user = User(auth.currentUser!!.uid,name, age.toInt(), sex, "", "", "")
                 currentUser.value = user
                 getFilePath(fbAvatar, "avatar")
@@ -133,6 +139,10 @@ class ProfileViewModel: ViewModel() {
                 user.avatarUrl = url
                 currentUser.value = user
             }
+        }
+        if (value == "avatar"){
+            isAlready.value?.put("avatar", true)
+            isAlready.value = isAlready.value
         }
     }
 

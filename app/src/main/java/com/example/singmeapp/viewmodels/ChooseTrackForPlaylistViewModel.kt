@@ -35,6 +35,9 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
 
     var isExist = MutableLiveData<Boolean>()
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
+
     fun setTrackToPlaylist(trackUuid: String){
         database.reference.child("albums/${playlistUuid.value}/tracks").addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -62,11 +65,16 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
     fun getTracks() {
         var fbTrackUrl: String
         var fbImageUrl: String
+
+        var fbTrackUrls = HashMap<String, String>()
+        var fbImageUrls = HashMap<String, String>()
+
         if (auth.currentUser != null)
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+                var count = 0
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var count = snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").childrenCount - 1
+
                     arrayListTrack  = ArrayList<Track>()
                     listTrack.value = arrayListTrack
                     snapshot.child("/users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
@@ -97,6 +105,8 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
                                 "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
                             fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
 
+                            fbTrackUrls.put(it.value.toString(), fbTrackUrl)
+                            fbImageUrls.put(it.value.toString(), fbImageUrl)
 
                             val track = Track(
                                 it.value.toString(),
@@ -111,13 +121,22 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
                             )
                             Log.e("Is In Love", isTrackInLove.toString())
 
-                            arrayListTrack.add(0,track)
-                            listTrack.value = arrayListTrack
-                            getFilePath(fbImageUrl, "image", count)
-                            getFilePath(fbTrackUrl, "track", count)
-                            count--
+                            arrayListTrack.add(track)
                         })
 
+                    if (arrayListTrack.size != 0) {
+                        arrayListTrack.reverse()
+                        listTrack.value = arrayListTrack
+                        arrayListTrack.forEach {
+                            getFilePath(fbImageUrls[it.uuid]!!, "image", count)
+                            getFilePath(fbTrackUrls[it.uuid]!!, "track", count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("image", true)
+                        isAlready.value?.put("track", true)
+                        isAlready.value = isAlready.value
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -128,7 +147,7 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
 
     }
 
-    fun getFilePath(url: String, value: String, index: Long){
+    fun getFilePath(url: String, value: String, index: Int){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {
                 override fun onResponse(
@@ -149,7 +168,7 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
             })
     }
 
-    fun getFileUrl(url: String, value: String, index: Long){
+    fun getFileUrl(url: String, value: String, index: Int){
         mService.getSecondFile(url, authToken)
             .enqueue(object : Callback<SecondFileApiModel> {
                 override fun onResponse(
@@ -169,7 +188,7 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
             })
     }
 
-    fun setList(url: String, value: String, index: Long){
+    fun setList(url: String, value: String, index: Int){
         when(value){
             "image" -> {
                 arrayListTrack[index.toInt()].imageUrl = url
@@ -179,6 +198,16 @@ class ChooseTrackForPlaylistViewModel: ViewModel() {
                 arrayListTrack[index.toInt()].trackUrl = url
                 listTrack.value = arrayListTrack
             }
+        }
+
+        if (index == arrayListTrack.size -1 && value == "image"){
+            isAlready.value?.put("image", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "track"){
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
         }
 
     }

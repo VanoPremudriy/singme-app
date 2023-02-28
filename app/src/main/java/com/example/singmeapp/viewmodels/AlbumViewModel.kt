@@ -43,6 +43,8 @@ class AlbumViewModel: ViewModel() {
 
     var isLoveAlbumsListChanged = MutableLiveData<Boolean>(false)
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     lateinit var album: Album
 
     init {
@@ -54,24 +56,6 @@ class AlbumViewModel: ViewModel() {
         }
     }
 
-
-    /*fun updateListeningCounter(albumUuid: String){
-        database.reference.child("albums/${albumUuid}/listening_counter").addListenerForSingleValueEvent(object: ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                var counter = 0
-                if (snapshot.value != null){
-                    counter = snapshot.value.toString().toInt()
-                }
-                counter++
-                database.reference.child("albums/${albumUuid}/listening_counter").setValue(counter)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }*/
 
     fun getAlbumData(albumUuid: String){
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -164,11 +148,18 @@ class AlbumViewModel: ViewModel() {
                         arrayListTrack.add(track)
                     }
 
-                    listTrack.value = arrayListTrack
-                    arrayListTrack.forEach {
-                        getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
-                        getFilePath(fbImageUrls.get(it.uuid)!!, "trackImage", count)
-                        count++
+                    if (arrayListTrack.size != 0) {
+                        listTrack.value = arrayListTrack
+                        arrayListTrack.forEach {
+                            getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                            getFilePath(fbImageUrls.get(it.uuid)!!, "trackImage", count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("track", true)
+                        isAlready.value?.put("trackImage", true)
+                       // isAlready.value?.put("albumCover", true)
+                        isAlready.value = isAlready.value
                     }
                 }
 
@@ -235,6 +226,21 @@ class AlbumViewModel: ViewModel() {
                 album.imageUrl = url
                 currentAlbum.value = album
             }
+        }
+
+        if (index == arrayListTrack.size -1 && value == "track"){
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "trackImage"){
+            isAlready.value?.put("trackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == -1 && value == "albumCover"){
+            isAlready.value?.put("albumCover", true)
+            isAlready.value = isAlready.value
         }
     }
 

@@ -89,6 +89,15 @@ class DiscographyFragment : Fragment(), MenuProvider, View.OnClickListener {
             binding.rcViewDiscographySingles.adapter = singleAdapter
         }
 
+        discographyViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["track"] == true
+                && it["trackImage"] == true
+                && it["albumImage"] == true
+                && it["singleImage"] == true){
+                binding.discographyProgressLayout.visibility = View.GONE
+            }
+        }
+
         binding.tvAllTopTracks.setOnClickListener(this@DiscographyFragment)
         binding.tvAllAlbums.setOnClickListener(this@DiscographyFragment)
         binding.tvAllSingles.setOnClickListener(this@DiscographyFragment)

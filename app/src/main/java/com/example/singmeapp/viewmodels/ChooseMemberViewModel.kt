@@ -33,6 +33,8 @@ class ChooseMemberViewModel: ViewModel() {
     var listChooseMembers = MutableLiveData<List<User>>()
     var arrayListChooseMembers =  ArrayList<User>()
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun getChooseMembers() {
         var fbFriendAvatarUrl: String
         var fbFriendAvatarUrls = HashMap<String, String>()
@@ -74,11 +76,15 @@ class ChooseMemberViewModel: ViewModel() {
                             arrayListChooseMembers.add(friend)
                         }
 
-                        listChooseMembers.value = arrayListChooseMembers
-
-                        arrayListChooseMembers.forEach {
-                            getFilePath(fbFriendAvatarUrls.get(it.uuid)!!, "avatar", count)
-                            count++
+                        if (arrayListChooseMembers.size != 0) {
+                            listChooseMembers.value = arrayListChooseMembers
+                            arrayListChooseMembers.forEach {
+                                getFilePath(fbFriendAvatarUrls.get(it.uuid)!!, "avatar", count)
+                                count++
+                            }
+                        } else {
+                            isAlready.value?.put("avatar", true)
+                            isAlready.value = isAlready.value
                         }
                     }
                 }
@@ -138,6 +144,11 @@ class ChooseMemberViewModel: ViewModel() {
                 arrayListChooseMembers[index].avatarUrl = url
                 listChooseMembers.value = arrayListChooseMembers
             }
+        }
+
+        if (index == arrayListChooseMembers.size -1 && value == "avatar"){
+            isAlready.value?.put("avatar", true)
+            isAlready.value = isAlready.value
         }
     }
 }

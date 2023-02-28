@@ -54,6 +54,12 @@ class ChoosePlaylistForTrackFragment : Fragment() {
             binding.rcChoosePlaylistForTrack.adapter = choosePlaylistForTrackAdapter
         }
 
+        choosePlaylistForTrackViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["image"] == true){
+                binding.choosePlaylistForTrackProgressLayout.visibility = View.GONE
+            }
+        }
+
         choosePlaylistForTrackViewModel.isExist.observe(viewLifecycleOwner){
             if (it){
                 Toast.makeText(context, "Этот трек уже есть в плейлисте", Toast.LENGTH_SHORT).show()

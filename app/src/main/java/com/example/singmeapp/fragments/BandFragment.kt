@@ -198,6 +198,12 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
             }
         }
 
+        bandViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["avatar"] == true && it["bandAvatar"] == true && it["bandBack"] == true){
+                binding.bandProgressLayout.visibility = View.GONE
+            }
+        }
+
 
         return binding.root
     }

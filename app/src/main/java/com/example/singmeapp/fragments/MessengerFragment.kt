@@ -46,6 +46,12 @@ class MessengerFragment : Fragment() {
             binding.rcChatUsers.adapter = chatUsersAdapter
         }
 
+        messengerViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["avatarChatUser"] == true){
+                binding.messengerProgressLayout.visibility = View.GONE
+            }
+        }
+
         return binding.root
     }
 

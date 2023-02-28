@@ -11,4 +11,19 @@
         android:layout_height="match_parent"
         android:isScrollContainer="false"
         android:scrollbars="none" />
+
+    <FrameLayout
+        android:id="@+id/loveAlbumsProgressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:clickable="true">
+
+        <ProgressBar
+            android:id="@+id/progressBar3"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 </FrameLayout>

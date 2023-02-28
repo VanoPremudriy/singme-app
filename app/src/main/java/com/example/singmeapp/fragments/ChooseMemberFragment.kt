@@ -58,6 +58,12 @@ class ChooseMemberFragment : Fragment() {
             binding.rcChooseMember.adapter = chooseMemberAdapter
         }
 
+        chooseMemberViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["avatar"] == true){
+                binding.chooseMemberProgressLayout.visibility = View.GONE
+            }
+        }
+
         binding.bAddChosenMemberRole.setOnClickListener {
             binding.llRoles.addView(EditText(context))
         }

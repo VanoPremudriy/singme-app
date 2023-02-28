@@ -41,6 +41,8 @@ class ChoosePlaylistForTrackViewModel: ViewModel() {
     lateinit var playlistName: String
     lateinit var playlistUuid: String
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun setTrackToPlaylist(playlistUuid: String){
         database.reference.child("albums/${playlistUuid}/tracks").addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -66,6 +68,7 @@ class ChoosePlaylistForTrackViewModel: ViewModel() {
 
     fun getPlaylists(){
         var fbAlbumImageUrl: String
+        var fbAlbumImageUrls = HashMap<String, String>()
         if (auth.currentUser != null){
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
@@ -87,9 +90,14 @@ class ChoosePlaylistForTrackViewModel: ViewModel() {
                                 val extension = snapshot.child("/albums/${t.value}")
                                     .child("cover").value.toString()
 
+                                if (extension != "null") {
+                                    fbAlbumImageUrl =
+                                        "/storage/users/${auth.currentUser?.uid}/playlists/${playlistsName}/cover.${extension}"
+                                } else {
+                                    fbAlbumImageUrl = "/storage/default_images/cover.png"
+                                }
 
-                                fbAlbumImageUrl =
-                                    "/storage/users/${auth.currentUser?.uid}/playlists/${playlistsName}/cover.${extension}"
+                                fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
                                 var isInLove = false
                                 snapshot.child("users/${auth.currentUser?.uid}/library/playlists").children.forEach { it1 ->
@@ -108,11 +116,19 @@ class ChoosePlaylistForTrackViewModel: ViewModel() {
                                 )
 
                                 arrayListPlaylists.add(album)
-                                listPlaylists.value = arrayListPlaylists
-                                getFilePath(fbAlbumImageUrl, "image", count)
-                                count++
+
                             }
 
+                            if (arrayListPlaylists.size != 0) {
+                                listPlaylists.value = arrayListPlaylists
+                                arrayListPlaylists.forEach {
+                                    getFilePath(fbAlbumImageUrls[it.uuid]!!, "image", count)
+                                    count++
+                                }
+                            } else {
+                                isAlready.value?.put("image", true)
+                                isAlready.value = isAlready.value
+                            }
                         })
 
                 }
@@ -173,5 +189,11 @@ class ChoosePlaylistForTrackViewModel: ViewModel() {
                 listPlaylists.value = arrayListPlaylists
             }
         }
+
+        if (index == arrayListPlaylists.size -1 && value  == "image"){
+            isAlready.value?.put("image", true)
+            isAlready.value = isAlready.value
+        }
+
     }
 }

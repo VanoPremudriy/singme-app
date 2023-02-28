@@ -44,6 +44,8 @@ class DiscographyAllViewModel: ViewModel() {
     var listMemberUuid = MutableLiveData<List<String>>()
     val arrayListMemberUuid = ArrayList<String>()
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun getMembers(currentBand: Band){
         if (auth.currentUser != null){
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -69,6 +71,10 @@ class DiscographyAllViewModel: ViewModel() {
     fun getTracks(currentBand: Band){
         var fbTrackUrl: String
         var fbTrackImageUrl: String
+
+        var fbTrackUrls = HashMap<String, String>()
+        var fbTrackImageUrls = HashMap<String, String>()
+
         var count = 0
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
@@ -89,6 +95,9 @@ class DiscographyAllViewModel: ViewModel() {
                     fbTrackUrl = "/storage/bands/${currentBand.name}/albums/${trackAlbumName}/${trackName}.mp3"
                     fbTrackImageUrl = "/storage/bands/${currentBand.name}/albums/${trackAlbumName}/cover.${extension}"
 
+                    fbTrackImageUrls.put(t.value.toString(), fbTrackImageUrl)
+                    fbTrackUrls.put(t.value.toString(), fbTrackUrl)
+
                     val track = Track(
                         t.value.toString(),
                         trackName,
@@ -103,11 +112,17 @@ class DiscographyAllViewModel: ViewModel() {
 
 
                     arrayListTrack.add(track)
-                    listTrack.value = arrayListTrack
-                    getFilePath(fbTrackUrl, "track", count)
-                    getFilePath(fbTrackImageUrl, "trackImage", count)
-                    count++
                 })
+
+                if (arrayListTrack.size != 0) {
+                    listTrack.value = arrayListTrack
+
+                    arrayListTrack.forEach {
+                        getFilePath(fbTrackUrls[it.uuid]!!, "track", count)
+                        getFilePath(fbTrackImageUrls[it.uuid]!!, "trackImage", count)
+                        count++
+                    }
+                }
 
             }
 
@@ -120,6 +135,7 @@ class DiscographyAllViewModel: ViewModel() {
 
     fun getAlbums(currentBand: Band){
         var fbAlbumImageUrl: String
+        var fbAlbumImageUrls = HashMap<String, String>()
         var albumCount = 0
         var singleCount = 0
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -128,21 +144,24 @@ class DiscographyAllViewModel: ViewModel() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.child("/bands/${currentBand.uuid}/albums").children.forEach(Consumer { t ->
                     val format = snapshot.child("/albums/${t.value}/format").value.toString()
-                    if (format == "Album"){
+                    if (format == "Album") {
                         val albumName = snapshot.child("/albums/${t.value}/name").value.toString()
-                        val year = snapshot.child("/albums/${t.value}/year").value?.toString()?.toInt()
+                        val year =
+                            snapshot.child("/albums/${t.value}/year").value?.toString()?.toInt()
                         val extension = snapshot.child("/albums/${t.value}/cover").value.toString()
 
                         if (albumName != null && year != null && extension != null && format != null) {
                             fbAlbumImageUrl =
                                 "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
+                            fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
                             var isInLove = false
                             snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
                                 if (it1.value.toString() == t.value.toString()) isInLove = true
                             }
 
-                            val isAuthor = snapshot.child("bands_has_users/${currentBand.uuid}/${auth.currentUser?.uid}").value != null
+                            val isAuthor =
+                                snapshot.child("bands_has_users/${currentBand.uuid}/${auth.currentUser?.uid}").value != null
 
                             val album = Album(
                                 t.value.toString(),
@@ -154,11 +173,15 @@ class DiscographyAllViewModel: ViewModel() {
                                 ""
                             )
 
-                                arrayListAlbum.add(album)
-                                listAlbum.value = arrayListAlbum
-                                getFilePath(fbAlbumImageUrl, "albumImage", albumCount)
-                                albumCount++
+                            arrayListAlbum.add(album)
+                        }
 
+                        if (arrayListAlbum.size != 0) {
+                            listAlbum.value = arrayListAlbum
+                            arrayListAlbum.forEach {
+                                getFilePath(fbAlbumImageUrls[it.uuid]!!, "albumImage", albumCount)
+                                albumCount++
+                            }
                         }
                     }
                 })
@@ -175,6 +198,7 @@ class DiscographyAllViewModel: ViewModel() {
 
     fun getSingles(currentBand: Band){
         var fbAlbumImageUrl: String
+        var fbAlbumImageUrls = HashMap<String, String>()
         var singleCount = 0
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
@@ -189,6 +213,7 @@ class DiscographyAllViewModel: ViewModel() {
                         if (albumName != null && year != null && extension != null && format != null) {
                             fbAlbumImageUrl =
                                 "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
+                            fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
                             var isInLove = false
                             snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
@@ -208,10 +233,15 @@ class DiscographyAllViewModel: ViewModel() {
                             )
 
                             arrayListSingle.add(album)
-                            listSingle.value = arrayListSingle
-                            getFilePath(fbAlbumImageUrl, "singleImage", singleCount)
-                            singleCount++
 
+                        }
+
+                        if (arrayListSingle.size != 0) {
+                            listSingle.value = arrayListSingle
+                            arrayListSingle.forEach {
+                                getFilePath(fbAlbumImageUrls[it.uuid]!!, "singleImage", singleCount)
+                                singleCount++
+                            }
                         }
                     }
                 })
@@ -283,6 +313,26 @@ class DiscographyAllViewModel: ViewModel() {
                 arrayListSingle[index].imageUrl = url
                 listSingle.value = arrayListSingle
             }
+        }
+
+        if (index == arrayListTrack.size -1 && value == "track"){
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "trackImage"){
+            isAlready.value?.put("trackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListAlbum.size -1 && value == "albumImage"){
+            isAlready.value?.put("albumImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListSingle.size -1 && value == "singleImage"){
+            isAlready.value?.put("singleImage", true)
+            isAlready.value = isAlready.value
         }
     }
 

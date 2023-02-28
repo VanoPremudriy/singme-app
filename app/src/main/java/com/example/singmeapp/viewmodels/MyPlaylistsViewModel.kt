@@ -42,6 +42,8 @@ class MyPlaylistsViewModel: ViewModel() {
     lateinit var playlistName: String
     lateinit var playlistUuid: String
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun isPlaylistExist(playlistName: String){
         this.playlistName = playlistName
         database.reference.child("playlist_exist/${auth.currentUser?.uid}").addListenerForSingleValueEvent(object: ValueEventListener{
@@ -115,8 +117,10 @@ class MyPlaylistsViewModel: ViewModel() {
                                 && year != "null") {
 
 
+                                if (extension != "null")
                                 fbAlbumImageUrl =
                                     "/storage/users/${userUuid ?: auth.currentUser?.uid}/playlists/${playlistsName}/cover.${extension}"
+                                else fbAlbumImageUrl = "/storage/default_images/cover.png"
                                 fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
                                 var isInLove = false
@@ -139,11 +143,16 @@ class MyPlaylistsViewModel: ViewModel() {
                             }
                         }
 
-                    listPlaylists.value = arrayListPlaylists
-                    arrayListPlaylists.forEach {
-                        getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "image", count)
-                        Log.e("Image", fbAlbumImageUrls.get(it.uuid).toString())
-                        count++
+                    if (arrayListPlaylists.size != 0) {
+                        listPlaylists.value = arrayListPlaylists
+                        arrayListPlaylists.forEach {
+                            getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "image", count)
+                            Log.e("Image", fbAlbumImageUrls.get(it.uuid).toString())
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("image", true)
+                        isAlready.value = isAlready.value
                     }
 
                 }
@@ -203,6 +212,10 @@ class MyPlaylistsViewModel: ViewModel() {
                 arrayListPlaylists[index].imageUrl= url
                 listPlaylists.value = arrayListPlaylists
             }
+        }
+        if (index == arrayListPlaylists.size -1 && value == "image"){
+            isAlready.value?.put("image", true)
+            isAlready.value = isAlready.value
         }
     }
 

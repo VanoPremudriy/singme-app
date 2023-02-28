@@ -2,6 +2,7 @@ package com.example.singmeapp.viewmodels
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,8 @@ class CatalogueNewsViewModel: ViewModel() {
 
     var listNewAlbum = MutableLiveData<List<Album>>()
     var arrayListNewAlbum = ArrayList<Album>()
+
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
 
     fun getTracks(){
         var fbTrackUrl = ""
@@ -75,7 +78,7 @@ class CatalogueNewsViewModel: ViewModel() {
                         bandName,
                         trackAlbumName,
                         bandUuid,
-                        trackAlbumName,
+                        trackAlbumUuid,
                         "",
                         "",
                         isInLove,
@@ -233,5 +236,23 @@ class CatalogueNewsViewModel: ViewModel() {
                 listSingle.value = arrayListSingle
             }*/
         }
+        if (index == arrayListNewTrack.size - 1 && value == "track"){
+            Log.e("Done", "track")
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListNewTrack.size -1 && value == "trackImage"){
+            Log.e("Done", "trackImage")
+            isAlready.value?.put("trackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListNewAlbum.size -1 && value == "albumImage"){
+            Log.e("Done", "album")
+            isAlready.value?.put("albumImage", true)
+            isAlready.value = isAlready.value
+        }
+
     }
 }

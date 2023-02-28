@@ -78,20 +78,59 @@ class CatalogueAllFragment : Fragment() {
         binding.rvCatalogueAll.layoutManager = LinearLayoutManager(context)
 
         when (whatIs) {
-            "newTracks", "popularTracks" -> {
+            "newTracks" -> {
                 catalogueAllViewModel.listTrack.observe(viewLifecycleOwner) {
                     tracksAdapter.trackList.clear()
                     tracksAdapter.trackList.addAll(it as ArrayList<Track>) /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
                     binding.rvCatalogueAll.adapter = tracksAdapter
                 }
+
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["newTrack"] == true && it["newTrackImage"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
+                }
             }
 
+            "popularTracks" -> {
+                catalogueAllViewModel.listTrack.observe(viewLifecycleOwner) {
+                    tracksAdapter.trackList.clear()
+                    tracksAdapter.trackList.addAll(it as ArrayList<Track>) /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+                    binding.rvCatalogueAll.adapter = tracksAdapter
+                }
 
-            "newAlbums", "popularAlbums" -> {
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["popularTrack"] == true && it["popularTrackImage"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
+                }
+            }
+
+            "newAlbums" -> {
                 catalogueAllViewModel.listAlbum.observe(viewLifecycleOwner) {
                     albumsAdapter.albumList.clear()
                     albumsAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                     binding.rvCatalogueAll.adapter = albumsAdapter
+                }
+
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["newAlbumImage"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
+                }
+            }
+
+            "popularAlbums" -> {
+                catalogueAllViewModel.listAlbum.observe(viewLifecycleOwner) {
+                    albumsAdapter.albumList.clear()
+                    albumsAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+                    binding.rvCatalogueAll.adapter = albumsAdapter
+                }
+
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["popularAlbumImage"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
                 }
             }
 

@@ -50,6 +50,12 @@ class ChooseTrackForPlaylistFragment : Fragment() {
             binding.rcChooseTrackForPlaylist.adapter = chooseTrackForPlaylistAdapter
         }
 
+        chooseTrackForPlaylistViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["image"] == true && it["track"] == true){
+                binding.chooseTrackForPlaylistProgressLayout.visibility = View.GONE
+            }
+        }
+
         chooseTrackForPlaylistViewModel.isExist.observe(viewLifecycleOwner){
             if (it){
                 Log.e("track", "exist")

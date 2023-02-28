@@ -2,11 +2,13 @@ package com.example.singmeapp.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
@@ -47,6 +49,7 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
         bingind = FragmentMyPlaylistsBinding.inflate(layoutInflater)
 
@@ -59,7 +62,15 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
         }
 
         playlistViewModel.isUserPlaylistsChanged.observe(viewLifecycleOwner){
+            myPlaylistsViewModel.isAlready.value?.put("image", false)
+            bingind.myPlaylistsProgressLayout.visibility = View.VISIBLE
             myPlaylistsViewModel.getPlaylists()
+        }
+
+        myPlaylistsViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["image"] == true){
+                bingind.myPlaylistsProgressLayout.visibility = View.GONE
+            }
         }
 
         mainActivity.binding.tvAddPlaylist.setOnClickListener(this)
@@ -82,6 +93,16 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+            if (count == 0) {
+                activity?.onBackPressed()
+
+            } else {
+                findNavController().popBackStack()
+            }
+        }
+
         if (item.itemId == R.id.menu_add_playlist){
             mainActivity.binding.AddPlaylistMenu.visibility = View.VISIBLE
             mainActivity.binding.view15.visibility = View.VISIBLE
@@ -95,8 +116,13 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0?.id){
             mainActivity.binding.tvAddPlaylist.id -> {
-                myPlaylistsViewModel.isPlaylistExist(mainActivity.binding.etPlaylistName.text.toString())
-                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                if (!mainActivity.binding.etPlaylistName.text.isNullOrEmpty()){
+                    myPlaylistsViewModel.isPlaylistExist(mainActivity.binding.etPlaylistName.text.toString())
+                    mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                } else {
+                    Toast.makeText(context, "Write playlist name", Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
     }

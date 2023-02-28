@@ -29,15 +29,15 @@ class FriendsViewModel: ViewModel() {
 
     var listFriends = MutableLiveData<List<User>>()
     //var arrayListFriends = ArrayList<User>()
-    lateinit var arrayListFriends: ArrayList<User>
+    var arrayListFriends = ArrayList<User>()
 
     var listRequests = MutableLiveData<List<User>>()
     //var arrayListRequests = ArrayList<User>()
-    lateinit var arrayListRequests:ArrayList<User>
+    var arrayListRequests = ArrayList<User>()
 
     var listMyRequests = MutableLiveData<List<User>>()
     //var arrayListMyRequests = ArrayList<User>()
-    lateinit var arrayListMyRequests:ArrayList<User>
+    var arrayListMyRequests = ArrayList<User>()
 
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
     var mService: RetrofitServices = Common.retrofitService
@@ -46,32 +46,42 @@ class FriendsViewModel: ViewModel() {
     private var database = Firebase.database
 
     var listAllUsers = MutableLiveData<List<User>>()
-    lateinit var arrayListAllUsers: ArrayList<User>
+    var arrayListAllUsers = ArrayList<User>()
+
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
 
 
     fun getFriends(){
         var fbFriendAvatarUrl: String
+        var fbFriendAvatarUrls = HashMap<String, String>()
+        var friendCount = 0
+        var requestCount = 0
+        var myRequestCount = 0
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
-                var friendCount = 0
-                var requestCount = 0
-                var myRequestCount = 0
-                arrayListFriends = ArrayList<User>()
-                arrayListRequests = ArrayList<User>()
-                arrayListMyRequests = ArrayList<User>()
+                arrayListFriends.clear()
+                arrayListRequests.clear()
+                arrayListMyRequests.clear()
                 listMyRequests.value = arrayListMyRequests
                 listFriends.value = arrayListFriends
                 listRequests.value = arrayListRequests
-                snapshot.child("/user_has_friends/${auth.currentUser?.uid}").children.forEach(Consumer { t ->
+                snapshot.child("/user_has_friends/${auth.currentUser?.uid}").children.forEach{ t ->
                     val friendName = snapshot.child("users/${t.key}/profile/name").value.toString()
                     val friendAge = snapshot.child("users/${t.key}/profile/age").value.toString()
                     val friendSex = snapshot.child("users/${t.key}/profile/sex").value.toString()
                     val avatarExtension = snapshot.child("users/${t.key}/profile/avatar").value.toString()
                     val friendshipStatus = t.value.toString()
 
-                    fbFriendAvatarUrl = "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
+                    if (avatarExtension != "null") {
+                        fbFriendAvatarUrl =
+                            "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
+                    } else {
+                        fbFriendAvatarUrl =
+                            "/storage/default_images/cover.png"
+                    }
+                    fbFriendAvatarUrls.put(t.key.toString(), fbFriendAvatarUrl)
 
                     val friend = User(
                         t.key.toString(),
@@ -85,27 +95,52 @@ class FriendsViewModel: ViewModel() {
 
                     if (friend.friendshipStatus == "friend"){
                         arrayListFriends.add(friend)
-                        listFriends.value = arrayListFriends
-                        getFilePath(fbFriendAvatarUrl, "avatarFriend", friendCount)
-                        friendCount++
+
                     }
 
                     if (friend.friendshipStatus == "request"){
                         arrayListRequests.add(friend)
-                        listRequests.value = arrayListRequests
-                        getFilePath(fbFriendAvatarUrl, "avatarRequest", requestCount)
-                        requestCount++
                     }
 
                     if (friend.friendshipStatus == "my request"){
                         arrayListMyRequests.add(friend)
-                        listMyRequests.value = arrayListMyRequests
-                        getFilePath(fbFriendAvatarUrl, "avatarMyRequest", myRequestCount)
-                        myRequestCount++
                     }
 
+                }
 
-                })
+                if (arrayListFriends.size != 0) {
+                    listFriends.value = arrayListFriends
+                    arrayListFriends.forEach {
+                        getFilePath(fbFriendAvatarUrls[it.uuid]!!, "avatarFriend", friendCount)
+                        friendCount++
+                    }
+                } else {
+                    isAlready.value?.put("avatarFriend", true)
+                    isAlready.value = isAlready.value
+                }
+
+                if (arrayListRequests.size != 0){
+                    listRequests.value = arrayListRequests
+                    arrayListRequests.forEach {
+                        getFilePath(fbFriendAvatarUrls[it.uuid]!!, "avatarRequest", requestCount)
+                        requestCount++
+                    }
+                } else {
+                    isAlready.value?.put("avatarRequest", true)
+                    isAlready.value = isAlready.value
+                }
+
+                if (arrayListMyRequests.size != 0){
+                    listMyRequests.value = arrayListMyRequests
+                    arrayListMyRequests.forEach {
+                        getFilePath(fbFriendAvatarUrls[it.uuid]!!, "avatarMyRequest", myRequestCount)
+                        myRequestCount++
+                    }
+                } else {
+                    isAlready.value?.put("avatarMyRequest", true)
+                    isAlready.value = isAlready.value
+                }
+
 
             }
 
@@ -118,20 +153,21 @@ class FriendsViewModel: ViewModel() {
 
     fun getOtherFriends(uuid: String){
         var fbFriendAvatarUrl: String
+        var fbFriendAvatarUrls = HashMap<String, String>()
+        var friendCount = 0
+        var requestCount = 0
+        var myRequestCount = 0
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
-                var friendCount = 0
-                var requestCount = 0
-                var myRequestCount = 0
-                arrayListFriends = ArrayList<User>()
-                arrayListRequests = ArrayList<User>()
-                arrayListMyRequests = ArrayList<User>()
+                arrayListFriends.clear()
+                arrayListRequests.clear()
+                arrayListMyRequests.clear()
                 listMyRequests.value = arrayListMyRequests
                 listFriends.value = arrayListFriends
                 listRequests.value = arrayListRequests
-                snapshot.child("/user_has_friends/${uuid}").children.forEach(Consumer { t ->
+                snapshot.child("/user_has_friends/${uuid}").children.forEach{ t ->
                     val friendName = snapshot.child("users/${t.key}/profile/name").value.toString()
                     val friendAge = snapshot.child("users/${t.key}/profile/age").value.toString()
                     val friendSex = snapshot.child("users/${t.key}/profile/sex").value.toString()
@@ -139,7 +175,14 @@ class FriendsViewModel: ViewModel() {
                     val friendshipStatusForFragment = t.value.toString()
                     val friendshipStatus = snapshot.child("/user_has_friends/${auth.currentUser?.uid}/${t.key}").value.toString()
 
-                    fbFriendAvatarUrl = "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
+                    if (avatarExtension != "null") {
+                        fbFriendAvatarUrl =
+                            "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
+                    } else {
+                        fbFriendAvatarUrl =
+                            "/storage/default_images/cover.png"
+                    }
+                    fbFriendAvatarUrls.put(t.key.toString(), fbFriendAvatarUrl)
 
                     val friend = User(
                         t.key.toString(),
@@ -151,29 +194,51 @@ class FriendsViewModel: ViewModel() {
                         ""
                     )
 
-                    if (friend.friendshipStatusForFragment == "friend"){
+                    if (friend.friendshipStatus == "friend"){
                         arrayListFriends.add(friend)
-                        listFriends.value = arrayListFriends
-                        getFilePath(fbFriendAvatarUrl, "avatarFriend", friendCount)
+                    }
+
+                    if (friend.friendshipStatus == "request"){
+                        arrayListRequests.add(friend)
+                    }
+
+                    if (friend.friendshipStatus == "my request"){
+                        arrayListMyRequests.add(friend)
+                    }
+                }
+
+                if (arrayListFriends.size != 0) {
+                    listFriends.value = arrayListFriends
+                    arrayListFriends.forEach {
+                        getFilePath(fbFriendAvatarUrls[it.uuid]!!, "avatarFriend", friendCount)
                         friendCount++
                     }
+                } else {
+                    isAlready.value?.put("avatarFriend", true)
+                    isAlready.value = isAlready.value
+                }
 
-                    if (friend.friendshipStatusForFragment == "request"){
-                        arrayListRequests.add(friend)
-                        listRequests.value = arrayListRequests
-                        getFilePath(fbFriendAvatarUrl, "avatarRequest", requestCount)
+                if (arrayListRequests.size != 0){
+                    listRequests.value = arrayListRequests
+                    arrayListRequests.forEach {
+                        getFilePath(fbFriendAvatarUrls[it.uuid]!!, "avatarRequest", requestCount)
                         requestCount++
                     }
+                } else {
+                    isAlready.value?.put("avatarRequest", true)
+                    isAlready.value = isAlready.value
+                }
 
-                    if (friend.friendshipStatusForFragment == "my request"){
-                        arrayListMyRequests.add(friend)
-                        listMyRequests.value = arrayListMyRequests
-                        getFilePath(fbFriendAvatarUrl, "avatarMyRequest", myRequestCount)
+                if (arrayListMyRequests.size != 0){
+                    listMyRequests.value = arrayListMyRequests
+                    arrayListMyRequests.forEach {
+                        getFilePath(fbFriendAvatarUrls[it.uuid]!!, "avatarMyRequest", myRequestCount)
                         myRequestCount++
                     }
-
-
-                })
+                } else {
+                    isAlready.value?.put("avatarMyRequest", true)
+                    isAlready.value = isAlready.value
+                }
 
             }
 
@@ -187,13 +252,13 @@ class FriendsViewModel: ViewModel() {
 
     fun getAllUsers(){
         var fbAvatarUrl: String
-
+        var fbAvatarUrls = HashMap<String, String>()
+        var count = 0
         database.reference.addValueEventListener(object : ValueEventListener{
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
-                var count = 0
-                arrayListAllUsers = ArrayList<User>()
+                arrayListAllUsers.clear()
                 listAllUsers.value = arrayListAllUsers
                 snapshot.child("users").children.forEach {
                     val userName = it.child("profile/name").value.toString()
@@ -202,7 +267,12 @@ class FriendsViewModel: ViewModel() {
                     val avatarExtension = it.child("profile/avatar").value.toString()
                     val friendShipStatus:String? = snapshot.child("user_has_friends/${auth.currentUser?.uid}/${it.key}").value?.toString()
 
-                    fbAvatarUrl = "/storage/users/${it.key}/profile/avatar.${avatarExtension}"
+                    if (avatarExtension != "null") {
+                        fbAvatarUrl = "/storage/users/${it.key}/profile/avatar.${avatarExtension}"
+                    } else {
+                        fbAvatarUrl = "/storage/default_images/cover.png"
+                    }
+                    fbAvatarUrls.put(it.key.toString(), fbAvatarUrl)
 
                     val user = User(
                         it.key.toString(),
@@ -214,12 +284,18 @@ class FriendsViewModel: ViewModel() {
                         ""
                     )
 
-                    Log.e("sts", user.friendshipStatus)
-
                     arrayListAllUsers.add(user)
+                }
+
+                if (arrayListAllUsers.size != 0){
                     listAllUsers.value = arrayListAllUsers
-                    getFilePath(fbAvatarUrl, "avatarUser", count)
-                    count++
+                    arrayListAllUsers.forEach {
+                        getFilePath(fbAvatarUrls[it.uuid]!!, "avatarUser", count)
+                        count++
+                    }
+                } else{
+                    isAlready.value?.put("avatarUser", true)
+                    isAlready.value = isAlready.value
                 }
             }
 
@@ -320,6 +396,26 @@ class FriendsViewModel: ViewModel() {
                 arrayListAllUsers[index].avatarUrl = url
                 listAllUsers.value = arrayListAllUsers
             }
+        }
+
+        if (index == arrayListFriends.size -1  && value == "avatarFriend"){
+            isAlready.value?.put("avatarFriend", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListRequests.size -1  && value == "avatarRequest"){
+            isAlready.value?.put("avatarRequest", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListMyRequests.size -1  && value == "avatarMyRequest"){
+            isAlready.value?.put("avatarMyRequest", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListAllUsers.size -1  && value == "avatarUser"){
+            isAlready.value?.put("avatarUser", true)
+            isAlready.value = isAlready.value
         }
     }
 

@@ -44,6 +44,8 @@ class DiscographyViewModel: ViewModel() {
     var listMemberUuid = MutableLiveData<List<String>>()
     val arrayListMemberUuid = ArrayList<String>()
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
 
     fun getMembers(currentBand: Band){
         if (auth.currentUser != null){
@@ -246,6 +248,25 @@ class DiscographyViewModel: ViewModel() {
                 arrayListSingle[index].imageUrl = url
                 listSingle.value = arrayListSingle
             }
+        }
+        if (index == arrayListTrack.size -1 && value == "track"){
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "trackImage"){
+            isAlready.value?.put("trackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListAlbum.size -1 && value == "albumImage"){
+            isAlready.value?.put("albumImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListSingle.size -1 && value == "singleImage"){
+            isAlready.value?.put("singleImage", true)
+            isAlready.value = isAlready.value
         }
     }
 

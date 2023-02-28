@@ -30,17 +30,21 @@ class MessengerViewModel: ViewModel() {
     private var database = Firebase.database
 
     var listChatUsers = MutableLiveData<List<ChatUser>>()
-    lateinit var arrayListChatUsers: ArrayList<ChatUser>
+    var arrayListChatUsers = ArrayList<ChatUser>()
 
     var messages = ArrayList<Message>()
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun getChatUsers() {
+        var fbAvatarUrl: String
+        var fbAvatarUrls = HashMap<String, String>()
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 var count = 0
-                arrayListChatUsers = ArrayList<ChatUser>()
+                arrayListChatUsers.clear()
                 snapshot.child("messenger/${auth.currentUser?.uid}").children.forEach {
                     var friendUuid = it.key
                     it.children.forEach {it1 ->
@@ -58,7 +62,13 @@ class MessengerViewModel: ViewModel() {
                     var friendshipStatus = snapshot.child("user_has_friends/${auth.currentUser?.uid}/${friendUuid}")?.value?.toString()
                     var avatarExtension = snapshot.child("users/${friendUuid}/profile/avatar").value.toString()
 
-                    val fbAvatarUrl = "/storage/users/${friendUuid}/profile/avatar.${avatarExtension}"
+                    if (avatarExtension != "null"){
+                        fbAvatarUrl = "/storage/users/${friendUuid}/profile/avatar.${avatarExtension}"
+                    } else {
+                        fbAvatarUrl = "/storage/default_images/cover.png"
+                    }
+
+                    fbAvatarUrls.put(it.key.toString(), fbAvatarUrl)
 
                     var friend = User(
                         it.key.toString(),
@@ -69,11 +79,17 @@ class MessengerViewModel: ViewModel() {
                         friendshipStatusForFragment = friendshipStatus ?: "unknown",
                         ""
                     )
-                    Log.e("mess", messages[messages.size-1].message.toString())
-                    getFilePath(fbAvatarUrl, "avatarChatUser", count)
                     arrayListChatUsers.add(ChatUser(friend, messages[messages.size-1]))
+                }
+                if (arrayListChatUsers.size != 0) {
                     listChatUsers.value = arrayListChatUsers
-                    count++
+                    arrayListChatUsers.forEach {
+                        getFilePath(fbAvatarUrls[it.user.uuid]!!, "avatarChatUser", count)
+                        count++
+                    }
+                } else {
+                    isAlready.value?.put("avatarChatUser", true)
+                    isAlready.value = isAlready.value
                 }
             }
 
@@ -127,7 +143,10 @@ class MessengerViewModel: ViewModel() {
                 arrayListChatUsers[index].user.avatarUrl = url
                 listChatUsers.value = arrayListChatUsers
             }
-
+        }
+        if (index == arrayListChatUsers.size -1 && value == "avatarChatUser"){
+            isAlready.value?.put("avatarChatUser", true)
+            isAlready.value = isAlready.value
         }
     }
 }

@@ -100,6 +100,12 @@ class AlbumFragment : Fragment(), View.OnClickListener {
             isInLove = it
         }
 
+        albumViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["track"] == true && it["trackImage"] == true && it["albumCover"] == true){
+                binding.albumProgressLayout.visibility = View.GONE
+            }
+        }
+
         binding.albumScrollView.viewTreeObserver.addOnScrollChangedListener {
             if (binding.albumScrollView.scrollY > 150){
                 binding.llTopMenu.visibility = View.VISIBLE
@@ -107,6 +113,8 @@ class AlbumFragment : Fragment(), View.OnClickListener {
                 binding.llTopMenu.visibility = View.GONE
             }
         }
+        
+
     }
 
     override fun onResume() {

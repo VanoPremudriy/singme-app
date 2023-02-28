@@ -39,6 +39,8 @@ class CatalogueAllViewModel: ViewModel() {
     var listSingle = MutableLiveData<List<Album>>()
     var arrayListSingle = ArrayList<Album>()
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
 
     fun getNewTracks(){
         var fbTrackUrl = ""
@@ -80,7 +82,7 @@ class CatalogueAllViewModel: ViewModel() {
                         bandName,
                         trackAlbumName,
                         bandUuid,
-                        trackAlbumName,
+                        trackAlbumUuid,
                         "",
                         "",
                         isInLove,
@@ -411,10 +413,36 @@ class CatalogueAllViewModel: ViewModel() {
                 arrayListAlbum[index].imageUrl = url
                 listAlbum.value = arrayListAlbum
             }
-            /*"singleImage" -> {
-                arrayListSingle[index].imageUrl = url
-                listSingle.value = arrayListSingle
-            }*/
+        }
+
+        if (index == arrayListTrack.size -1 && value == "newTrack"){
+            isAlready.value?.put("newTrack", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "newTrackImage"){
+            isAlready.value?.put("newTrackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "popularTrack"){
+            isAlready.value?.put("popularTrack", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "popularTrackImage"){
+            isAlready.value?.put("popularTrackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index ==  arrayListAlbum.size -1 && value == "newAlbumImage"){
+            isAlready.value?.put("newAlbumImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index ==  arrayListAlbum.size -1 && value == "popularAlbumImage"){
+            isAlready.value?.put("popularAlbumImage", true)
+            isAlready.value = isAlready.value
         }
     }
 }

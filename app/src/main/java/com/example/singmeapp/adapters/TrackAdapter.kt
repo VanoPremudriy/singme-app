@@ -112,13 +112,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
                 }
             }
             if (it != null) {
-                /*Log.e(
-                    "position",
-                    "position=${position?.toString()} prevId=${prevId?.toString()} currentTrackId=${it?.toString()}"
-                )*/
-               /* if (it != prevId && position != it){
-                    playerPlaylistViewModel.updateListeningCounter(trackList[it].uuid)
-                }*/
+
                 if (it != prevId && prevItem != null && prevId != null) {
 
                     prevItem?.binding?.ivPlayPauseTrackItem?.visibility = View.GONE

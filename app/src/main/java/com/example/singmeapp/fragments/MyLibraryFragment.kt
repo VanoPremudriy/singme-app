@@ -62,14 +62,10 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
         binding.rcView.layoutManager = linearLayoutManager
 
 
-        /*playerPlaylistViewModel.isListTrackChanged.observe(viewLifecycleOwner, object: Observer<Boolean>{
-            override fun onChanged(t: Boolean?) {
-                myLibraryViewModel.getTracks()
-            }
-
-        })*/
-
         playerPlaylistViewModel.isListTrackChanged.observe(viewLifecycleOwner){
+            binding.myLibraryProgressLayout.visibility = View.VISIBLE
+            myLibraryViewModel.isAlready.value?.put("track", false)
+            myLibraryViewModel.isAlready.value?.put("image", false)
             trackAdapter = TrackAdapter(fragmentActivity, this)
             myLibraryViewModel.getTracks()
         }
@@ -80,6 +76,12 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
             trackAdapter.trackList.clear()
             trackAdapter.trackList.addAll(it as ArrayList<Track>)
             binding.rcView.adapter = trackAdapter
+        }
+
+        myLibraryViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["track"] == true && it["image"] == true){
+                binding.myLibraryProgressLayout.visibility = View.GONE
+            }
         }
         return binding.root
     }

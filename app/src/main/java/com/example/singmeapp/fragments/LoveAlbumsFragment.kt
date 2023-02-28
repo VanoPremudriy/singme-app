@@ -60,7 +60,15 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
         }
 
         albumViewModel.isLoveAlbumsListChanged.observe(viewLifecycleOwner){
+            binding.loveAlbumsProgressLayout.visibility = View.VISIBLE
+            loveAlbumsViewModel.isAlready.value?.put("image", false)
             loveAlbumsViewModel.getAlbums()
+        }
+
+        loveAlbumsViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["image"] == true){
+                binding.loveAlbumsProgressLayout.visibility = View.GONE
+            }
         }
 
         return binding.root

@@ -79,6 +79,12 @@ class DiscographyAllFragment : Fragment() {
                     tracksAdapter.trackList.addAll(it as ArrayList<Track>) /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
                     binding.rcDiscographyAll.adapter = tracksAdapter
                 }
+
+                discographyAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["track"] == true && it["trackImage"] == true){
+                        binding.discographyAllProgressLayout.visibility = View.GONE
+                    }
+                }
             }
             "albums" -> {
                 discographyAllViewModel.listAlbum.observe(viewLifecycleOwner){
@@ -86,12 +92,24 @@ class DiscographyAllFragment : Fragment() {
                     albumsAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                     binding.rcDiscographyAll.adapter = albumsAdapter
                 }
+
+                discographyAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["albumImage"] == true){
+                        binding.discographyAllProgressLayout.visibility = View.GONE
+                    }
+                }
             }
             "singles" -> {
                 discographyAllViewModel.listSingle.observe(viewLifecycleOwner){
                     singlesAdapter.albumList.clear()
                     singlesAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                     binding.rcDiscographyAll.adapter = singlesAdapter
+                }
+
+                discographyAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["singleImage"] == true){
+                        binding.discographyAllProgressLayout.visibility = View.GONE
+                    }
                 }
             }
         }

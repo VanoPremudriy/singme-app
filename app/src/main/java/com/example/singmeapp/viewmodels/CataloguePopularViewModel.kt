@@ -36,6 +36,8 @@ class CataloguePopularViewModel: ViewModel() {
     var listPopularAlbum = MutableLiveData<List<Album>>()
     var arrayListPopularAlbum = ArrayList<Album>()
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun getTracks(){
         var fbTrackUrl = ""
         var fbTrackImageUrl = ""
@@ -251,10 +253,24 @@ class CataloguePopularViewModel: ViewModel() {
                 arrayListPopularAlbum[index].imageUrl = url
                 listPopularAlbum.value = arrayListPopularAlbum
             }
-            /*"singleImage" -> {
-                arrayListSingle[index].imageUrl = url
-                listSingle.value = arrayListSingle
-            }*/
+
+        }
+        if (index == arrayListPopularTrack.size - 1 && value == "track"){
+            Log.e("Done", "track")
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListPopularTrack.size -1 && value == "trackImage"){
+            Log.e("Done", "trackImage")
+            isAlready.value?.put("trackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListPopularAlbum.size -1 && value == "albumImage"){
+            Log.e("Done", "album")
+            isAlready.value?.put("albumImage", true)
+            isAlready.value = isAlready.value
         }
     }
 }

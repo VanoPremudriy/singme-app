@@ -40,6 +40,8 @@ class BandViewModel: ViewModel() {
     val currentBand = MutableLiveData<Band>()
     lateinit var band: Band
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun getBandDate(bandUuid: String){
         database.reference.child("bands/${bandUuid}").addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -49,7 +51,7 @@ class BandViewModel: ViewModel() {
                 var bandBackgroundExtension = snapshot.child("background").value.toString()
 
                 val fbBandAvatar = "storage/bands/${bandName}/profile/avatar.${bandAvatarExtension}"
-                val fbBandBack = "storage/bands/${bandName}/profile/avatar.${bandBackgroundExtension}"
+                val fbBandBack = "storage/bands/${bandName}/profile/back.${bandBackgroundExtension}"
 
                 band = Band(
                     bandUuid,
@@ -61,6 +63,7 @@ class BandViewModel: ViewModel() {
 
                 getFilePath(fbBandAvatar, "bandAvatar", -1)
                 getFilePath(fbBandBack, "bandBack", -1)
+
 
 
             }
@@ -132,8 +135,10 @@ class BandViewModel: ViewModel() {
                     response: Response<FileApiModel>
                 ) {
                     Log.e("Track", "Three")
-                    val filePath = (response.body() as FileApiModel).public_url
-                    getFileUrl(filePath,value, index)
+                    if (response.body() != null) {
+                        val filePath = (response.body() as FileApiModel).public_url
+                        getFileUrl(filePath, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<FileApiModel>, t: Throwable) {
@@ -150,8 +155,10 @@ class BandViewModel: ViewModel() {
                     call: Call<SecondFileApiModel>,
                     response: Response<SecondFileApiModel>
                 ) {
-                    val fileUrl = (response.body() as SecondFileApiModel).href
-                    setList(fileUrl, value, index)
+                    if (response.body() != null) {
+                        val fileUrl = (response.body() as SecondFileApiModel).href
+                        setList(fileUrl, value, index)
+                    }
                 }
 
                 override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
@@ -176,6 +183,22 @@ class BandViewModel: ViewModel() {
                 band.backgroundUrl = url
                 currentBand.value = band
             }
+
+        }
+
+        if (index == -1 && value == "bandAvatar"){
+            isAlready.value?.put("bandAvatar", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == -1 && value == "bandBack"){
+            isAlready.value?.put("bandBack", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListMember.size -1 && value == "avatar"){
+            isAlready.value?.put("avatar", true)
+            isAlready.value = isAlready.value
         }
     }
 

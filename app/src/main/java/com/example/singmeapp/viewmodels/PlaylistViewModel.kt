@@ -37,7 +37,10 @@ class PlaylistViewModel: ViewModel() {
 
     var isUserPlaylistsChanged = MutableLiveData<Boolean>(false)
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun getPlaylistData(playlistUuid: String){
+        var fbPlaylistCover:String
         database.reference.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val playlistName = snapshot.child("albums/${playlistUuid}/name").value.toString()
@@ -46,7 +49,12 @@ class PlaylistViewModel: ViewModel() {
                 val playlistYear = snapshot.child("albums/${playlistUuid}/year").value.toString().toInt()
                 val playlistCoverExtension = snapshot.child("albums/${playlistUuid}/cover").value.toString()
 
-                val fbPlaylistCover = "storage/users/${playlistAuthorUuid}/playlists/${playlistName}/cover.${playlistCoverExtension}"
+                if (playlistCoverExtension != "null") {
+                     fbPlaylistCover =
+                        "storage/users/${playlistAuthorUuid}/playlists/${playlistName}/cover.${playlistCoverExtension}"
+                } else {
+                    fbPlaylistCover ="storage/default_images/cover.png"
+                }
 
                 var isInLove = false
                 snapshot.child("users/${auth.currentUser?.uid}/library/playlists").children.forEach { it1 ->
@@ -78,6 +86,10 @@ class PlaylistViewModel: ViewModel() {
     fun getTracks(playlistUuid: String){
         var fbTrackUrl: String
         var fbImageUrl: String
+
+        var fbTrackUrls = HashMap<String, String>()
+        var fbImageUrls = HashMap<String, String>()
+
         database.reference.addListenerForSingleValueEvent(object: ValueEventListener{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -85,7 +97,7 @@ class PlaylistViewModel: ViewModel() {
                 arrayListTrack.clear()
                 listTrack.value = arrayListTrack
                 if (snapshot.child("albums/${playlistUuid}/tracks").childrenCount > 0)
-                snapshot.child("albums/${playlistUuid}/tracks").children.forEach(Consumer { t->
+                snapshot.child("albums/${playlistUuid}/tracks").children.forEach{t->
                         val trackName = snapshot.child("/tracks/${t.value}/name").value.toString()
                         val bandUuid = snapshot.child("/tracks/${t.value}/band").value.toString()
                         val albumUuid = snapshot.child("/tracks/${t.value}/album").value.toString()
@@ -96,6 +108,9 @@ class PlaylistViewModel: ViewModel() {
 
                         fbImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${albumCoverExtension}"
                         fbTrackUrl = "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
+
+                        fbTrackUrls.put(t.value.toString(), fbTrackUrl)
+                        fbImageUrls.put(t.value.toString(), fbImageUrl)
 
                         var isInLove = false
                         snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
@@ -116,15 +131,22 @@ class PlaylistViewModel: ViewModel() {
                         )
 
                         arrayListTrack.add(track)
-                        listTrack.value = arrayListTrack
-                        Log.e("URL", fbImageUrl)
-                        Log.e("URL", fbTrackUrl)
-                        getFilePath(fbTrackUrl, "track", count)
-                        getFilePath(fbImageUrl, "trackImage", count)
-                        count++
-
                     }
-                )
+
+                if (arrayListTrack.size != 0) {
+                    listTrack.value = arrayListTrack
+                    arrayListTrack.forEach {
+                        getFilePath(fbTrackUrls[it.uuid]!!, "track", count)
+                        getFilePath(fbImageUrls[it.uuid]!!, "trackImage", count)
+                        count++
+                    }
+                } else {
+                    isAlready.value?.put("track", true)
+                    isAlready.value?.put("trackImage", true)
+                    isAlready.value?.put("playlistCover", true)
+                    isAlready.value = isAlready.value
+                }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -221,6 +243,21 @@ class PlaylistViewModel: ViewModel() {
                 playlist.imageUrl = url
                 curPlaylist.value = playlist
             }
+        }
+
+        if (index == arrayListTrack.size -1 && value == "track"){
+            isAlready.value?.put("track", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListTrack.size -1 && value == "trackImage"){
+            isAlready.value?.put("trackImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == -1 && value == "playlistCover"){
+            isAlready.value?.put("playlistCover", true)
+            isAlready.value = isAlready.value
         }
     }
 

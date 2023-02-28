@@ -29,7 +29,7 @@ class FriendsFragment : Fragment(), MenuProvider {
     lateinit var myRequestAdapter: FriendAdapter
     lateinit var optionsMenu: Menu
     lateinit var userAdapter: FriendAdapter
-    lateinit var arrayListUsers: ArrayList<User>
+    var arrayListUsers = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,6 @@ class FriendsFragment : Fragment(), MenuProvider {
             if ((arguments?.getSerializable("curUser") as User).uuid != friendsViewModel.auth.currentUser?.uid.toString()){
                 friendsViewModel.getOtherFriends((requireArguments().getSerializable("curUser") as User).uuid.toString())
             }else friendsViewModel.getFriends()
-        friendsViewModel.getAllUsers()
     }
 
     override fun onCreateView(
@@ -91,6 +90,12 @@ class FriendsFragment : Fragment(), MenuProvider {
             binding.rcAllUsers.adapter = userAdapter
         }
 
+        friendsViewModel.isAlready.observe(viewLifecycleOwner){
+            if ((it["avatarFriend"] == true && it["avatarRequest"] == true && it["avatarMyRequest"] == true) || it["avatarUser"] == true){
+                binding.friendsProgressLayout.visibility = View.GONE
+            }
+        }
+
 
 
 
@@ -115,6 +120,9 @@ class FriendsFragment : Fragment(), MenuProvider {
             item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener{
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     Log.e("Search", "onMenuItemActionExpand")
+                    friendsViewModel.isAlready.value?.put("avatarUser", false)
+                    friendsViewModel.getAllUsers()
+                    binding.friendsProgressLayout.visibility = View.VISIBLE
                     binding.searchLayout.visibility = View.VISIBLE
                     return true
                 }

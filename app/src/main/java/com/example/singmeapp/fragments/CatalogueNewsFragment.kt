@@ -1,6 +1,7 @@
 package com.example.singmeapp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -62,6 +63,12 @@ class CatalogueNewsFragment : Fragment() {
         catalogueNewsViewModel.listNewAlbum.observe(viewLifecycleOwner){
             newAlbumAdapter.albumList = it as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
             binding.rvCatalogueNewAlbums.adapter = newAlbumAdapter
+        }
+
+        catalogueNewsViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["track"] == true && it["trackImage"] == true && it["albumImage"] == true){
+                binding.catalogueNewsProgressLayout.visibility = View.GONE
+            }
         }
 
         binding.tvAllNewTracks.setOnClickListener{

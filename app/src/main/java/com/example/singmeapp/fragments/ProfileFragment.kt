@@ -70,6 +70,12 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
                 binding.tvMyFriends.text = getString(R.string.friends)
             }
         }
+
+        profileViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["avatar"] == true){
+                binding.profileProgressLayout.visibility = View.GONE
+            }
+        }
     }
 
 

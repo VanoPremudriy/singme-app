@@ -34,6 +34,8 @@ class LoveBandsViewModel: ViewModel() {
     val arrayListBand = ArrayList<Band>()
     var url: String = "/users/${auth.currentUser?.uid}/library/love_bands"
 
+    var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
     fun getBands(){
         var fbBandImageUrl: String
         var fbBandBackUrl: String
@@ -45,6 +47,8 @@ class LoveBandsViewModel: ViewModel() {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    arrayListBand.clear()
+                    listBand.value = arrayListBand
                     snapshot.child("/users/${auth.currentUser?.uid}/library/love_bands").children.forEach{ t ->
 
                         val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
@@ -69,11 +73,18 @@ class LoveBandsViewModel: ViewModel() {
                         arrayListBand.add(band)
 
                     }
-                    listBand.value = arrayListBand
-                    arrayListBand.forEach {
-                        getFilePath(fbBandImageUrls.get(it.uuid)!!, "image", count)
-                        getFilePath(fbBandBackUrls.get(it.uuid)!!, "back", count)
-                        count++
+
+                    if (arrayListBand.size != 0) {
+                        listBand.value = arrayListBand
+                        arrayListBand.forEach {
+                            getFilePath(fbBandImageUrls.get(it.uuid)!!, "image", count)
+                            getFilePath(fbBandBackUrls.get(it.uuid)!!, "back", count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("image", true)
+                        isAlready.value?.put("back", true)
+                        isAlready.value = isAlready.value
                     }
                 }
 
@@ -86,17 +97,18 @@ class LoveBandsViewModel: ViewModel() {
     }
 
     fun getBands(user: User){
-        var fbBandImageUrl = ""
-        var fbBandBackUrl = ""
+        var fbBandImageUrl: String
+        var fbBandBackUrl: String
+        var fbBandImageUrls = HashMap<String, String>()
+        var fbBandBackUrls = HashMap<String, String>()
         var count = 0
         if (auth.currentUser != null){
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.child("/users_has_bands/${user.uuid}").children.forEach(
-                        Consumer { t ->
-                            Log.e("ds", t.toString())
+                    snapshot.child("/users_has_bands/${user.uuid}").children.forEach{ t ->
+
                             val bandName = snapshot.child("/bands/${t.key}").child("name").value.toString()
                             var extension = snapshot.child("/bands/${t.key}").child("avatar").value.toString()
                             var info = snapshot.child("/bands/${t.key}").child("info").value.toString()
@@ -104,6 +116,9 @@ class LoveBandsViewModel: ViewModel() {
 
                             fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
                             fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
+
+                            fbBandBackUrls.put(t.key.toString(), fbBandBackUrl)
+                            fbBandImageUrls.put(t.key.toString(), fbBandImageUrl)
 
                             val band = Band(
                                 t.key.toString(),
@@ -114,11 +129,20 @@ class LoveBandsViewModel: ViewModel() {
                             )
 
                             arrayListBand.add(band)
-                            listBand.value = arrayListBand
-                            getFilePath(fbBandImageUrl, "image", count)
-                            getFilePath(fbBandBackUrl, "back", count)
+                        }
+
+                    if (arrayListBand.size != 0) {
+                        listBand.value = arrayListBand
+                        arrayListBand.forEach {
+                            getFilePath(fbBandImageUrls.get(it.uuid)!!, "image", count)
+                            getFilePath(fbBandBackUrls.get(it.uuid)!!, "back", count)
                             count++
-                        })
+                        }
+                    } else {
+                        isAlready.value?.put("image", true)
+                        isAlready.value?.put("back", true)
+                        isAlready.value = isAlready.value
+                    }
 
                 }
 
@@ -183,6 +207,16 @@ class LoveBandsViewModel: ViewModel() {
                 arrayListBand[index].backgroundUrl = url
                 listBand.value = arrayListBand
             }
+        }
+
+        if (index == arrayListBand.size -1 && value == "image"){
+            isAlready.value?.put("image", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListBand.size -1 && value == "back"){
+            isAlready.value?.put("back", true)
+            isAlready.value = isAlready.value
         }
     }
 

@@ -67,6 +67,12 @@ class CataloguePopularFragment : Fragment() {
             binding.rvCataloguePopularAlbums.adapter = newAlbumAdapter
         }
 
+        cataloguePopularViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["track"] == true && it["trackImage"] == true && it["albumImage"] == true){
+                binding.cataloguePopularProgressLayout.visibility = View.GONE
+            }
+        }
+
         binding.tvAllPopularTracks.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("whatIs", "popularTracks")
@@ -77,6 +83,8 @@ class CataloguePopularFragment : Fragment() {
             bundle.putString("whatIs", "popularAlbums")
             findNavController().navigate(R.id.catalogueAllFragment, bundle)
         }
+
+
         return binding.root
     }
 
