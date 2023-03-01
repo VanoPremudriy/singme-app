@@ -83,28 +83,6 @@
             app:layout_constraintTop_toBottomOf="@+id/cvBandBack" />
 
         <ImageButton
-            android:id="@+id/ibSubscribeBand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:background="#00FFFFFF"
-            android:src="@android:drawable/ic_popup_reminder"
-            app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/tvBandNameBandFragment" />
-
-        <ImageButton
-            android:id="@+id/ibAddBand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="12dp"
-            android:background="#00FFFFFF"
-            android:src="@android:drawable/ic_input_add"
-            app:layout_constraintStart_toEndOf="@+id/ibSubscribeBand"
-            app:layout_constraintTop_toBottomOf="@+id/tvBandNameBandFragment" />
-
-        <ImageButton
             android:id="@+id/ibWrapBandInfo"
             android:layout_width="30dp"
             android:layout_height="20dp"
@@ -158,13 +136,13 @@
             android:id="@+id/llBandInfo"
             android:layout_width="0dp"
             android:layout_height="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ibSubscribeBand">
+            app:layout_constraintTop_toBottomOf="@+id/ibAddBandInLoveInBandFragment">
 
             <TextView
                 android:id="@+id/tvBandAboutInBandFragment"
@@ -272,7 +250,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progressBar8"
@@ -281,6 +260,27 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
         </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/ibAddBandInLoveInBandFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="5dp"
+            app:layout_constraintStart_toStartOf="@+id/tvBandNameBandFragment"
+            app:layout_constraintTop_toBottomOf="@+id/tvBandNameBandFragment"
+            app:srcCompat="@drawable/ic_add_love" />
+
+        <ImageButton
+            android:id="@+id/ibDeleteBandFromLoveInBandFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:background="#A60202"
+            app:layout_constraintBottom_toBottomOf="@+id/ibAddBandInLoveInBandFragment"
+            app:layout_constraintStart_toEndOf="@+id/ibAddBandInLoveInBandFragment"
+            app:layout_constraintTop_toTopOf="@+id/ibAddBandInLoveInBandFragment"
+            app:srcCompat="@drawable/ic_close" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

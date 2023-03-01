@@ -134,6 +134,7 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         bandViewModel = provider[BandViewModel::class.java]
         bandViewModel.getMembers(bandUuid)
         bandViewModel.getBandDate(bandUuid)
+        bandViewModel.isLove(bandUuid)
 
     }
     private fun convert(value: Int):Int{
@@ -204,6 +205,18 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
             }
         }
 
+        bandViewModel.isLove.observe(viewLifecycleOwner){
+            if (it) {
+                binding.ibAddBandInLoveInBandFragment.setImageResource(R.drawable.ic_apply)
+                binding.ibDeleteBandFromLoveInBandFragment.visibility = View.VISIBLE
+                binding.ibAddBandInLoveInBandFragment.isActivated = false
+            } else {
+                binding.ibAddBandInLoveInBandFragment.setImageResource(R.drawable.ic_add_love)
+                binding.ibDeleteBandFromLoveInBandFragment.visibility = View.GONE
+                binding.ibAddBandInLoveInBandFragment.isActivated = true
+            }
+        }
+
 
         return binding.root
     }
@@ -221,6 +234,8 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
         binding.ibEditBandBackInBandFragment.setOnClickListener(this@BandFragment)
         binding.ibEditBandAvatarInBandFragment.setOnClickListener(this@BandFragment)
         binding.ibAddNewMember.setOnClickListener(this@BandFragment)
+        binding.ibAddBandInLoveInBandFragment.setOnClickListener(this@BandFragment)
+        binding.ibDeleteBandFromLoveInBandFragment.setOnClickListener(this@BandFragment)
 
     }
 
@@ -240,13 +255,14 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
                 wrap(binding.llBandMembers)
             }
 
-            binding.ibAddBand.id -> {
-                Toast.makeText(context, "Band added", Toast.LENGTH_SHORT).show()
+            binding.ibAddBandInLoveInBandFragment.id -> {
+                bandViewModel.addBandInLove(bandUuid)
             }
 
-            binding.ibSubscribeBand.id ->{
-                Toast.makeText(context, "Subscribed", Toast.LENGTH_SHORT).show()
+            binding.ibDeleteBandFromLoveInBandFragment.id -> {
+                bandViewModel.deleteBandFromLove(bandUuid)
             }
+
             binding.idDiscography.id ->{
                 val bundle = Bundle()
                 bundle.putInt("Back", R.id.bandFragment)

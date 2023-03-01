@@ -44,18 +44,23 @@
                 android:id="@+id/tvItemAlbumName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="TextView" />
 
             <TextView
                 android:id="@+id/tvItemAlbumBandName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minLines="1"
+                android:singleLine="true"
                 android:text="TextView" />
 
             <TextView
                 android:id="@+id/tvItemYear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:text="TextView" />
         </LinearLayout>
 

@@ -40,7 +40,62 @@ class BandViewModel: ViewModel() {
     val currentBand = MutableLiveData<Band>()
     lateinit var band: Band
 
+    val isLove = MutableLiveData<Boolean>()
+
     var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
+
+    fun isLove(bandUuid: String){
+        val ha = HashMap<String, String>()
+        database.reference.child("users/${auth.currentUser?.uid}/library/love_bands").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    ha.put(it.value.toString(), "true")
+                }
+                isLove.value = ha.get(bandUuid) != null
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun addBandInLove(bandUuid: String){
+        var count = 0
+        database.reference.child("users/${auth.currentUser?.uid}/library/love_bands").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                count = snapshot.childrenCount.toInt()
+                database.reference.child("users/${auth.currentUser?.uid}/library/love_bands/${count}").setValue(bandUuid)
+                isLove(bandUuid)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun deleteBandFromLove(bandUuid: String){
+        var bandsUuids = ArrayList<String>()
+        database.reference.child("users/${auth.currentUser?.uid}/library/love_bands").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    bandsUuids.add(it.value.toString())
+                }
+                bandsUuids.remove(bandUuid)
+                database.reference.child("users/${auth.currentUser?.uid}/library/love_bands").setValue(bandsUuids)
+                isLove(bandUuid)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
 
     fun getBandDate(bandUuid: String){
         database.reference.child("bands/${bandUuid}").addListenerForSingleValueEvent(object: ValueEventListener{
