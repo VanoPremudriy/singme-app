@@ -68,6 +68,8 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
             requireActivity(),
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
+
+
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
             if (activity != null) {
@@ -210,10 +212,12 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
                 binding.ibAddBandInLoveInBandFragment.setImageResource(R.drawable.ic_apply)
                 binding.ibDeleteBandFromLoveInBandFragment.visibility = View.VISIBLE
                 binding.ibAddBandInLoveInBandFragment.isActivated = false
+                binding.ibAddBandInLoveInBandFragment.isClickable = false
             } else {
                 binding.ibAddBandInLoveInBandFragment.setImageResource(R.drawable.ic_add_love)
                 binding.ibDeleteBandFromLoveInBandFragment.visibility = View.GONE
                 binding.ibAddBandInLoveInBandFragment.isActivated = true
+                binding.ibAddBandInLoveInBandFragment.isClickable = true
             }
         }
 

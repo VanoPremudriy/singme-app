@@ -94,7 +94,7 @@ class CreateAlbumViewModel: ViewModel() {
         database.reference.child("/albums/${albumUuid}/format").setValue(albumFormat)
         database.reference.child("/albums/${albumUuid}/name").setValue(albumName)
         database.reference.child("/albums/${albumUuid}/year").setValue(datetime.year.toString())
-
+        database.reference.child("/albums/${albumUuid}/created_at").setValue(datetime.toString())
         database.reference.child("/bands/${band.uuid}/albums").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 albumsCount = snapshot.childrenCount
@@ -117,6 +117,7 @@ class CreateAlbumViewModel: ViewModel() {
                     database.reference.child("tracks/${trackUuid}/album").setValue(albumUuid)
                     database.reference.child("tracks/${trackUuid}/band").setValue(band.uuid)
                     database.reference.child("tracks/${trackUuid}/name").setValue(audioFileNames[albumTracksCount].substring(0, audioFileNames[albumTracksCount].length - 4))
+                    database.reference.child("tracks/${trackUuid}/created_at").setValue(datetime.toString())
                     database.reference.child("/albums/${albumUuid}/tracks/${albumTracksCount}").setValue(trackUuid)
                     database.reference.child("/bands/${band.uuid}/tracks/${bandTracksCount}").setValue(trackUuid)
                 }

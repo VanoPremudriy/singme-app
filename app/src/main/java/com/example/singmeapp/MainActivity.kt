@@ -1,5 +1,6 @@
 package com.example.singmeapp
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +18,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.findFragment
 import androidx.navigation.NavController
@@ -73,11 +76,41 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private val REQUEST_EXTERNAL_STORAGE = 1
+    @RequiresApi(Build.VERSION_CODES.M)
+    private val PERMISSIONS_STORAGE = arrayOf<String>(
+        /*Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE*/
+        Manifest.permission.ACCESS_NOTIFICATION_POLICY
+    )
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun verifyStoragePermissions() {
+        // Check if we have write permission
+        val permission = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_NOTIFICATION_POLICY
+        )
+
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            if (this != null) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+                )
+            }
+        }
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        verifyStoragePermissions()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
@@ -210,9 +243,21 @@ class MainActivity : AppCompatActivity() {
                         navController.navigate(R.id.action_global_profileFragment)
                     else navController.navigate(R.id.action_global_notAuthorizedFragment)
                 }
-                R.id.homeFragment -> {navController.navigate(R.id.action_global_homeFragment)}
-                R.id.messengerFragment -> navController.navigate(R.id.action_global_messengerFragment)
-                R.id.catalogueFragment -> navController.navigate(R.id.catalogueFragment)
+                R.id.homeFragment -> {
+                    if (auth.currentUser != null)
+                        navController.navigate(R.id.action_global_homeFragment)
+                    else navController.navigate(R.id.action_global_notAuthorizedFragment)
+                }
+                R.id.messengerFragment -> {
+                    if (auth.currentUser != null)
+                        navController.navigate(R.id.action_global_messengerFragment)
+                    else navController.navigate(R.id.action_global_notAuthorizedFragment)
+                }
+                R.id.catalogueFragment -> {
+                    if (auth.currentUser != null)
+                        navController.navigate(R.id.catalogueFragment)
+                    else navController.navigate(R.id.action_global_notAuthorizedFragment)
+                }
             }
             true
         }

@@ -10,6 +10,7 @@ import com.example.singmeapp.api.interfaces.RetrofitServices
 import com.example.singmeapp.api.models.FileApiModel
 import com.example.singmeapp.api.models.SecondFileApiModel
 import com.example.singmeapp.items.Album
+import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -36,8 +37,8 @@ class CatalogueAllViewModel: ViewModel() {
     var listAlbum = MutableLiveData<List<Album>>()
     var arrayListAlbum = ArrayList<Album>()
 
-    var listSingle = MutableLiveData<List<Album>>()
-    var arrayListSingle = ArrayList<Album>()
+    var listBand = MutableLiveData<List<Band>>()
+    var arrayListBand = ArrayList<Band>()
 
     var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
 
@@ -343,6 +344,76 @@ class CatalogueAllViewModel: ViewModel() {
 
     }
 
+    fun getNewBands(){
+        var fbBandImageUrl: String
+        var fbBandBackUrl: String
+        var fbBandImageUrls = HashMap<String, String>()
+        var fbBandBackUrls = HashMap<String, String>()
+        var count = 0
+        if (auth.currentUser != null){
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("RestrictedApi")
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    arrayListBand.clear()
+                    listBand.value = arrayListBand
+                    snapshot.child("bands").children.forEach{ t ->
+
+                        val bandName = t.child("name").value.toString()
+                        var extension = t.child("avatar").value.toString()
+                        var info = t.child("info").value.toString()
+                        var backExtension = t.child("background").value.toString()
+
+                        val date = t.child("created_at").value.toString()
+
+                        var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            LocalDateTime.parse(date)
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
+                        }
+
+                        fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
+                        fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
+
+                        fbBandBackUrls.put(t.key.toString(), fbBandBackUrl)
+                        fbBandImageUrls.put(t.key.toString(), fbBandImageUrl)
+
+                        val band = Band(
+                            t.key.toString(),
+                            bandName,
+                            info,
+                            "",
+                            "",
+                            localDateTime
+                        )
+
+                        arrayListBand.add(band)
+
+                    }
+
+                    if (arrayListBand.size != 0) {
+                        arrayListBand.sortBy { band ->  band.date}
+                        arrayListBand.reverse()
+                        listBand.value = arrayListBand
+                        arrayListBand.forEach {
+                            getFilePath(fbBandImageUrls.get(it.uuid)!!, "newBandImage", count)
+                            getFilePath(fbBandBackUrls.get(it.uuid)!!, "newBandBack", count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("newBandImage", true)
+                        isAlready.value?.put("newBandBack", true)
+                        isAlready.value = isAlready.value
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+    }
 
     fun getFilePath(url: String, value: String, index: Int){
         mService.getFile(url, authToken)
@@ -413,6 +484,16 @@ class CatalogueAllViewModel: ViewModel() {
                 arrayListAlbum[index].imageUrl = url
                 listAlbum.value = arrayListAlbum
             }
+
+            "newBandImage" -> {
+                arrayListBand[index].imageUrl = url
+                listBand.value = arrayListBand
+            }
+
+            "newBandBack" -> {
+                arrayListBand[index].backgroundUrl = url
+                listBand.value = arrayListBand
+            }
         }
 
         if (index == arrayListTrack.size -1 && value == "newTrack"){
@@ -442,6 +523,16 @@ class CatalogueAllViewModel: ViewModel() {
 
         if (index ==  arrayListAlbum.size -1 && value == "popularAlbumImage"){
             isAlready.value?.put("popularAlbumImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListBand.size -1 && value == "newBandImage"){
+            isAlready.value?.put("newBandImage", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListBand.size -1 && value == "newBandBack"){
+            isAlready.value?.put("newBandBack", true)
             isAlready.value = isAlready.value
         }
     }

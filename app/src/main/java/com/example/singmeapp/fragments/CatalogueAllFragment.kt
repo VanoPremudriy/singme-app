@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.singmeapp.R
 import com.example.singmeapp.adapters.AlbumAdapter
+import com.example.singmeapp.adapters.BandAdapter
 import com.example.singmeapp.adapters.PlaylistAdapter
 import com.example.singmeapp.adapters.TrackAdapter
 import com.example.singmeapp.databinding.FragmentCatalogueAllBinding
@@ -28,7 +30,7 @@ class CatalogueAllFragment : Fragment() {
     lateinit var binding: FragmentCatalogueAllBinding
     lateinit var tracksAdapter: TrackAdapter
     lateinit var albumsAdapter: AlbumAdapter
-    lateinit var playlistAdapter: PlaylistAdapter
+    lateinit var bandAdapter: BandAdapter
     lateinit var catalogueAllViewModel: CatalogueAllViewModel
     lateinit var whatIs: String
 
@@ -63,6 +65,12 @@ class CatalogueAllFragment : Fragment() {
                 fragmentActivity.title = getString(R.string.albums)
                 catalogueAllViewModel.getPopularAlbums()
                 albumsAdapter = AlbumAdapter(this)
+            }
+
+            "newBands" -> {
+                fragmentActivity.title = getString(R.string.Bands)
+                catalogueAllViewModel.getNewBands()
+                bandAdapter = BandAdapter(this)
             }
 
         }
@@ -129,6 +137,21 @@ class CatalogueAllFragment : Fragment() {
 
                 catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
                     if (it["popularAlbumImage"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
+                }
+            }
+
+            "newBands" -> {
+                binding.rvCatalogueAll.layoutManager = GridLayoutManager(context, 3)
+                catalogueAllViewModel.listBand.observe(viewLifecycleOwner){
+                    bandAdapter.bandList.clear()
+                    bandAdapter.bandList.addAll(it as ArrayList<Band>)
+                    binding.rvCatalogueAll.adapter = bandAdapter
+                }
+
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["newBandImage"] == true && it["newBandBack"] == true){
                         binding.catalogueAllProgressLayout.visibility = View.GONE
                     }
                 }

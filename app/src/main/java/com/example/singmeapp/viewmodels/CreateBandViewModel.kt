@@ -23,6 +23,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
 
 
 class CreateBandViewModel: ViewModel() {
@@ -32,6 +33,7 @@ class CreateBandViewModel: ViewModel() {
     private var database = Firebase.database
     val isExist = MutableLiveData<Boolean>()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun createBand(
         band: Band,
         avatar: RequestBody,
@@ -40,6 +42,7 @@ class CreateBandViewModel: ViewModel() {
         backExtension: String,
         rolesArray: ArrayList<String>
     ){
+        val datetime = LocalDateTime.now()
         val uuid = java.util.UUID.randomUUID()
         band.uuid = uuid.toString()
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -57,8 +60,10 @@ class CreateBandViewModel: ViewModel() {
                     database.reference.child("bands/${band.uuid}").child("info").setValue(band.info)
                     database.reference.child("bands/${band.uuid}").child("avatar").setValue(avatarExtension)
                     database.reference.child("bands/${band.uuid}").child("background").setValue(backExtension)
+                    database.reference.child("bands/${band.uuid}").child("created_at").setValue(datetime.toString())
                     database.reference.child("bands_has_users").child(band.uuid).child(auth.currentUser!!.uid).setValue(rolesArray)
                     database.reference.child("users_has_bands").child(auth.currentUser!!.uid).child(band.uuid).setValue(rolesArray)
+
                 }
 
 

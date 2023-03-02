@@ -65,7 +65,7 @@ class CreateBandFragment : Fragment(), View.OnClickListener {
                 ActivityCompat.requestPermissions(
                     requireActivity(),
                     PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
+                    1
                 )
             }
         }
