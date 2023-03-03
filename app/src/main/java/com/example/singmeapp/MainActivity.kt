@@ -77,19 +77,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val REQUEST_EXTERNAL_STORAGE = 1
-    @RequiresApi(Build.VERSION_CODES.M)
     private val PERMISSIONS_STORAGE = arrayOf<String>(
-        /*Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE*/
-        Manifest.permission.ACCESS_NOTIFICATION_POLICY
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun verifyStoragePermissions() {
         // Check if we have write permission
         val permission = ActivityCompat.checkSelfPermission(
             this,
-            Manifest.permission.ACCESS_NOTIFICATION_POLICY
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
 
 

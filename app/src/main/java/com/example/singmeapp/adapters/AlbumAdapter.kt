@@ -115,6 +115,9 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
             CataloguePopularFragment::class.java -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.album_item_2, parent, false)
             }
+            CatalogueFragment::class.java -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.album_item_2, parent, false)
+            }
         }
         return  AlbumHolder(view, fragment)
     }

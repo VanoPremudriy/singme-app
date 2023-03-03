@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -38,17 +39,71 @@ class CreateNotification{
         val mediaSessionCompact = MediaSessionCompat(context, "tag")
 
         val intentClose = Intent(context, BroadcastReiceiverService::class.java).setAction(ACTION_CLOSE)
-        val pendingIntentClose = PendingIntent.getBroadcast(context, 0, intentClose, PendingIntent.FLAG_UPDATE_CURRENT)
+
 
         val intentPrevious = Intent(context, BroadcastReiceiverService::class.java).setAction(ACTION_PREVIOUS)
-        val pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT)
+
 
 
         val intentPlay = Intent(context, BroadcastReiceiverService::class.java).setAction(ACTION_PLAY)
-        val pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT)
+
 
         val intentNext = Intent(context, BroadcastReiceiverService::class.java).setAction(ACTION_NEXT)
-        val pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT)
+         val pendingIntentClose:PendingIntent
+        val pendingIntentPrevious: PendingIntent
+        val pendingIntentPlay: PendingIntent
+        val pendingIntentNext: PendingIntent
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            pendingIntentClose = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentClose,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            pendingIntentPrevious = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentPrevious,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            pendingIntentPlay = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentPlay,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            pendingIntentNext = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentNext,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else {
+            pendingIntentClose = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentClose,
+                PendingIntent.FLAG_MUTABLE
+            )
+            pendingIntentPrevious = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentPrevious,
+                PendingIntent.FLAG_MUTABLE
+            )
+            pendingIntentPlay = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentPlay,
+                PendingIntent.FLAG_MUTABLE
+            )
+            pendingIntentNext = PendingIntent.getBroadcast(
+                context,
+                0,
+                intentNext,
+                PendingIntent.FLAG_MUTABLE
+            )
+        }
 
 
         val closeIcon = R.drawable.ic_close

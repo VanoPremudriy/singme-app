@@ -93,13 +93,21 @@ class CatalogueAllViewModel: ViewModel() {
 
                     arrayListTrack.add(track)
                 }
-                arrayListTrack.sortBy { track -> track.date }
-                arrayListTrack = arrayListTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
-                listTrack.value = arrayListTrack
-                arrayListTrack.forEach {
-                    getFilePath(fbTrackUrls.get(it.uuid)!!, "newTrack", count)
-                    getFilePath(fbTrackImageUrls.get(it.uuid)!!, "newTrackImage", count)
-                    count++
+
+                if (arrayListTrack.size != 0) {
+                    arrayListTrack.sortBy { track -> track.date }
+                    arrayListTrack =
+                        arrayListTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+                    listTrack.value = arrayListTrack
+                    arrayListTrack.forEach {
+                        getFilePath(fbTrackUrls.get(it.uuid)!!, "newTrack", count)
+                        getFilePath(fbTrackImageUrls.get(it.uuid)!!, "newTrackImage", count)
+                        count++
+                    }
+                } else {
+                    isAlready.value?.put("newTrack", true)
+                    isAlready.value?.put("newTrackImage", true)
+                    isAlready.value = isAlready.value
                 }
 
 
