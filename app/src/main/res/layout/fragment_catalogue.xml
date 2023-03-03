@@ -81,7 +81,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
-                            android:text="@string/top_tracks"
+                            android:text="@string/tracks"
                             android:textSize="20sp" />
 
                         <TextView
@@ -126,7 +126,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
-                            android:text="@string/new_albums"
+                            android:text="@string/albums"
                             android:textSize="20sp" />
 
                         <TextView
@@ -171,7 +171,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
-                            android:text="@string/new_names"
+                            android:text="@string/Bands"
                             android:textSize="20sp" />
 
                         <TextView
