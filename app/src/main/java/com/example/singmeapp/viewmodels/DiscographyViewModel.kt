@@ -114,11 +114,17 @@ class DiscographyViewModel: ViewModel() {
                     arrayListTrack.add(track)
                 }
 
-                listTrack.value = arrayListTrack
-                arrayListTrack.forEach {
-                    getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
-                    getFilePath(fbTrackImageUrls.get(it.uuid)!!, "trackImage", count)
-                    count++
+                if (arrayListTrack.size != 0) {
+                    listTrack.value = arrayListTrack
+                    arrayListTrack.forEach {
+                        getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                        getFilePath(fbTrackImageUrls.get(it.uuid)!!, "trackImage", count)
+                        count++
+                    }
+                } else {
+                    isAlready.value?.put("track", true)
+                    isAlready.value?.put("trackImage", true)
+                    isAlready.value = isAlready.value
                 }
 
             }
@@ -132,53 +138,123 @@ class DiscographyViewModel: ViewModel() {
 
     fun getAlbums(currentBand: Band){
         var fbAlbumImageUrl: String
+        var fbAlbumImageUrls = HashMap<String, String>()
+        var albumCount = 0
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("RestrictedApi")
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.child("/bands/${currentBand.uuid}/albums").children.forEach{ t ->
+                    val format = snapshot.child("/albums/${t.value}/format").value.toString()
+                    if (format == "Album"){
+                        val albumName = snapshot.child("/albums/${t.value}/name").value.toString()
+                        val year = snapshot.child("/albums/${t.value}/year").value?.toString()?.toInt()
+                        val extension = snapshot.child("/albums/${t.value}/cover").value.toString()
+
+                        if (albumName != null && year != null && extension != null && format != null) {
+                            fbAlbumImageUrl =
+                                "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
+                            fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
+
+                            var isInLove = false
+                            snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
+                                if (it1.value.toString() == t.value.toString()) isInLove = true
+                            }
+
+                            val isAuthor =
+                                snapshot.child("bands_has_users/${currentBand.uuid}/${auth.currentUser?.uid}").value != null
+
+                            val album = Album(
+                                t.value.toString(),
+                                albumName,
+                                currentBand.name,
+                                year,
+                                isInLove,
+                                isAuthor,
+                                ""
+                            )
+
+                            arrayListAlbum.add(album)
+
+                        }
+                    }
+                }
+
+                if (arrayListAlbum.size != 0) {
+                    listAlbum.value = arrayListAlbum
+                    arrayListAlbum.forEach {
+                        getFilePath(fbAlbumImageUrls[it.uuid]!!, "albumImage", albumCount)
+                        albumCount++
+                    }
+                } else {
+                    isAlready.value?.put("albumImage", true)
+                    isAlready.value = isAlready.value
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+    }
+
+    fun getSingles(currentBand: Band){
+        var fbAlbumImageUrl: String
+        var fbAlbumImageUrls = HashMap<String, String>()
         var albumCount = 0
         var singleCount = 0
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.child("/bands/${currentBand.uuid}/albums").children.forEach(Consumer { t ->
-
-                    val albumName = snapshot.child("/albums/${t.value}/name").value.toString()
-                    val year = snapshot.child("/albums/${t.value}/year").value?.toString()?.toInt()
-                    val extension = snapshot.child("/albums/${t.value}/cover").value.toString()
+                snapshot.child("/bands/${currentBand.uuid}/albums").children.forEach{ t ->
                     val format = snapshot.child("/albums/${t.value}/format").value.toString()
-                    if (albumName != null && year != null && extension != null && format != null) {
-                        fbAlbumImageUrl =
-                            "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
+                    if (format == "Single/EP"){
+                        val albumName = snapshot.child("/albums/${t.value}/name").value.toString()
+                        val year = snapshot.child("/albums/${t.value}/year").value?.toString()?.toInt()
+                        val extension = snapshot.child("/albums/${t.value}/cover").value.toString()
 
-                        var isInLove = false
-                        snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
-                            if (it1.value.toString() == t.value.toString()) isInLove = true
-                        }
+                        if (albumName != null && year != null && extension != null && format != null) {
+                            fbAlbumImageUrl =
+                                "/storage/bands/${currentBand.name}/albums/${albumName}/cover.${extension}"
+                            fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
-                        val isAuthor = snapshot.child("bands_has_users/${currentBand.uuid}/${auth.currentUser?.uid}").value != null
+                            var isInLove = false
+                            snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
+                                if (it1.value.toString() == t.value.toString()) isInLove = true
+                            }
 
-                        val album = Album(
-                            t.value.toString(),
-                            albumName,
-                            currentBand.name,
-                            year,
-                            isInLove,
-                            isAuthor,
-                            ""
-                        )
+                            val isAuthor =
+                                snapshot.child("bands_has_users/${currentBand.uuid}/${auth.currentUser?.uid}").value != null
 
-                        if (format == "Album") {
-                            arrayListAlbum.add(album)
-                            listAlbum.value = arrayListAlbum
-                            getFilePath(fbAlbumImageUrl, "albumImage", albumCount)
-                            albumCount++
-                        }
-                        if (format == "Single/EP") {
+                            val album = Album(
+                                t.value.toString(),
+                                albumName,
+                                currentBand.name,
+                                year,
+                                isInLove,
+                                isAuthor,
+                                ""
+                            )
                             arrayListSingle.add(album)
-                            listSingle.value = arrayListSingle
-                            getFilePath(fbAlbumImageUrl, "singleImage", singleCount)
-                            singleCount++
                         }
                     }
-                })
+                }
+
+                if (arrayListSingle.size != 0) {
+                    listSingle.value = arrayListSingle
+                    arrayListSingle.forEach {
+                        getFilePath(fbAlbumImageUrls[it.uuid]!!, "singleImage", singleCount)
+                        singleCount++
+                    }
+                }
+                else {
+                    isAlready.value?.put("singleImage", true)
+                    isAlready.value = isAlready.value
+                }
 
             }
 

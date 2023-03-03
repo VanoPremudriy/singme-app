@@ -45,6 +45,7 @@ class DiscographyFragment : Fragment(), MenuProvider, View.OnClickListener {
         discographyViewModel = provider[DiscographyViewModel::class.java]
         discographyViewModel.getTracks(band)
         discographyViewModel.getAlbums(band)
+        discographyViewModel.getSingles(band)
         discographyViewModel.getMembers(band)
     }
 
