@@ -7,18 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.singmeapp.R
+import com.example.singmeapp.adapters.PostNewsAdapter
 import com.example.singmeapp.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
+    lateinit var fragmentActivity: AppCompatActivity
+    lateinit var postNewsAdapter: PostNewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fragActivity = activity as AppCompatActivity
-        fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        fragActivity.title = getString(R.string.home)
+        fragmentActivity = activity as AppCompatActivity
+        fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        fragmentActivity.title = getString(R.string.home)
+        postNewsAdapter = PostNewsAdapter()
 
     }
 
@@ -26,9 +31,12 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        Log.d("ADAPTER", "Yes")
+        binding.rvPosts.layoutManager = LinearLayoutManager(context)
+        val list = arrayListOf<String>("ds", "ds", "fs", "sd")
+        postNewsAdapter.list.addAll(list)
+        binding.rvPosts.adapter = postNewsAdapter
+
         return binding.root
     }
 
