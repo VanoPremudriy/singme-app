@@ -56,6 +56,12 @@ class CatalogueAllFragment : Fragment() {
                 catalogueAllViewModel.getPopularTracks()
                 tracksAdapter = TrackAdapter(activity as AppCompatActivity, this)
             }
+            "searchTracks" -> {
+                val search = arguments?.getString("search")
+                fragmentActivity.title = getString(R.string.tracks)
+                catalogueAllViewModel.getSearchTracks(search ?: "")
+                tracksAdapter = TrackAdapter(activity as AppCompatActivity, this)
+            }
             "newAlbums" -> {
                 fragmentActivity.title = getString(R.string.albums)
                 catalogueAllViewModel.getNewAlbums()
@@ -67,11 +73,27 @@ class CatalogueAllFragment : Fragment() {
                 albumsAdapter = AlbumAdapter(this)
             }
 
+            "searchAlbums" -> {
+                val search = arguments?.getString("search")
+                fragmentActivity.title = getString(R.string.albums)
+                catalogueAllViewModel.getSearchAlbums(search ?: "")
+                albumsAdapter = AlbumAdapter(this)
+            }
+
             "newBands" -> {
                 fragmentActivity.title = getString(R.string.Bands)
                 catalogueAllViewModel.getNewBands()
                 bandAdapter = BandAdapter(this)
             }
+
+            "searchBands" -> {
+                val search = arguments?.getString("search")
+                fragmentActivity.title = getString(R.string.Bands)
+                catalogueAllViewModel.getSearchBands(search ?: "")
+                bandAdapter = BandAdapter(this)
+            }
+
+
 
         }
 
@@ -114,6 +136,20 @@ class CatalogueAllFragment : Fragment() {
                 }
             }
 
+            "searchTracks" -> {
+                catalogueAllViewModel.listTrack.observe(viewLifecycleOwner) {
+                    tracksAdapter.trackList.clear()
+                    tracksAdapter.trackList.addAll(it as ArrayList<Track>) /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+                    binding.rvCatalogueAll.adapter = tracksAdapter
+                }
+
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["searchTrack"] == true && it["searchTrackImage"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
+                }
+            }
+
             "newAlbums" -> {
                 catalogueAllViewModel.listAlbum.observe(viewLifecycleOwner) {
                     albumsAdapter.albumList.clear()
@@ -142,6 +178,20 @@ class CatalogueAllFragment : Fragment() {
                 }
             }
 
+            "searchAlbums" -> {
+                catalogueAllViewModel.listAlbum.observe(viewLifecycleOwner) {
+                    albumsAdapter.albumList.clear()
+                    albumsAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+                    binding.rvCatalogueAll.adapter = albumsAdapter
+                }
+
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["searchAlbumImage"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
+                }
+            }
+
             "newBands" -> {
                 binding.rvCatalogueAll.layoutManager = GridLayoutManager(context, 3)
                 catalogueAllViewModel.listBand.observe(viewLifecycleOwner){
@@ -152,6 +202,21 @@ class CatalogueAllFragment : Fragment() {
 
                 catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
                     if (it["newBandImage"] == true && it["newBandBack"] == true){
+                        binding.catalogueAllProgressLayout.visibility = View.GONE
+                    }
+                }
+            }
+
+            "searchBands" -> {
+                binding.rvCatalogueAll.layoutManager = GridLayoutManager(context, 3)
+                catalogueAllViewModel.listBand.observe(viewLifecycleOwner){
+                    bandAdapter.bandList.clear()
+                    bandAdapter.bandList.addAll(it as ArrayList<Band>)
+                    binding.rvCatalogueAll.adapter = bandAdapter
+                }
+
+                catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+                    if (it["searchBandImage"] == true && it["searchBandBack"] == true){
                         binding.catalogueAllProgressLayout.visibility = View.GONE
                     }
                 }

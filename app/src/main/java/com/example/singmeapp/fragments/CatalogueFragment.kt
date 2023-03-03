@@ -163,6 +163,26 @@ class CatalogueFragment : Fragment(), MenuProvider {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    binding.tvAllSearchTracks.setOnClickListener{
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "searchTracks")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+
+                    binding.tvAllSearchAlbums.setOnClickListener {
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "searchAlbums")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+
+                    binding.tvAllSearchBands.setOnClickListener {
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "searchBands")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
                     binding.catalogueProgressLayout.visibility = View.VISIBLE
                     catalogueViewModel.isAlready.value?.forEach {
                         catalogueViewModel.isAlready.value?.put(it.key, false)
