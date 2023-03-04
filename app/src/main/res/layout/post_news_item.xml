@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:background="@drawable/post_news_background"
-    android:backgroundTint="#D6D6D6"
+    android:backgroundTint="#E6E6E6"
     android:paddingBottom="10dp">
 
     <androidx.cardview.widget.CardView
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView18">
 
         <ImageView
-            android:id="@+id/ivlbumCoverInPost"
+            android:id="@+id/ivAlbumCoverInPost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/back" />
@@ -52,38 +52,38 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textView16"
+        android:id="@+id/tvBandNameInPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="8dp"
         android:text="TextView"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
         app:layout_constraintTop_toTopOf="@+id/cvBandAvatar" />
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/tvDateInPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/textView16"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+        app:layout_constraintStart_toStartOf="@+id/tvBandNameInPost"
+        app:layout_constraintTop_toBottomOf="@+id/tvBandNameInPost" />
 
     <TextView
         android:id="@+id/textView18"
         android:layout_width="0dp"
         android:layout_height="22dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
+        android:text="Исполнитель опубликовал новый альбом"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/cvBandAvatar"
         app:layout_constraintTop_toBottomOf="@+id/cvBandAvatar" />
 
     <LinearLayout
+        android:id="@+id/llAlbumInPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -124,13 +124,6 @@
                 android:maxLines="1"
                 android:text="TextView" />
 
-            <TextView
-                android:id="@+id/tvItemYearInPost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="TextView" />
         </LinearLayout>
 
         <ImageButton
@@ -143,4 +136,14 @@
             app:srcCompat="@drawable/ic_play" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvDateTwoInPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

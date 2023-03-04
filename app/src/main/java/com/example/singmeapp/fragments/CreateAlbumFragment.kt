@@ -212,6 +212,9 @@ class CreateAlbumFragment : Fragment(), View.OnClickListener {
                         audioRequestBodyList,
                         audioFileNamesList
                     )
+                    Toast.makeText(context, "Обновляйте страницу, пока альбом не появится", Toast.LENGTH_SHORT).show()
+                    back()
+
                 }
                 else Toast.makeText(context, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
             }
@@ -221,16 +224,20 @@ class CreateAlbumFragment : Fragment(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){
             Log.e("Back", "home")
-            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-
-            if (count == 0) {
-                (activity as AppCompatActivity).supportActionBar?.show()
-                activity?.onBackPressed()
-            } else {
-                (activity as AppCompatActivity).supportActionBar?.show()
-                findNavController().popBackStack()
-            }
+            back()
         }
         return true
+    }
+
+    fun back(){
+        val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+
+        if (count == 0) {
+            (activity as AppCompatActivity).supportActionBar?.show()
+            activity?.onBackPressed()
+        } else {
+            (activity as AppCompatActivity).supportActionBar?.show()
+            findNavController().popBackStack()
+        }
     }
 }

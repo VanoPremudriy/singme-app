@@ -120,7 +120,12 @@ class CreateAlbumViewModel: ViewModel() {
                     database.reference.child("tracks/${trackUuid}/created_at").setValue(datetime.toString())
                     database.reference.child("/albums/${albumUuid}/tracks/${albumTracksCount}").setValue(trackUuid)
                     database.reference.child("/bands/${band.uuid}/tracks/${bandTracksCount}").setValue(trackUuid)
+                    bandTracksCount++
                 }
+                val postUuid = UUID.randomUUID().toString()
+                database.reference.child("posts/${postUuid}/band").setValue(band.uuid)
+                database.reference.child("posts/${postUuid}/album").setValue(albumUuid)
+                database.reference.child("posts/${postUuid}/created_at").setValue(datetime.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {
