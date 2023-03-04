@@ -188,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                         binding.playerTrackMenu.visibility = View.GONE
                         binding.AddPlaylistMenu.visibility = View.GONE
                         binding.playlistMenu.visibility = View.GONE
+                        binding.profileMenu.visibility = View.GONE
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.view15.visibility = View.GONE
@@ -201,6 +202,7 @@ class MainActivity : AppCompatActivity() {
                         binding.playerTrackMenu.visibility = View.GONE
                         binding.AddPlaylistMenu.visibility = View.GONE
                         binding.playlistMenu.visibility = View.GONE
+                        binding.profileMenu.visibility = View.GONE
                     }
             }
             }

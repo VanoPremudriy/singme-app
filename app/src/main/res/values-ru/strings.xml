@@ -102,4 +102,8 @@
     <string name="popular_tracks">Популярные треки</string>
     <string name="popular_albums">Популярные альбомы</string>
     <string name="new_names">Новые имена</string>
+    <string name="publish_new_album">Исполнитель опубликовал новый альбом</string>
+    <string name="here_posts">Здесь будут публиковаться новости об исполнителях, на которых вы подписаны.</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="change_avatar">Изменить аватарку</string>
 </resources>

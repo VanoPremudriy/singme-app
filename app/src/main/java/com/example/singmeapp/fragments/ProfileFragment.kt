@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentProfileBinding
 import com.example.singmeapp.items.User
 import com.example.singmeapp.viewmodels.ProfileViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -25,9 +27,10 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.processNextEventInCurrentThread
 
 
-class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
+class ProfileFragment : Fragment(), View.OnClickListener {
 
     lateinit var fragActivity: AppCompatActivity
+    lateinit var mainActivity: MainActivity
     lateinit var binding: FragmentProfileBinding
     lateinit var profileViewModel: ProfileViewModel
     val bundle = Bundle()
@@ -35,6 +38,7 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragActivity = activity as AppCompatActivity
+        mainActivity = activity as MainActivity
         val provider = ViewModelProvider(this)
         profileViewModel = provider[ProfileViewModel::class.java]
         if (arguments?.getSerializable("otherUser") != null){
@@ -82,20 +86,13 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
     @SuppressLint("ClickableViewAccessibility")
     private fun buttonSets(){
         binding.imageButton.setOnClickListener(this@ProfileFragment)
-        binding.profileMenu.setOnTouchListener(this@ProfileFragment)
-        binding.profileLayout.setOnTouchListener(this@ProfileFragment)
-        binding.tvProfileExit.setOnClickListener(this@ProfileFragment)
         binding.idMyBands.setOnClickListener(this@ProfileFragment)
         binding.idMyFriends.setOnClickListener(this@ProfileFragment)
+        mainActivity.binding.tvChangeAvatarInProfile.setOnClickListener(this@ProfileFragment)
+        mainActivity.binding.tvProfileExitInProfile.setOnClickListener(this@ProfileFragment)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-        if (p1?.action == MotionEvent.ACTION_DOWN){
-            if (p0?.id != binding.profileMenu.id) binding.profileMenu.visibility = View.GONE
-        }
-        return true
-    }
+
 
 
     companion object {
@@ -105,18 +102,25 @@ class ProfileFragment : Fragment(), View.OnTouchListener, View.OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0?.id){
-            binding.tvProfileExit.id ->{
-                profileViewModel.auth.signOut()
-                findNavController().navigate(R.id.action_profileFragment_to_notAuthorizedFragment)
-            }
+
             binding.imageButton.id -> {
-                binding.profileMenu.visibility  = View.VISIBLE
+                mainActivity.binding.profileMenu.visibility = View.VISIBLE
+                mainActivity.binding.view15.visibility = View.VISIBLE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
             }
             binding.idMyBands.id -> {
                 findNavController().navigate(R.id.loveBandsFragment, bundle)
             }
             binding.idMyFriends.id ->{
                 findNavController().navigate(R.id.friendsFragment, bundle)
+            }
+            mainActivity.binding.tvChangeAvatarInProfile.id -> {
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+            mainActivity.binding.tvProfileExitInProfile.id -> {
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                profileViewModel.auth.signOut()
+                findNavController().navigate(R.id.action_profileFragment_to_notAuthorizedFragment)
             }
         }
     }

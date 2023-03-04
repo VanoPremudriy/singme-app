@@ -52,7 +52,7 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
         bingind = FragmentMyPlaylistsBinding.inflate(layoutInflater)
-
+        fragmentActivity.title = getString(R.string.playlists)
         bingind.rcPlaylists.layoutManager = LinearLayoutManager(context)
 
         myPlaylistsViewModel.listPlaylists.observe(viewLifecycleOwner){

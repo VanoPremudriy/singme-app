@@ -58,6 +58,50 @@
         tools:ignore="PrivateResource">
 
         <LinearLayout
+            android:id="@+id/profileMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_swipe_background"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/swipeLine11"
+                android:layout_width="100dp"
+                android:layout_height="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/bottom_swipe_background"
+                android:backgroundTint="#4F1578" />
+
+            <TextView
+                android:id="@+id/tvChangeAvatarInProfile"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/change_avatar" />
+
+            <TextView
+                android:id="@+id/tvProfileExitInProfile"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/exit" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/playlistMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

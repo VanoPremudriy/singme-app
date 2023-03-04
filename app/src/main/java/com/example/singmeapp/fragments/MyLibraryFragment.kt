@@ -52,7 +52,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener {
     ): View? {
 
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        fragmentActivity.title = getString(R.string.albums)
+        fragmentActivity.title = getString(R.string.library)
 
         Log.e("LifeCycle", "onCreateView")
         binding = FragmentMyLibraryBinding.inflate(layoutInflater)

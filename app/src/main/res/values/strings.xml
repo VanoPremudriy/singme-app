@@ -111,6 +111,10 @@
     <string name="popular_tracks">Popular tracks</string>
     <string name="popular_albums">Popular albums</string>
     <string name="new_names">New names</string>
+    <string name="publish_new_album">The artist has published a new album</string>
+    <string name="here_posts">News about the artists you are subscribed to will be published here.</string>
+    <string name="playlists">Playlists</string>
+    <string name="change_avatar">Change avatar</string>
 
 
 </resources>
