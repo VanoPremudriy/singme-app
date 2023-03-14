@@ -254,7 +254,7 @@ class FriendsViewModel: ViewModel() {
         var fbAvatarUrl: String
         var fbAvatarUrls = HashMap<String, String>()
         var count = 0
-        database.reference.addValueEventListener(object : ValueEventListener{
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener{
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {

@@ -70,23 +70,28 @@ class FriendsFragment : Fragment(), MenuProvider {
         binding.rcAllUsers.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         friendsViewModel.listFriends.observe(viewLifecycleOwner){
-            friendAdapter.friendList = it as ArrayList<User> /* = java.util.ArrayList<com.example.singmeapp.items.User> */
+            friendAdapter.friendList.clear()
+            friendAdapter.friendList.addAll(it as ArrayList<User>) /* = java.util.ArrayList<com.example.singmeapp.items.User> */
             binding.rcMyFriends.adapter = friendAdapter
         }
 
         friendsViewModel.listRequests.observe(viewLifecycleOwner){
-            requestAdapter.friendList = it as ArrayList<User> /* = java.util.ArrayList<com.example.singmeapp.items.User> */
+            requestAdapter.friendList.clear()
+            requestAdapter.friendList.addAll(it as ArrayList<User>)
             binding.rcFriendRequests.adapter = requestAdapter
         }
 
         friendsViewModel.listMyRequests.observe(viewLifecycleOwner){
-            myRequestAdapter.friendList = it as ArrayList<User> /* = java.util.ArrayList<com.example.singmeapp.items.User> */
+            myRequestAdapter.friendList.clear()
+            myRequestAdapter.friendList.addAll(it as ArrayList<User>)
             binding.rcMyFriendRequests.adapter = myRequestAdapter
         }
 
         friendsViewModel.listAllUsers.observe(viewLifecycleOwner){
-            arrayListUsers = it as ArrayList<User> /* = java.util.ArrayList<com.example.singmeapp.items.User> */
-            userAdapter.friendList = it as ArrayList<User> /* = java.util.ArrayList<com.example.singmeapp.items.User> */
+            arrayListUsers.clear()
+            arrayListUsers.addAll(it as ArrayList<User>)
+            userAdapter.friendList.clear()
+            userAdapter.friendList.addAll(it as ArrayList<User>) /* = java.util.ArrayList<com.example.singmeapp.items.User> */
             binding.rcAllUsers.adapter = userAdapter
         }
 
