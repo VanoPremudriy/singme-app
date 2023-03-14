@@ -1,6 +1,12 @@
 package com.example.singmeapp.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +14,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.MainActivity
+import com.example.singmeapp.PathConverter
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FragmentProfileBinding
 import com.example.singmeapp.items.User
@@ -25,6 +35,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.processNextEventInCurrentThread
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import java.io.File
+import java.io.FileNotFoundException
 
 
 class ProfileFragment : Fragment(), View.OnClickListener {
@@ -33,7 +47,54 @@ class ProfileFragment : Fragment(), View.OnClickListener {
     lateinit var mainActivity: MainActivity
     lateinit var binding: FragmentProfileBinding
     lateinit var profileViewModel: ProfileViewModel
+    lateinit var file: Bitmap
+    var avatarRequestBody: RequestBody? = null
+    lateinit var avatarExtension: String
+
     val bundle = Bundle()
+    private val pathConverter = PathConverter()
+
+    private val REQUEST_EXTERNAL_STORAGE = 1
+    private val PERMISSIONS_STORAGE = arrayOf<String>(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    fun verifyStoragePermissions() {
+        // Check if we have write permission
+        val permission = ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            if (activity != null) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+                )
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    val getUserAvatar = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            try {
+                var imageUri = it.data?.data
+                val path = pathConverter.getPath(requireContext(), imageUri!!)
+                val f = File(path)
+                avatarExtension = f.extension
+                avatarRequestBody = RequestBody.create(MediaType.parse("image/*"), f)
+
+                profileViewModel.changeImage(avatarRequestBody!!, avatarExtension, "avatar")
+                Picasso.get().load(imageUri).fit().noPlaceholder().noFade().centerCrop().into(binding.ivProfileAvatar)
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +177,11 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             }
             mainActivity.binding.tvChangeAvatarInProfile.id -> {
                 mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                val photoPickIntent = Intent(Intent.ACTION_PICK)
+                photoPickIntent.type = "image/"
+                verifyStoragePermissions()
+                getUserAvatar.launch(photoPickIntent)
+
             }
             mainActivity.binding.tvProfileExitInProfile.id -> {
                 mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN

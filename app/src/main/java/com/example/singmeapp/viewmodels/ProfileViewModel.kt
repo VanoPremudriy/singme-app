@@ -17,6 +17,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -95,6 +97,7 @@ class ProfileViewModel: ViewModel() {
             )
     }
 
+
     fun getFilePath(url: String, value: String){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {
@@ -144,6 +147,66 @@ class ProfileViewModel: ViewModel() {
             isAlready.value?.put("avatar", true)
             isAlready.value = isAlready.value
         }
+    }
+
+
+    fun changeImage(file: RequestBody, extension: String, image: String){
+        if (image == "avatar") {
+            getFileUrl("storage/users/${auth.currentUser?.uid}/profile/avatar.${extension}", file)
+            database.reference.child("users/${auth.currentUser?.uid}/profile/avatar").setValue(extension)
+        }
+    }
+
+    fun getFileUrl(url: String, file: RequestBody){
+        mService.getUrlForReUpload(url, "true", authToken).enqueue(object :
+            Callback<SecondFileApiModel> {
+            override fun onResponse(
+                call: Call<SecondFileApiModel>,
+                response: Response<SecondFileApiModel>
+            ) {
+                if (response.code() == 200 || response.code() == 409) {
+                    mService.addFile(response.body()!!.href, file, "image/*", "*/*").enqueue(object: Callback<ResponseBody>{
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            publicFile(url)
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            t.printStackTrace()
+                        }
+
+                    })
+
+                }
+                else Log.e("Responce", "URL not Getted")
+            }
+
+
+            override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
+
+            }
+
+        })
+    }
+
+
+    fun publicFile(url: String){
+        mService.publishFile(url, authToken).enqueue(object :
+            Callback<SecondFileApiModel> {
+            override fun onResponse(
+                call: Call<SecondFileApiModel>,
+                response: Response<SecondFileApiModel>
+            ) {
+                if (response.code() == 200)
+                    Log.e("CreateBand", "File public")
+                else Log.e("CreateBand", response.code().toString())
+            }
+
+
+            override fun onFailure(call: Call<SecondFileApiModel>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+        })
     }
 
 }
