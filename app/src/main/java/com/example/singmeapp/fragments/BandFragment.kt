@@ -231,8 +231,8 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
     }
 
     fun setButtons(){
-        binding.ibWrapBandInfo.setOnClickListener(this@BandFragment)
-        binding.ibWrapBandMembers.setOnClickListener(this@BandFragment)
+        binding.bWrapBandInfo.setOnClickListener(this@BandFragment)
+        binding.bWrapBandMembers.setOnClickListener(this@BandFragment)
         binding.idDiscography.setOnClickListener(this@BandFragment)
         binding.ibEditBandInfo.setOnClickListener(this@BandFragment)
         binding.ibEditBandBackInBandFragment.setOnClickListener(this@BandFragment)
@@ -251,11 +251,11 @@ class BandFragment : Fragment(), View.OnClickListener, MenuProvider {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onClick(p0: View?) {
         when (p0?.id){
-            binding.ibWrapBandInfo.id -> {
+            binding.bWrapBandInfo.id -> {
                 wrap(binding.llBandInfo)
             }
 
-            binding.ibWrapBandMembers.id -> {
+            binding.bWrapBandMembers.id -> {
                 wrap(binding.llBandMembers)
             }
 

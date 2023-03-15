@@ -82,15 +82,18 @@
             app:layout_constraintStart_toEndOf="@+id/cvBandAvatar"
             app:layout_constraintTop_toBottomOf="@+id/cvBandBack" />
 
-        <ImageButton
-            android:id="@+id/ibWrapBandInfo"
-            android:layout_width="30dp"
+
+        <Button
+            android:id="@+id/bWrapBandInfo"
+            android:layout_width="60dp"
             android:layout_height="20dp"
             android:layout_marginEnd="16dp"
-            android:background="#9839B5"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@android:drawable/arrow_down_float"
+            android:backgroundTint="#9839B5"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/ic_up_down_arrow"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
             app:layout_constraintEnd_toEndOf="@+id/llBandInfo"
             app:layout_constraintTop_toBottomOf="@+id/llBandInfo" />
 
@@ -107,15 +110,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llBandInfo" />
 
-        <ImageButton
-            android:id="@+id/ibWrapBandMembers"
-            android:layout_width="30dp"
+
+        <Button
+            android:id="@+id/bWrapBandMembers"
+            android:layout_width="60dp"
             android:layout_height="20dp"
             android:layout_marginEnd="16dp"
-            android:background="#9839B5"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@android:drawable/arrow_down_float"
+            android:backgroundTint="#9839B5"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/ic_up_down_arrow"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
             app:layout_constraintEnd_toEndOf="@+id/llBandMembers"
             app:layout_constraintTop_toBottomOf="@+id/llBandMembers" />
 
