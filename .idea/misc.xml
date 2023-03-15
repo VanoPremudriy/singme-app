@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable-anydpi-v24/ic_close.xml" value="0.2945" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable-anydpi/ic_home.xml" value="0.3385" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2755" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable/bottom_menu.xml" value="0.2985" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable/bottom_menu_home_selector.xml" value="0.3385" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable/bottom_menu_selector.xml" value="0.2985" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable/bottom_swipe_background.xml" value="0.3505" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2755" />
@@ -63,7 +65,7 @@
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/track_item.xml" value="0.5" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/layout/track_item_2.xml" value="0.5" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/menu/band_editor_menu.xml" value="0.23092105263157894" />
-        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/menu/bottom_menu.xml" value="0.365625" />
+        <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/menu/bottom_menu.xml" value="0.25" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/menu/discography_menu.xml" value="0.15789473684210525" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/menu/my_playlists_menu.xml" value="0.1" />
         <entry key="..\:/IdeaProjects/Samsung/SingMeApp/app/src/main/res/menu/search_menu.xml" value="0.23157894736842105" />

@@ -14,8 +14,11 @@
         android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:background="@color/ColorBottomViewNavigation"
+        app:itemIconTint="@color/bottom_menu_text_color"
         app:itemTextColor="@color/bottom_menu_text_color"
         app:labelVisibilityMode="labeled"
+        app:itemTextAppearanceActive="@dimen/design_bottom_navigation_active_text_size"
+        app:itemTextAppearanceInactive="@dimen/design_bottom_navigation_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu"
         tools:layout_editor_absoluteX="0dp" />
