@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         tools:context=".fragments.FriendsFragment">
 
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/ibWrapFriendRequests"
             android:layout_width="30dp"
             android:layout_height="20dp"
@@ -21,9 +21,9 @@
             android:focusable="true"
             android:src="@android:drawable/arrow_down_float"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />
+            app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />-->
 
-        <ImageButton
+       <!-- <ImageButton
             android:id="@+id/ibWrapMyFriendRequests"
             android:layout_width="30dp"
             android:layout_height="20dp"
@@ -33,7 +33,7 @@
             android:focusable="true"
             android:src="@android:drawable/arrow_down_float"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rcMyFriendRequests" />
+            app:layout_constraintTop_toBottomOf="@+id/rcMyFriendRequests" />-->
 
         <View
             android:id="@+id/view7"
@@ -74,6 +74,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />
 
+        <Button
+            android:id="@+id/bWrapFriendRequests"
+            android:layout_width="60dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#9839B5"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/ic_up_down_arrow"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rcFriendRequests" />
+
+        <Button
+            android:id="@+id/bWrapMyFriendRequests"
+            android:layout_width="60dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#9839B5"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/ic_up_down_arrow"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rcMyFriendRequests" />
+
         <TextView
             android:id="@+id/tvMyFriendsInFriendsFragment"
             android:layout_width="wrap_content"
@@ -82,6 +110,15 @@
             android:layout_marginTop="8dp"
             android:text="@string/my_friends"
             app:layout_constraintStart_toStartOf="@+id/view7"
+            app:layout_constraintTop_toBottomOf="@+id/view7" />
+
+        <TextView
+            android:id="@+id/tvMyFriendsInFriendsFragmentCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/tvMyFriendsInFriendsFragment"
             app:layout_constraintTop_toBottomOf="@+id/view7" />
 
         <TextView
@@ -95,6 +132,15 @@
             app:layout_constraintTop_toBottomOf="@+id/view8" />
 
         <TextView
+            android:id="@+id/tvRequestsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/tvRequests"
+            app:layout_constraintTop_toBottomOf="@+id/view8" />
+
+        <TextView
             android:id="@+id/tvMyRequests"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,10 +150,19 @@
             app:layout_constraintStart_toStartOf="@+id/view9"
             app:layout_constraintTop_toBottomOf="@+id/view9" />
 
+        <TextView
+            android:id="@+id/tvMyRequestsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/tvMyRequests"
+            app:layout_constraintTop_toBottomOf="@+id/view9" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcFriendRequests"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -120,7 +175,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcMyFriendRequests"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -155,6 +210,7 @@
             android:layout_height="0dp"
             android:background="#FFFFFF"
             android:clickable="true"
+            android:elevation="100dp"
             android:focusable="true"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -175,10 +231,12 @@
             android:layout_height="0dp"
             android:background="#FFFFFF"
             android:clickable="true"
+            android:elevation="10000dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progressBar17"

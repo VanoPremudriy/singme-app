@@ -2,6 +2,7 @@ package com.example.singmeapp.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
@@ -73,18 +74,21 @@ class FriendsFragment : Fragment(), MenuProvider {
             friendAdapter.friendList.clear()
             friendAdapter.friendList.addAll(it as ArrayList<User>) /* = java.util.ArrayList<com.example.singmeapp.items.User> */
             binding.rcMyFriends.adapter = friendAdapter
+            binding.tvMyFriendsInFriendsFragmentCount.text = "(${it.size})"
         }
 
         friendsViewModel.listRequests.observe(viewLifecycleOwner){
             requestAdapter.friendList.clear()
             requestAdapter.friendList.addAll(it as ArrayList<User>)
             binding.rcFriendRequests.adapter = requestAdapter
+            binding.tvRequestsCount.text = "(${it.size})"
         }
 
         friendsViewModel.listMyRequests.observe(viewLifecycleOwner){
             myRequestAdapter.friendList.clear()
             myRequestAdapter.friendList.addAll(it as ArrayList<User>)
             binding.rcMyFriendRequests.adapter = myRequestAdapter
+            binding.tvMyRequestsCount.text = "(${it.size})"
         }
 
         friendsViewModel.listAllUsers.observe(viewLifecycleOwner){
@@ -103,7 +107,12 @@ class FriendsFragment : Fragment(), MenuProvider {
 
 
 
-
+        binding.bWrapMyFriendRequests.setOnClickListener{
+            wrap(binding.rcMyFriendRequests)
+        }
+        binding.bWrapFriendRequests.setOnClickListener{
+            wrap(binding.rcFriendRequests)
+        }
 
         // Inflate the layout for this fragment
         return binding.root
@@ -164,7 +173,24 @@ class FriendsFragment : Fragment(), MenuProvider {
         return true
     }
 
+    private fun convert(value: Int):Int{
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics).toInt()
+    }
 
+    private fun wrap(wrapItem: View){
+        if (wrapItem.height == convert(0)) {
+            Log.e("efs", "YES")
+            val params = wrapItem.layoutParams
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            //binding.rcVievMembers.adapter = memberAdapter
+            wrapItem.layoutParams = params
+        }
+        else {
+            val params = wrapItem.layoutParams
+            params.height = convert(0)
+            wrapItem.layoutParams = params
+        }
+    }
 
     companion object {
 
