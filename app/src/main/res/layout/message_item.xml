@@ -19,19 +19,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/tvFriendMessage"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/bottom_swipe_background"
             android:backgroundTint="#D8D8D8"
+            android:gravity="end"
+            android:orientation="horizontal"
             android:paddingStart="5dp"
             android:paddingTop="3dp"
             android:paddingEnd="5dp"
-            android:paddingBottom="3dp"
-            android:text="TextView" />
+            android:paddingBottom="3dp">
+
+            <TextView
+                android:id="@+id/tvFriendMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvFriendMessageTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="TextView"
+                android:textSize="10sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -48,19 +66,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/tvMyMessage"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/bottom_swipe_background"
             android:backgroundTint="#D8D8D8"
+            android:gravity="end"
+            android:orientation="horizontal"
             android:paddingStart="5dp"
             android:paddingTop="3dp"
             android:paddingEnd="5dp"
-            android:paddingBottom="3dp"
-            android:text="TextView" />
+            android:paddingBottom="3dp">
+
+            <TextView
+                android:id="@+id/tvMyMessageTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="TextView"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tvMyMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="16sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

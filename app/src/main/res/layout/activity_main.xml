@@ -29,7 +29,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/bNav" />
+        app:layout_constraintBottom_toTopOf="@+id/bNav"
+        app:navGraph="@navigation/main_nav"/>
 
     <include
         android:id="@+id/player"
@@ -663,7 +664,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
-                android:text="add_to_playlist" />
+                android:text="@string/add_to_playlist" />
 
             <TextView
                 android:id="@+id/tvGoToBandProfileInPlayer"

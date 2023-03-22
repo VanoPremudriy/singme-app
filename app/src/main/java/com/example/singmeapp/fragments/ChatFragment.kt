@@ -1,11 +1,13 @@
 package com.example.singmeapp.fragments
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -41,19 +43,21 @@ class ChatFragment : Fragment() {
         (activity as MainActivity).binding.player.root.visibility = View.INVISIBLE
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.title = chatUser.user.name
-
+        chatViewModel.readMessages(chatUser)
         binding = FragmentChatBinding.inflate(layoutInflater)
         messageAdapter = MessageAdapter(this)
         binding.rcChat.layoutManager = LinearLayoutManager(context)
         chatViewModel.listMessages.observe(viewLifecycleOwner){
             messageAdapter.messageList = it as ArrayList<Message>
             binding.rcChat.adapter = messageAdapter
+            (binding.rcChat.layoutManager as LinearLayoutManager).scrollToPosition(it.size-1)
         }
         binding.imageButton2.setOnClickListener{
             if (binding.multiAutoCompleteTextView.text.toString() != "" && binding.multiAutoCompleteTextView.text.toString() != null){

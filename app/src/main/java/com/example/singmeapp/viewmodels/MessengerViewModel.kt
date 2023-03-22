@@ -22,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
 
 class MessengerViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
@@ -39,22 +40,26 @@ class MessengerViewModel: ViewModel() {
     fun getChatUsers() {
         var fbAvatarUrl: String
         var fbAvatarUrls = HashMap<String, String>()
-        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+        database.reference.addValueEventListener(object : ValueEventListener {
+            @androidx.annotation.RequiresApi(Build.VERSION_CODES.O)
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 var count = 0
                 arrayListChatUsers.clear()
-                snapshot.child("messenger/${auth.currentUser?.uid}").children.forEach {
+                snapshot.child("messenger/${auth.currentUser?.uid}").children.forEach { it ->
                     var friendUuid = it.key
-                    it.children.forEach {it1 ->
-                        messages.add(
-                            Message(
-                                it1.child("message").value.toString(),
-                                it1.child("userUuid").value.toString()
-                            )
+                    val messCount = it.childrenCount
+                    var message = Message(
+                            it.child("${messCount-1}/message").value.toString(),
+                            it.child("${messCount-1}/senderUuid").value.toString(),
+                            it.child("${messCount-1}/is_read").value.toString().toBoolean(),
+                            LocalDateTime.parse(it.child("${messCount-1}/created_at").value.toString())
+
                         )
-                    }
+
+
+
                     var friendName = snapshot.child("users/${friendUuid}/profile/name").value.toString()
                     var friendAge= snapshot.child("users/${friendUuid}/profile/age").value.toString()
                     var friendSex = snapshot.child("users/${friendUuid}/profile/sex").value.toString()
@@ -79,9 +84,13 @@ class MessengerViewModel: ViewModel() {
                         friendshipStatusForFragment = friendshipStatus ?: "unknown",
                         ""
                     )
-                    arrayListChatUsers.add(ChatUser(friend, messages[messages.size-1]))
+                    arrayListChatUsers.add(ChatUser(friend, message))
                 }
                 if (arrayListChatUsers.size != 0) {
+                    arrayListChatUsers.sortBy {
+                        it.lastMessage?.dateTime
+                    }
+                    arrayListChatUsers.reverse()
                     listChatUsers.value = arrayListChatUsers
                     arrayListChatUsers.forEach {
                         getFilePath(fbAvatarUrls[it.user.uuid]!!, "avatarChatUser", count)

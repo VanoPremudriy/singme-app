@@ -23,6 +23,7 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
 import java.util.function.Consumer
 
 class ChatViewModel: ViewModel() {
@@ -43,7 +44,10 @@ class ChatViewModel: ViewModel() {
                 snapshot.children.forEach{ t ->
                        val message = Message(
                            t.child("message").value.toString(),
-                           t.child("senderUuid").value.toString()
+                           t.child("senderUuid").value.toString(),
+                           t.child("is_read").value.toString().toBoolean(),
+                           LocalDateTime.parse(t.child("created_at").value.toString())
+
                        )
 
                         arrayListMessages.add(message)
@@ -60,17 +64,39 @@ class ChatViewModel: ViewModel() {
     }
 
     fun set(){
-        var message = Message("Hello, fucking beautiduls svlknovlanoaenrgoiw", "CT0bbnzjjjTDddVDUkQDpSBBOFp2")
+        /*var message = Message("Hello, fucking beautiduls svlknovlanoaenrgoiw", "CT0bbnzjjjTDddVDUkQDpSBBOFp2")
         database.reference.child("messenger/${auth.currentUser?.uid}/CT0bbnzjjjTDddVDUkQDpSBBOFp2/0").setValue(message)
         message = Message("vvsdlkvkmedrlb;nesrojbnesrjtbheln erg gesngoeagrn eognrao", auth.currentUser?.uid.toString())
-        database.reference.child("messenger/${auth.currentUser?.uid}/CT0bbnzjjjTDddVDUkQDpSBBOFp2/1").setValue(message)
+        database.reference.child("messenger/${auth.currentUser?.uid}/CT0bbnzjjjTDddVDUkQDpSBBOFp2/1").setValue(message)*/
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(mess: String, chatUser: ChatUser){
-        var message = Message(mess, auth.currentUser?.uid.toString())
-        var count = listMessages.value?.size
-        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}/${count}").setValue(message)
+        val datetime = LocalDateTime.now().toString()
+        val count = listMessages.value?.size ?: 0
+        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}/${count}/created_at").setValue(datetime)
+        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}/${count}/senderUuid").setValue(auth.currentUser?.uid.toString())
+        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}/${count}/message").setValue(mess)
+        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}/${count}/is_read").setValue(false)
+
+    }
+
+    fun readMessages(chatUser: ChatUser){
+        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    if (it.child("senderUuid").value.toString() == chatUser.user.uuid){
+                        database.reference.child("messenger/${auth.currentUser?.uid}/${chatUser.user.uuid}/${it.key}/is_read").setValue(true)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
 

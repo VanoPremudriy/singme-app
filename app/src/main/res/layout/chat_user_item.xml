@@ -7,6 +7,19 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
+    <View
+        android:id="@+id/view16"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/post_news_background"
+        android:backgroundTint="@color/purple_1001"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tvChatUserLastMessage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tvChatUserLastMessage"
+        app:layout_constraintTop_toTopOf="@+id/tvChatUserLastMessage" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cvItemChatUserAvatar"
         android:layout_width="wrap_content"
@@ -39,10 +52,18 @@
         android:layout_height="20dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="100dp"
+        android:layout_marginEnd="30dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/cvItemChatUserAvatar"
         app:layout_constraintTop_toBottomOf="@+id/tvChatUserName" />
+
+    <TextView
+        android:id="@+id/tvChatUserMessageTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

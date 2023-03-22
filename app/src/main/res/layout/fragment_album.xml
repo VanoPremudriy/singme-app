@@ -25,7 +25,8 @@
             android:layout_weight="1"
             android:background="#00FFFFFF"
             android:clickable="true"
-            android:src="?attr/actionModeCloseDrawable" />
+            android:src="?attr/actionModeCloseDrawable"
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/textView9"

@@ -8,6 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
-    <color name="ColorBottomViewNavigation">#8C39C1</color>
+    <color name="purple_800">#5839AC</color>
+    <color name="purple_900">#47338F</color>
+    <color name="purple_1000">#90573D92</color>
+    <color name="purple_1001">#573D92</color>
+    <color name="ColorBottomViewNavigation">#5839AC</color>
+    <!--#8C39C1-->
 </resources>
 
