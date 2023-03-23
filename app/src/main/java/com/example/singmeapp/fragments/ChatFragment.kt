@@ -50,7 +50,6 @@ class ChatFragment : Fragment() {
     ): View? {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.title = chatUser.user.name
-        chatViewModel.readMessages(chatUser)
         binding = FragmentChatBinding.inflate(layoutInflater)
         messageAdapter = MessageAdapter(this)
         binding.rcChat.layoutManager = LinearLayoutManager(context)
@@ -58,6 +57,7 @@ class ChatFragment : Fragment() {
             messageAdapter.messageList = it as ArrayList<Message>
             binding.rcChat.adapter = messageAdapter
             (binding.rcChat.layoutManager as LinearLayoutManager).scrollToPosition(it.size-1)
+            chatViewModel.readMessages(chatUser)
         }
         binding.imageButton2.setOnClickListener{
             if (binding.multiAutoCompleteTextView.text.toString() != "" && binding.multiAutoCompleteTextView.text.toString() != null){
