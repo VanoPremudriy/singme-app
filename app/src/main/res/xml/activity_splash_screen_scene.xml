@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="300"
+        motion:autoTransition="animateToEnd">
+       <KeyFrameSet></KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/textView17"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintHorizontal_bias="0.554"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.32999998" />
+        <Constraint
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/textView19"
+            motion:layout_constraintTop_toBottomOf="@+id/textView17"
+            motion:layout_constraintStart_toStartOf="@+id/textView17" />
+        <Constraint
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:id="@+id/imageView"
+            motion:layout_constraintTop_toTopOf="@+id/textView19"
+            motion:layout_constraintBottom_toBottomOf="@+id/textView19"
+            motion:layout_constraintStart_toEndOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:id="@+id/imageView"
+            motion:layout_constraintStart_toEndOf="@+id/textView19"
+            motion:layout_constraintTop_toTopOf="@+id/textView19"
+            android:layout_marginStart="8dp" />
+    </ConstraintSet>
+
+    <Transition
+        android:id="@+id/endTrans"
+        motion:constraintSetEnd="@+id/end2"
+        motion:constraintSetStart="@id/end"
+        motion:duration="200"
+        motion:autoTransition="animateToEnd"
+        android:layout_marginStart="8dp">
+        <KeyFrameSet></KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/end2">
+        <Constraint
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:id="@+id/imageView"
+            motion:layout_constraintStart_toEndOf="@+id/textView19"
+            motion:layout_constraintTop_toTopOf="@+id/textView19"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="15dp"/>
+    </ConstraintSet>
+
+    <Transition
+        motion:constraintSetEnd="@+id/end3"
+        motion:constraintSetStart="@id/end2"
+        motion:duration="200"
+        motion:autoTransition="animateToEnd">
+        <KeyFrameSet></KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/end3">
+        <Constraint
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:id="@+id/imageView"
+            motion:layout_constraintStart_toEndOf="@+id/textView19"
+            motion:layout_constraintTop_toTopOf="@+id/textView19"
+            android:layout_marginStart="8dp"/>
+    </ConstraintSet>
+</MotionScene>
