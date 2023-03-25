@@ -7,86 +7,115 @@
     tools:context=".fragments.RegistrationFragment">
 
     <EditText
-        android:id="@+id/etEmailInRegistration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="@+id/etLastNameInRegistration"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/etLastNameInRegistration"
-        app:layout_constraintTop_toBottomOf="@+id/etLastNameInRegistration" />
-
-    <EditText
-        android:id="@+id/etPasswordInRegistration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:singleLine="false"
-        app:layout_constraintEnd_toEndOf="@+id/etEmailInRegistration"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/etEmailInRegistration"
-        app:layout_constraintTop_toBottomOf="@+id/etEmailInRegistration" />
-
-    <EditText
-        android:id="@+id/etRepeatPasswordInRegistration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:ems="10"
-        android:hint="@string/repeat_password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/etPasswordInRegistration"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/etPasswordInRegistration"
-        app:layout_constraintTop_toBottomOf="@+id/etPasswordInRegistration" />
-
-    <EditText
         android:id="@+id/etNameInRegistration"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="108dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/name"
         android:inputType="textPersonName"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etLastNameInRegistration"
-        android:layout_width="wrap_content"
+        android:id="@+id/etRealNameInRegistration"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/real_name"
+        android:inputType="textPersonName"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNameInRegistration" />
+
+    <EditText
+        android:id="@+id/etLastNameInRegistration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/last_name"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/etNameInRegistration"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/etNameInRegistration"
-        app:layout_constraintTop_toBottomOf="@+id/etNameInRegistration" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etRealNameInRegistration" />
+
+    <EditText
+        android:id="@+id/etEmailInRegistration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etLastNameInRegistration" />
+
+    <EditText
+        android:id="@+id/etPasswordInRegistration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:singleLine="false"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEmailInRegistration" />
+
+    <EditText
+        android:id="@+id/etRepeatPasswordInRegistration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/repeat_password"
+        android:inputType="textPassword"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPasswordInRegistration" />
 
     <Button
         android:id="@+id/bSignUpReg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginBottom="70dp"
         android:text="@string/sign_up"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/etRepeatPasswordInRegistration"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/etRepeatPasswordInRegistration"
-        app:layout_constraintTop_toBottomOf="@+id/etRepeatPasswordInRegistration" />
+        app:layout_constraintStart_toStartOf="@+id/etRepeatPasswordInRegistration" />
 
     <TextView
         android:id="@+id/tvPassValid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/red"
         app:layout_constraintStart_toStartOf="@+id/etPasswordInRegistration"
         app:layout_constraintTop_toBottomOf="@+id/etPasswordInRegistration" />
@@ -117,6 +146,15 @@
         android:textColor="@color/red"
         app:layout_constraintStart_toStartOf="@+id/etLastNameInRegistration"
         app:layout_constraintTop_toBottomOf="@+id/etLastNameInRegistration" />
+
+    <TextView
+        android:id="@+id/tvRealNameValid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/red"
+        app:layout_constraintStart_toStartOf="@+id/etRealNameInRegistration"
+        app:layout_constraintTop_toBottomOf="@+id/etRealNameInRegistration" />
 
     <TextView
         android:id="@+id/tvNameValid"

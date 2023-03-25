@@ -234,9 +234,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setNavigation(){
+        if (auth.currentUser != null)
+            navController.navigate(R.id.action_global_homeFragment)
+        else navController.navigate(R.id.action_global_notAuthorizedFragment)
+
         binding.bNav.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.myLibraryFragment ->  {navController.navigate(R.id.action_global_myLibraryFragment)}//{navController.navigate(R.id.action_global_libraryFragment) }
+                R.id.myLibraryFragment -> {
+                    if (auth.currentUser != null)
+                        navController.navigate(R.id.action_global_myLibraryFragment)
+                    else navController.navigate(R.id.action_global_notAuthorizedFragment)
+                }
                 R.id.profileFragment -> {
                     if (auth.currentUser != null)
                         navController.navigate(R.id.action_global_profileFragment)

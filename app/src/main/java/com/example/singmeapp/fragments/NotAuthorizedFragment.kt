@@ -15,13 +15,12 @@ import com.example.singmeapp.databinding.FragmentNotAuthorizedBinding
 class NotAuthorizedFragment : Fragment(), View.OnClickListener {
 
     lateinit var binding: FragmentNotAuthorizedBinding
+    private lateinit var fragActivity: AppCompatActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fragActivity = activity as AppCompatActivity
+        fragActivity = activity as AppCompatActivity
         fragActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        fragActivity.title = getString(R.string.profile)
-
 
     }
 
@@ -29,6 +28,8 @@ class NotAuthorizedFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        fragActivity.title = getString(R.string.home)
 
         binding = FragmentNotAuthorizedBinding.inflate(layoutInflater)
 

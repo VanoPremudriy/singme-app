@@ -55,11 +55,12 @@ class RegistrationFragment : Fragment() {
     private fun signUp(){
         if (textValidation()) {
             val uName =binding.etNameInRegistration.text.toString()
+            val uRealName = binding.etRealNameInRegistration.text.toString()
             val uLastName = binding.etLastNameInRegistration.text.toString()
             val uEmail = binding.etEmailInRegistration.text.toString()
             val uPassword = binding.etPasswordInRegistration.text.toString()
 
-            regViewModel.setRegValues(arrayListOf(uName, uLastName, uEmail, uPassword))
+            regViewModel.setRegValues(arrayListOf(uName,uRealName, uLastName, uEmail, uPassword))
             regViewModel.registration()
             regViewModel.isSuccess.observe(viewLifecycleOwner){
                 if (it){
@@ -83,12 +84,13 @@ class RegistrationFragment : Fragment() {
 
     private fun textValidation():Boolean{
         val uName =binding.etNameInRegistration.text.toString()
+        val uRealName = binding.etRealNameInRegistration.text.toString()
         val uLastName = binding.etLastNameInRegistration.text.toString()
         val uEmail = binding.etEmailInRegistration.text.toString()
         val uPassword = binding.etPasswordInRegistration.text.toString()
         val uRepPassword = binding.etRepeatPasswordInRegistration.text.toString()
 
-        regViewModel.setValidValues(arrayListOf(uName, uLastName, uEmail, uPassword, uRepPassword))
+        regViewModel.setValidValues(arrayListOf(uName, uRealName, uLastName, uEmail, uPassword, uRepPassword))
 
         val result =  regViewModel.Valid()
         observeViewModel()
@@ -100,6 +102,10 @@ class RegistrationFragment : Fragment() {
     fun observeViewModel(){
         regViewModel.nameValid.observe(viewLifecycleOwner){
             binding.tvNameValid.text = it.toString()
+        }
+
+        regViewModel.realNameValid.observe(viewLifecycleOwner){
+            binding.tvRealNameValid.text = it.toString()
         }
 
         regViewModel.lastNameValid.observe(viewLifecycleOwner){

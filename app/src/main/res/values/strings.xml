@@ -115,6 +115,8 @@
     <string name="here_posts">News about the artists you are subscribed to will be published here.</string>
     <string name="playlists">Playlists</string>
     <string name="change_avatar">Change avatar</string>
+    <string name="real_name">Real name</string>
+    <string name="null_real_name">Real name is null</string>
 
 
 </resources>

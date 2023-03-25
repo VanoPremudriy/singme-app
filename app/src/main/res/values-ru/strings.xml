@@ -106,4 +106,6 @@
     <string name="here_posts">Здесь будут публиковаться новости об исполнителях, на которых вы подписаны.</string>
     <string name="playlists">Плейлисты</string>
     <string name="change_avatar">Изменить аватарку</string>
+    <string name="real_name">Настоящее имя</string>
+    <string name="null_real_name">Настоящее имя пустое</string>
 </resources>

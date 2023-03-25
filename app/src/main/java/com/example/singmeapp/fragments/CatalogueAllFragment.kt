@@ -103,6 +103,7 @@ class CatalogueAllFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentActivity.title = getString(R.string.catalogue)
         binding = FragmentCatalogueAllBinding.inflate(layoutInflater)
 
         binding.rvCatalogueAll.layoutManager = LinearLayoutManager(context)

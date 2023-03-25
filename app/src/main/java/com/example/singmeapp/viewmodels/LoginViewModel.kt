@@ -59,10 +59,12 @@ class LoginViewModel: ViewModel() {
                 if (auth.currentUser?.isEmailVerified == true) {
                     isVerify.value = true
                 } else {
+                    isVerify.value = false
                     auth.signOut()
                 }
             }
             else {
+                isSuccess.value = false
                 auth.signOut()
             }
         }

@@ -8,48 +8,51 @@
 
     <EditText
         android:id="@+id/etEmailInLogin"
-        android:layout_width="332dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="196dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.544"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/etPasswordInLogin"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="72dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/etEmailInLogin"
-        app:layout_constraintHorizontal_bias="0.571"
-        app:layout_constraintStart_toStartOf="@+id/etEmailInLogin"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etEmailInLogin" />
 
     <Button
         android:id="@+id/bSignInLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_marginBottom="70dp"
         android:text="@string/sign_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/etPasswordInLogin"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/etPasswordInLogin"
-        app:layout_constraintTop_toBottomOf="@+id/etPasswordInLogin"
-        app:layout_constraintVertical_bias="0.049" />
+        app:layout_constraintStart_toStartOf="@+id/etPasswordInLogin" />
 
     <TextView
         android:id="@+id/tvEmailValidLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/red"
         app:layout_constraintStart_toStartOf="@+id/etEmailInLogin"
         app:layout_constraintTop_toBottomOf="@+id/etEmailInLogin" />
@@ -58,7 +61,7 @@
         android:id="@+id/tvPasswordValidLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/red"
         app:layout_constraintStart_toStartOf="@+id/etPasswordInLogin"
         app:layout_constraintTop_toBottomOf="@+id/etPasswordInLogin" />

@@ -26,7 +26,6 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        fragmentActivity.title = getString(R.string.home)
         postNewsAdapter = PostNewsAdapter(this)
         val provider = ViewModelProvider(this)
         homeViewModel = provider[HomeViewModel::class.java]
@@ -38,6 +37,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentActivity.title = getString(R.string.home)
         binding = FragmentHomeBinding.inflate(layoutInflater)
         binding.rvPosts.layoutManager = LinearLayoutManager(context)
 

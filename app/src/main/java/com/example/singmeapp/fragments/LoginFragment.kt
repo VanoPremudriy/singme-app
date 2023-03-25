@@ -49,7 +49,19 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
         val provider = ViewModelProvider(this)
         loginViewModel = provider[LoginViewModel::class.java]
-
+        loginViewModel.isSuccess.observe(viewLifecycleOwner){
+            if (it) {
+                loginViewModel.isVerify.observe(viewLifecycleOwner){it1 ->
+                    if (it1) {
+                        findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
+                    } else {
+                        Toast.makeText(context, getString(R.string.not_verify), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(context, getString(R.string.incorrect_email_password), Toast.LENGTH_SHORT).show()
+            }
+        }
         setButtons()
 
         // Inflate the layout for this fragment
@@ -74,7 +86,9 @@ class LoginFragment : Fragment(), View.OnClickListener {
             loginViewModel.setLoginValues(arrayListOf(uEmail, uPassword))
             loginViewModel.logIn()
 
-            if (loginViewModel.isSuccess.value == true){
+
+
+            /*if (loginViewModel.isSuccess.value == true){
                 if (loginViewModel.isVerify.value == true){
                     findNavController().navigate(R.id.action_loginFragment_to_profileFragment);
                 }
@@ -84,7 +98,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
             }
             else {
                 Toast.makeText(context, getString(R.string.incorrect_email_password), Toast.LENGTH_SHORT).show()
-            }
+            }*/
         }
     }
 

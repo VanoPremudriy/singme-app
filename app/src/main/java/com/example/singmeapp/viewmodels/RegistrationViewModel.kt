@@ -23,12 +23,14 @@ class RegistrationViewModel: ViewModel() {
     }
 
     var uName = ""
+    var uRealName = ""
     var uLastName = ""
     var uEmail = ""
     var uPass = ""
     var uRepPass = ""
 
     var nameValid = MutableLiveData<String>()
+    var realNameValid = MutableLiveData<String>()
     val lastNameValid = MutableLiveData<String>()
     val emailValid = MutableLiveData<String>()
     val passValid = MutableLiveData<String>()
@@ -38,28 +40,35 @@ class RegistrationViewModel: ViewModel() {
 
     fun setValidValues(list: ArrayList<String>){
         uName = list[0]
-        uLastName = list[1]
-        uEmail = list[2]
-        uPass = list[3]
-        uRepPass = list[4]
+        uRealName = list[1]
+        uLastName = list[2]
+        uEmail = list[3]
+        uPass = list[4]
+        uRepPass = list[5]
     }
 
     fun setRegValues(list: ArrayList<String>){
         uName = list[0]
-        uLastName = list[1]
-        uEmail = list[2]
-        uPass = list[3]
+        uRealName = list[1]
+        uLastName = list[2]
+        uEmail = list[3]
+        uPass = list[4]
     }
 
 
     fun Valid():Boolean{
 
-        if (uName == ""){
+        if (uName.isEmpty()){
             nameValid.value = App.getRes().getString(R.string.null_name)
             return false
         }
 
-        if (uLastName == ""){
+        if (uRealName.isEmpty()){
+            nameValid.value = App.getRes().getString(R.string.null_real_name)
+            return false
+        }
+
+        if (uLastName.isEmpty()){
             lastNameValid.value = App.getRes().getString(R.string.null_last_name)
             return false
         }
@@ -94,6 +103,7 @@ class RegistrationViewModel: ViewModel() {
 
     fun clearValid(){
         nameValid.value = ""
+        realNameValid.value = ""
         lastNameValid.value = ""
         emailValid.value = ""
         passValid.value = ""
@@ -112,6 +122,8 @@ class RegistrationViewModel: ViewModel() {
                             Log.d("REG", "success")
                             database.getReference("users/" + auth.currentUser?.uid + "/profile/name")
                                 .setValue(uName)
+                            database.getReference("users/" + auth.currentUser?.uid + "/profile/real_name")
+                                .setValue(uRealName)
                             database.getReference("users/" + auth.currentUser?.uid + "/profile/last_name")
                                 .setValue(uLastName)
                             database.getReference("users/" + auth.currentUser?.uid + "/profile/email")
