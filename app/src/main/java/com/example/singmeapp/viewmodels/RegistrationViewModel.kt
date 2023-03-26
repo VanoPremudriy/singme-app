@@ -1,13 +1,8 @@
 package com.example.singmeapp.viewmodels
 
-import android.content.res.Resources
-import android.provider.Settings.Global.getString
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.App
 import com.example.singmeapp.R
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +23,8 @@ class RegistrationViewModel: ViewModel() {
     var uEmail = ""
     var uPass = ""
     var uRepPass = ""
+    var uSex = -1
+    var uBirthday = ""
 
     var nameValid = MutableLiveData<String>()
     var realNameValid = MutableLiveData<String>()
@@ -35,6 +32,7 @@ class RegistrationViewModel: ViewModel() {
     val emailValid = MutableLiveData<String>()
     val passValid = MutableLiveData<String>()
     val repPassValid = MutableLiveData<String>()
+    val sexValid = MutableLiveData<String>()
 
     var isSuccess = MutableLiveData<Boolean>()
 
@@ -45,6 +43,7 @@ class RegistrationViewModel: ViewModel() {
         uEmail = list[3]
         uPass = list[4]
         uRepPass = list[5]
+        uSex = list[6].toInt()
     }
 
     fun setRegValues(list: ArrayList<String>){
@@ -53,6 +52,8 @@ class RegistrationViewModel: ViewModel() {
         uLastName = list[2]
         uEmail = list[3]
         uPass = list[4]
+        uSex = list[5].toInt()
+        uBirthday = list[6]
     }
 
 
@@ -98,6 +99,11 @@ class RegistrationViewModel: ViewModel() {
             passValid.value = App.getRes().getString(R.string.small_pass)
             return false
         }
+
+        if (uSex == -1) {
+            sexValid.value = App.getRes().getString(R.string.choose_sex)
+            return false
+        }
         return true
     }
 
@@ -108,6 +114,7 @@ class RegistrationViewModel: ViewModel() {
         emailValid.value = ""
         passValid.value = ""
         repPassValid.value = ""
+        sexValid.value = ""
     }
 
     fun registration() {
@@ -130,6 +137,15 @@ class RegistrationViewModel: ViewModel() {
                                 .setValue(uEmail)
                             database.getReference("users/" + auth.currentUser?.uid + "/profile/password")
                                 .setValue(uPass)
+                            if (uSex == R.id.rbMale) {
+                                database.getReference("users/" + auth.currentUser?.uid + "/profile/sex")
+                                    .setValue("male")
+                            } else {
+                                database.getReference("users/" + auth.currentUser?.uid + "/profile/sex")
+                                    .setValue("female")
+                            }
+                            database.getReference("users/" + auth.currentUser?.uid + "/profile/birthday")
+                                .setValue(uBirthday)
                             auth.currentUser?.sendEmailVerification()
                             isSuccess.value = true
                         }

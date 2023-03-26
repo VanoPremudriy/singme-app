@@ -1,9 +1,11 @@
 package com.example.singmeapp.viewmodels
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.StrictMode
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +24,9 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
 
 class ProfileViewModel: ViewModel() {
     val currentUser = MutableLiveData<User>()
@@ -42,16 +47,24 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun getData(){
         var fbAvatar: String
         if (auth.currentUser != null)
         database.getReference("users/${auth.currentUser?.uid}/profile").addListenerForSingleValueEvent(object:
             ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(snapshot: DataSnapshot) {
                 val name = snapshot.child("name").value.toString()
                 val extension = snapshot.child("avatar").value.toString()
-                val age = snapshot.child("age").value.toString()
+
                 val sex = snapshot.child("sex").value.toString()
+                val realName = snapshot.child("real_name").value.toString()
+                val lastName = snapshot.child("last_name").value.toString()
+                val birthday = snapshot.child("birthday").value.toString()
+                var birthdayDateTime = LocalDate.parse(birthday)
+
+                var age = Period.between(birthdayDateTime, LocalDate.now()).years
                 //val imagePath = mService.getFile("storage/users/${auth.currentUser?.uid}/profile/avatar.jpg", authToken).execute().body()?.public_url
                 //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
                 if (extension != "null") {
@@ -59,7 +72,7 @@ class ProfileViewModel: ViewModel() {
                 } else {
                     fbAvatar = "storage/default_images/cover.png"
                 }
-                user = User(auth.currentUser!!.uid,name, age.toInt(), sex, "", "", "")
+                user = User(auth.currentUser!!.uid,name, age.toInt(), sex, "", "", "", realName, lastName)
                 currentUser.value = user
                 getFilePath(fbAvatar, "avatar")
             }
@@ -72,19 +85,28 @@ class ProfileViewModel: ViewModel() {
         )
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun getOtherData(uuid: String){
         var fbAvatar: String
             database.getReference("users/${uuid}/profile").addListenerForSingleValueEvent(object:
                 ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val name = snapshot.child("name").value.toString()
                     val extension = snapshot.child("avatar").value.toString()
-                    val age = snapshot.child("age").value.toString()
                     val sex = snapshot.child("sex").value.toString()
+                    val realName = snapshot.child("real_name").value.toString()
+                    val lastName = snapshot.child("last_name").value.toString()
+
+                    val birthday = snapshot.child("birthday").value.toString()
+                    var birthdayDateTime = LocalDate.parse(birthday)
+
+                    var age = Period.between(birthdayDateTime, LocalDate.now()).years
+
                     //val imagePath = mService.getFile("storage/users/${auth.currentUser?.uid}/profile/avatar.jpg", authToken).execute().body()?.public_url
                     //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
                     fbAvatar = "storage/users/${uuid}/profile/avatar.${extension}"
-                    user = User(uuid, name, age.toInt(), sex, "", "", "")
+                    user = User(uuid, name, age.toInt(), sex, "", "", "", realName, lastName)
                     currentUser.value = user
                     getFilePath(fbAvatar, "avatar")
                 }

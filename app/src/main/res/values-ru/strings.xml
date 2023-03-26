@@ -108,4 +108,8 @@
     <string name="change_avatar">Изменить аватарку</string>
     <string name="real_name">Настоящее имя</string>
     <string name="null_real_name">Настоящее имя пустое</string>
+    <string name="male">Мужчина</string>
+    <string name="female">Женщинаж</string>
+    <string name="choose_date_birth">Выберите дату своего рождения</string>
+    <string name="choose_sex">Выберите свой пол</string>
 </resources>

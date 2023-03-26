@@ -23,6 +23,8 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
+import java.time.Period
 import java.util.function.Consumer
 
 class FriendsViewModel: ViewModel() {
@@ -69,10 +71,14 @@ class FriendsViewModel: ViewModel() {
                 listRequests.value = arrayListRequests
                 snapshot.child("/user_has_friends/${auth.currentUser?.uid}").children.forEach{ t ->
                     val friendName = snapshot.child("users/${t.key}/profile/name").value.toString()
-                    val friendAge = snapshot.child("users/${t.key}/profile/age").value.toString()
                     val friendSex = snapshot.child("users/${t.key}/profile/sex").value.toString()
                     val avatarExtension = snapshot.child("users/${t.key}/profile/avatar").value.toString()
                     val friendshipStatus = t.value.toString()
+
+                    val birthday = snapshot.child("users/${t.key}/profile/birthday").value.toString()
+                    var birthdayDateTime = LocalDate.parse(birthday)
+
+                    var friendAge = Period.between(birthdayDateTime, LocalDate.now()).years
 
                     if (avatarExtension != "null") {
                         fbFriendAvatarUrl =
@@ -169,7 +175,10 @@ class FriendsViewModel: ViewModel() {
                 listRequests.value = arrayListRequests
                 snapshot.child("/user_has_friends/${uuid}").children.forEach{ t ->
                     val friendName = snapshot.child("users/${t.key}/profile/name").value.toString()
-                    val friendAge = snapshot.child("users/${t.key}/profile/age").value.toString()
+                    val birthday = snapshot.child("users/${t.key}/profile/birthday").value.toString()
+                    var birthdayDateTime = LocalDate.parse(birthday)
+
+                    var friendAge = Period.between(birthdayDateTime, LocalDate.now()).years
                     val friendSex = snapshot.child("users/${t.key}/profile/sex").value.toString()
                     val avatarExtension = snapshot.child("users/${t.key}/profile/avatar").value.toString()
                     val friendshipStatusForFragment = t.value.toString()
@@ -262,7 +271,10 @@ class FriendsViewModel: ViewModel() {
                 listAllUsers.value = arrayListAllUsers
                 snapshot.child("users").children.forEach {
                     val userName = it.child("profile/name").value.toString()
-                    val userAge = it.child("profile/age").value.toString()
+                    val birthday = it.child("profile/birthday").value.toString()
+                    var birthdayDateTime = LocalDate.parse(birthday)
+
+                    var userAge = Period.between(birthdayDateTime, LocalDate.now()).years
                     val userSex = it.child("profile/sex").value.toString()
                     val avatarExtension = it.child("profile/avatar").value.toString()
                     val friendShipStatus:String? = snapshot.child("user_has_friends/${auth.currentUser?.uid}/${it.key}").value?.toString()

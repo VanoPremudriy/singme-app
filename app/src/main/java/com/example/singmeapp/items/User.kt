@@ -8,4 +8,7 @@ data class User(var uuid: String,
                 val sex: String,
                 var friendshipStatus: String,
                 var friendshipStatusForFragment: String,
-                var avatarUrl: String): Serializable
+                var avatarUrl: String,
+                var realName: String = "",
+                var lastName: String = ""
+                ): Serializable

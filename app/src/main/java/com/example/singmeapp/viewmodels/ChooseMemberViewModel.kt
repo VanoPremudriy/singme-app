@@ -21,6 +21,8 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
+import java.time.Period
 import java.util.function.Consumer
 
 class ChooseMemberViewModel: ViewModel() {
@@ -51,13 +53,14 @@ class ChooseMemberViewModel: ViewModel() {
                         if (friendshipStatus == "friend") {
                             val friendName =
                                 snapshot.child("users/${t.key}/profile/name").value.toString()
-                            val friendAge =
-                                snapshot.child("users/${t.key}/profile/age").value.toString()
                             val friendSex =
                                 snapshot.child("users/${t.key}/profile/sex").value.toString()
                             val avatarExtension =
                                 snapshot.child("users/${t.key}/profile/avatar").value.toString()
+                            val birthday = snapshot.child("users/${t.key}/profile/birthday").value.toString()
+                            var birthdayDateTime = LocalDate.parse(birthday)
 
+                            var friendAge = Period.between(birthdayDateTime, LocalDate.now()).years
 
                             fbFriendAvatarUrl =
                                 "/storage/users/${t.key}/profile/avatar.${avatarExtension}"

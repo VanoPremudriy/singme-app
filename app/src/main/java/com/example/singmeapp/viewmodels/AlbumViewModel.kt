@@ -99,6 +99,7 @@ class AlbumViewModel: ViewModel() {
         })
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun getTracks(albumUuid: String){
         var fbTrackUrl: String
         var fbImageUrl: String
@@ -304,6 +305,7 @@ class AlbumViewModel: ViewModel() {
 
     fun deleteAlbum(albumUuid: String){
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener{
+            @SuppressLint("SuspiciousIndentation")
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val bandUuid = snapshot.child("/albums/${albumUuid}/band").value.toString()

@@ -22,7 +22,9 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Period
 
 class MessengerViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
@@ -51,17 +53,17 @@ class MessengerViewModel: ViewModel() {
                     var friendUuid = it.key
                     val messCount = it.childrenCount
                     var message = Message(
-                            it.child("${messCount-1}/message").value.toString(),
-                            it.child("${messCount-1}/senderUuid").value.toString(),
-                            it.child("${messCount-1}/is_read").value.toString().toBoolean(),
-                            LocalDateTime.parse(it.child("${messCount-1}/created_at").value.toString())
-
-                        )
-
-
+                        it.child("${messCount-1}/message").value.toString(),
+                        it.child("${messCount-1}/senderUuid").value.toString(),
+                        it.child("${messCount-1}/is_read").value.toString().toBoolean(),
+                        LocalDateTime.parse(it.child("${messCount-1}/created_at").value.toString())
+                    )
 
                     var friendName = snapshot.child("users/${friendUuid}/profile/name").value.toString()
-                    var friendAge= snapshot.child("users/${friendUuid}/profile/age").value.toString()
+                    val birthday = snapshot.child("users/${friendUuid}/profile/birthday").value.toString()
+                    var birthdayDateTime = LocalDate.parse(birthday)
+
+                    var friendAge = Period.between(birthdayDateTime, LocalDate.now()).years
                     var friendSex = snapshot.child("users/${friendUuid}/profile/sex").value.toString()
                     var friendMail = snapshot.child("users/${friendUuid}/profile/mail").value.toString()
                     var friendshipStatus = snapshot.child("user_has_friends/${auth.currentUser?.uid}/${friendUuid}")?.value?.toString()

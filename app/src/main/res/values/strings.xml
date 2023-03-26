@@ -117,6 +117,10 @@
     <string name="change_avatar">Change avatar</string>
     <string name="real_name">Real name</string>
     <string name="null_real_name">Real name is null</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="choose_date_birth">Choose your date of birth</string>
+    <string name="choose_sex">Choose your sex</string>
 
 
 </resources>

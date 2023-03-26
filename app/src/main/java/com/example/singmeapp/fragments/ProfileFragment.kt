@@ -123,13 +123,21 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         return binding.root
     }
 
+    @SuppressLint("SuspiciousIndentation", "SetTextI18n")
     private fun observe(){
 
         profileViewModel.currentUser.observe(viewLifecycleOwner){
             if (it.avatarUrl != "")
             Picasso.get().load(it.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivProfileAvatar)
             bundle.putSerializable("curUser", it)
-            binding.textView.text = it.name
+            binding.nameInProfile.text = it.name
+            binding.realNameAndLastNameInProfile.text = "${it.realName} ${it.lastName}"
+            if (it.sex == "male"){
+                binding.sexAndAgeInProfile.text = "${getString(R.string.male)}, ${it.age}"
+            } else {
+                binding.sexAndAgeInProfile.text = "${getString(R.string.female)}, ${it.age}"
+            }
+
             if (it.uuid != profileViewModel.auth.uid.toString()){
                 binding.tvMyBands.text = getString(R.string.projects)
                 binding.tvMyFriends.text = getString(R.string.friends)
@@ -161,6 +169,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         fun newInstance() = ProfileFragment()
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onClick(p0: View?) {
         when (p0?.id){
 
