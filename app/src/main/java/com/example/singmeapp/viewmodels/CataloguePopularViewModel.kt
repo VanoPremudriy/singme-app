@@ -22,6 +22,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDateTime
+import java.util.TreeSet
 
 class CataloguePopularViewModel: ViewModel() {
     private val authToken = "y0_AgAAAAAGPsvAAADLWwAAAADZbKmDfz8x-nCuSJ-i7cNOGYhnyRVPBUc"
@@ -102,7 +103,8 @@ class CataloguePopularViewModel: ViewModel() {
                 }
 
                 arrayListPopularTrack.sortBy { track -> listeningCounters.get(track.uuid) }
-                arrayListPopularTrack = arrayListPopularTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+                arrayListPopularTrack = arrayListPopularTrack.reversed() as ArrayList<Track>
+                if (arrayListPopularTrack.size > 12) arrayListPopularTrack = ArrayList(arrayListPopularTrack.subList(0, 12))
                 listPopularTrack.value = arrayListPopularTrack
                 arrayListPopularTrack.forEach {
                     getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
@@ -183,6 +185,7 @@ class CataloguePopularViewModel: ViewModel() {
 
                 arrayListPopularAlbum.sortBy { album -> listeningCounters.get(album.uuid) }
                 arrayListPopularAlbum = arrayListPopularAlbum.reversed() as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+                if (arrayListPopularAlbum.size  > 12) arrayListPopularAlbum = ArrayList(arrayListPopularAlbum.subList(0, 12))
                 listPopularAlbum.value = arrayListPopularAlbum
                 arrayListPopularAlbum.forEach {
                     getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "albumImage", count)
@@ -219,7 +222,10 @@ class CataloguePopularViewModel: ViewModel() {
             })
     }
 
+    
+
     fun getFileUrl(url: String, value: String, index: Int){
+
         mService.getSecondFile(url, authToken)
             .enqueue(object : Callback<SecondFileApiModel> {
                 override fun onResponse(

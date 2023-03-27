@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         fragmentActivity.title = getString(R.string.home)
+        fragmentActivity.titleColor = R.color.white
         binding = FragmentHomeBinding.inflate(layoutInflater)
         binding.rvPosts.layoutManager = LinearLayoutManager(context)
 

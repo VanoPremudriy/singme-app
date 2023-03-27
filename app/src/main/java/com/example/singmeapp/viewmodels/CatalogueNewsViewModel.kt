@@ -93,7 +93,8 @@ class CatalogueNewsViewModel: ViewModel() {
                     arrayListNewTrack.add(track)
                 }
                 arrayListNewTrack.sortBy { track -> track.date }
-                arrayListNewTrack = arrayListNewTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+                arrayListNewTrack = arrayListNewTrack.reversed() as ArrayList<Track>
+                if (arrayListNewTrack.size > 12) arrayListNewTrack = ArrayList(arrayListNewTrack.subList(0,12))
                 listNewTrack.value = arrayListNewTrack
                 arrayListNewTrack.forEach {
                     getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
@@ -164,7 +165,8 @@ class CatalogueNewsViewModel: ViewModel() {
                     }
                 }
                 arrayListNewAlbum.sortBy { album ->  album.date}
-                arrayListNewAlbum = arrayListNewAlbum.reversed() as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+                arrayListNewAlbum = arrayListNewAlbum.reversed() as ArrayList<Album>
+                if (arrayListNewAlbum.size > 12) arrayListNewAlbum = ArrayList(arrayListNewAlbum.subList(0,12))
                 listNewAlbum.value = arrayListNewAlbum
                 arrayListNewAlbum.forEach {
                     getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "albumImage", count)
@@ -229,7 +231,10 @@ class CatalogueNewsViewModel: ViewModel() {
                     if (arrayListNewBand.size != 0) {
                         arrayListNewBand.sortBy { band ->  band.date}
                         arrayListNewBand.reverse()
+                        if (arrayListNewBand.size > 9) arrayListNewBand = ArrayList(arrayListNewBand.subList(0,9))
+
                         listNewBand.value = arrayListNewBand
+
                         arrayListNewBand.forEach {
                             getFilePath(fbBandImageUrls.get(it.uuid)!!, "bandImage", count)
                             getFilePath(fbBandBackUrls.get(it.uuid)!!, "bandBack", count)
