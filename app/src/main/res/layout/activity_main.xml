@@ -93,6 +93,16 @@
                 android:text="@string/change_avatar" />
 
             <TextView
+                android:id="@+id/tvChangeUserData"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:text="@string/change_user_data" />
+
+            <TextView
                 android:id="@+id/tvProfileExitInProfile"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"

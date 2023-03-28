@@ -64,15 +64,16 @@ class ProfileViewModel: ViewModel() {
                 val birthday = snapshot.child("birthday").value.toString()
                 var birthdayDateTime = LocalDate.parse(birthday)
 
+                birthdayDateTime = LocalDate.of(birthdayDateTime.year, birthdayDateTime.month+1, birthdayDateTime.dayOfMonth)
+
                 var age = Period.between(birthdayDateTime, LocalDate.now()).years
-                //val imagePath = mService.getFile("storage/users/${auth.currentUser?.uid}/profile/avatar.jpg", authToken).execute().body()?.public_url
-                //val imageUrl = mService.getSecondFile(imagePath!!, authToken).execute().body()?.href.toString()
+
                 if (extension != "null") {
                     fbAvatar = "storage/users/${auth.currentUser?.uid}/profile/avatar.${extension}"
                 } else {
                     fbAvatar = "storage/default_images/cover.png"
                 }
-                user = User(auth.currentUser!!.uid,name, age.toInt(), sex, "", "", "", realName, lastName)
+                user = User(auth.currentUser!!.uid,name, age, sex, "", "", "", realName, lastName)
                 currentUser.value = user
                 getFilePath(fbAvatar, "avatar")
             }

@@ -222,7 +222,7 @@ class CataloguePopularViewModel: ViewModel() {
             })
     }
 
-    
+
 
     fun getFileUrl(url: String, value: String, index: Int){
 

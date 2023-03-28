@@ -159,6 +159,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         binding.idMyFriends.setOnClickListener(this@ProfileFragment)
         mainActivity.binding.tvChangeAvatarInProfile.setOnClickListener(this@ProfileFragment)
         mainActivity.binding.tvProfileExitInProfile.setOnClickListener(this@ProfileFragment)
+        mainActivity.binding.tvChangeUserData.setOnClickListener(this@ProfileFragment)
     }
 
 
@@ -196,6 +197,11 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                 mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                 profileViewModel.auth.signOut()
                 findNavController().navigate(R.id.action_profileFragment_to_notAuthorizedFragment)
+            }
+
+            mainActivity.binding.tvChangeUserData.id -> {
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                findNavController().navigate(R.id.changeUserDataFragment)
             }
         }
     }

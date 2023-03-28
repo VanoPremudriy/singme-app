@@ -208,4 +208,14 @@
         android:name="com.example.singmeapp.fragments.CatalogueAllFragment"
         android:label="fragment_catalogue_all"
         tools:layout="@layout/fragment_catalogue_all" />
+    <fragment
+        android:id="@+id/catalogueNewsFragment"
+        android:name="com.example.singmeapp.fragments.CatalogueNewsFragment"
+        android:label="fragment_catalogue_news"
+        tools:layout="@layout/fragment_catalogue_news" />
+    <fragment
+        android:id="@+id/changeUserDataFragment"
+        android:name="com.example.singmeapp.fragments.ChangeUserDataFragment"
+        android:label="fragment_change_user_data"
+        tools:layout="@layout/fragment_change_user_data" />
 </navigation>

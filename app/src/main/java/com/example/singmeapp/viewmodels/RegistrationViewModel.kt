@@ -65,7 +65,7 @@ class RegistrationViewModel: ViewModel() {
         }
 
         if (uRealName.isEmpty()){
-            nameValid.value = App.getRes().getString(R.string.null_real_name)
+            realNameValid.value = App.getRes().getString(R.string.null_real_name)
             return false
         }
 

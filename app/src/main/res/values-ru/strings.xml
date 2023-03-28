@@ -112,4 +112,6 @@
     <string name="female">Женщинаж</string>
     <string name="choose_date_birth">Выберите дату своего рождения</string>
     <string name="choose_sex">Выберите свой пол</string>
+    <string name="save">Сохранить</string>
+    <string name="change_user_data">Изменить данные</string>
 </resources>

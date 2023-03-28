@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">SingMeApp</string>
+    <string name="app_name" translatable="false">SingMe</string>
 
     <string name="messenger">Messenger</string>
     <string name="profile">Profile</string>
@@ -121,6 +121,8 @@
     <string name="female">Female</string>
     <string name="choose_date_birth">Choose your date of birth</string>
     <string name="choose_sex">Choose your sex</string>
+    <string name="save">Save</string>
+    <string name="change_user_data">Change data</string>
 
 
 </resources>
