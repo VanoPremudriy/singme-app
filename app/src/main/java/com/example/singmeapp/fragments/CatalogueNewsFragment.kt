@@ -79,8 +79,18 @@ class CatalogueNewsFragment : Fragment() {
             binding.rvCatalogueNewBands.adapter = newBandAdapter
         }
 
+        binding.catalogueNewsProgressLayout.visibility = View.GONE
+
         catalogueNewsViewModel.isAlready.observe(viewLifecycleOwner){
-            if (it["track"] == true && it["trackImage"] == true && it["albumImage"] == true && it["bandImage"] == true && it["bandBack"] == true){
+            if (it["track"] != null
+                && it["track"] == true
+                && it["trackImage"]!= null
+                && it["trackImage"] == true
+                && it["albumImage"] != null
+                && it["albumImage"] == true
+                && it["bandImage"] == true
+                && it["bandImage"] != null
+                && it["bandBack"] == true){
                 binding.catalogueNewsProgressLayout.visibility = View.GONE
             }
         }

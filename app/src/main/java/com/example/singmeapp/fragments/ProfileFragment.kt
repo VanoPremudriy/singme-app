@@ -106,6 +106,8 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             profileViewModel.getOtherData((requireArguments().getSerializable("otherUser") as User).uuid.toString())
         }
         else profileViewModel.getData()
+
+
     }
 
     override fun onCreateView(

@@ -27,6 +27,8 @@ import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
+import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCompletionListener {
 
@@ -200,6 +202,16 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
 
         runnable = Runnable {
             binding.seekBar.progress = mPlayer.currentSeconds
+
+            val curMin = TimeUnit.SECONDS.toMinutes(mPlayer.currentSeconds.toLong())
+            val curSec = mPlayer.currentSeconds % 60
+
+            val minusMin = TimeUnit.SECONDS.toMinutes(mPlayer.seconds.toLong() - mPlayer.currentSeconds.toLong())
+            val minusSec = (mPlayer.seconds.toLong() - mPlayer.currentSeconds.toLong()) % 60
+
+            binding.tvTrackCurrentTime.text =  String.format("%02d:%02d", curMin, curSec)
+            binding.tvTrackMinusCurrentTime.text = String.format("-%02d:%02d", minusMin, minusSec)
+
             handler.postDelayed(runnable, 10)
         }
         handler.postDelayed(runnable, 10)

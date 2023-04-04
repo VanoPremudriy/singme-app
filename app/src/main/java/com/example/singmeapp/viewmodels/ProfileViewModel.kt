@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.StrictMode
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.singmeapp.api.Common.Common
@@ -26,7 +24,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
 import java.time.Period
-import java.time.format.DateTimeFormatter
 
 class ProfileViewModel: ViewModel() {
     val currentUser = MutableLiveData<User>()
@@ -46,6 +43,7 @@ class ProfileViewModel: ViewModel() {
             StrictMode.setThreadPolicy(policy)
         }
     }
+
 
     @SuppressLint("SuspiciousIndentation")
     fun getData(){

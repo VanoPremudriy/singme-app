@@ -5,6 +5,9 @@ import com.example.singmeapp.api.interfaces.RetrofitServices
 
 object Common {
     private const val BASE_URL = "https://cloud-api.yandex.net/"
+    val retro = RetrofitClient
     val retrofitService: RetrofitServices
-        get() = RetrofitClient.getClient(BASE_URL).create(RetrofitServices::class.java)
+        get() = retro.getClient(BASE_URL).create(RetrofitServices::class.java)
+
 }
+
