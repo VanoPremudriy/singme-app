@@ -48,7 +48,7 @@ class CatalogueViewModel: ViewModel() {
         var fbTrackUrls = HashMap<String, String>()
         var fbTrackImageUrls = HashMap<String, String>()
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
-            @SuppressLint("RestrictedApi")
+            @SuppressLint("RestrictedApi", "SuspiciousIndentation")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 arrayListTrack.clear()
@@ -128,7 +128,7 @@ class CatalogueViewModel: ViewModel() {
         var listeningCounters = HashMap<String, Int>()
         var fbAlbumImageUrls = HashMap<String, String>()
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
-            @SuppressLint("RestrictedApi")
+            @SuppressLint("RestrictedApi", "SuspiciousIndentation")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 arrayListAlbum.clear()

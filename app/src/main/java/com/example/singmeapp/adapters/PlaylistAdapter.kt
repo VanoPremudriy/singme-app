@@ -14,6 +14,7 @@ import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.AlbumItemBinding
 import com.example.singmeapp.fragments.DiscographyFragment
+import com.example.singmeapp.fragments.MyLibraryFragment
 import com.example.singmeapp.items.Album
 import com.example.singmeapp.viewmodels.PlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -97,6 +98,9 @@ class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdap
         var view = LayoutInflater.from(parent.context).inflate(R.layout.album_item, parent, false)
         when(fragment::class.java){
             DiscographyFragment::class.java -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.album_item_2, parent, false)
+            }
+            MyLibraryFragment::class.java -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.album_item_2, parent, false)
             }
         }

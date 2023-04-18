@@ -1,168 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.MyLibraryFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.MyLibraryFragment">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <LinearLayout
-            android:id="@+id/idBands"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="9"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <TextView
-                android:id="@+id/tvBands"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/Bands"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/tvArrow1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:gravity="center"
-                android:text=">"
-                android:textSize="24sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/idPlaylists"
-            android:layout_width="match_parent"
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:visibility="gone">
+
+        <LinearLayout
+                android:id="@+id/idBands"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
 
             <TextView
-                android:id="@+id/tvPlaylist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/Playlists"
-                android:textSize="24sp" />
+                    android:id="@+id/tvBands"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/Bands"
+                    android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/tvArrow2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:gravity="center"
-                android:text=">"
-                android:textSize="24sp" />
+                    android:id="@+id/tvArrow1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:text=">"
+                    android:textSize="24sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/idAlbums"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="9"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <TextView
-                android:id="@+id/tvAlbums"
+                android:id="@+id/idPlaylists"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/albums"
-                android:textSize="24sp" />
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
 
             <TextView
-                android:id="@+id/tvArrow3"
+                    android:id="@+id/tvPlaylist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/Playlists"
+                    android:textSize="24sp" />
+
+            <TextView
+                    android:id="@+id/tvArrow2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:text=">"
+                    android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/idAlbums"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:gravity="center"
-                android:text=">"
-                android:textSize="24sp" />
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+            <TextView
+                    android:id="@+id/tvAlbums"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/albums"
+                    android:textSize="24sp" />
+
+            <TextView
+                    android:id="@+id/tvArrow3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:text=">"
+                    android:textSize="24sp" />
         </LinearLayout>
     </LinearLayout>
 
     <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@color/purple_200"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/purple_200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            tools:visibility="gone" />
 
     <TextView
-        android:id="@+id/tvMyMusic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/my_music"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvMyMusic" />
-
-    <FrameLayout
-        android:id="@+id/myLibraryProgressLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ProgressBar
-            android:id="@+id/progressBar4"
-            style="?android:attr/progressBarStyle"
+            android:id="@+id/tvMyMusic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_marginTop="12dp"
+            android:text="@string/my_music"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            tools:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.476"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMyMusic"
+            tools:visibility="gone" />
+
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#FFFFFF"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:id="@+id/libraryGSLayout"
+            android:clickable="true"
+            android:focusable="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/libraryGSConstraintLayout">
+
+
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView20"
+                    app:layout_constraintTop_toBottomOf="@id/llContentInGSInLibrary"
+                    android:layout_marginTop="60dp"
+                    android:visibility="invisible" />
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:id="@+id/llContentInGSInLibrary"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintVertical_bias="0.0">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/llMyMusicInGSInLibrary"
+                        android:visibility="visible"
+                        tools:visibility="visible">
+
+                    <View
+                            android:id="@+id/view21"
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/purple_200" />
+
+                    <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:layout_marginTop="8dp">
+
+                        <TextView
+                                android:text="@string/my_music"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tvMyMusicInGSInLibrary" />
+
+                        <TextView
+                                android:text="@string/all"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:id="@+id/tvAllMyMusicInGSInLibrary" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:id="@+id/rvMyMusicInGSInLibrary" />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/llMyAlbumsInGSInLibrary"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                    <View
+                            android:id="@+id/view20"
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/purple_200" />
+
+                    <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:layout_marginTop="8dp">
+
+                        <TextView
+                                android:text="@string/my_albums"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tvMyAlbumsInGSInLibrary" />
+
+                        <TextView
+                                android:text="@string/all"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:id="@+id/tvAllMyAlbumsInGSInLibrary" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:id="@+id/rvMyAlbumsInGSInLibrary" />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/llMyPlaylistsInGSInLibrary"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                    <View
+                            android:id="@+id/view22"
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/purple_200" />
+
+                    <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:layout_marginTop="8dp">
+
+                        <TextView
+                                android:text="@string/my_playlists"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tvMyPlaylistsInGSInLibrary" />
+
+                        <TextView
+                                android:text="@string/all"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:id="@+id/tvAllMyPlaylistsInGSInLibrary" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:id="@+id/rvMyPlaylistssInGSInLibrary" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <FrameLayout
+            android:id="@+id/myLibraryProgressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone">
+
+        <ProgressBar
+                android:id="@+id/progressBar4"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

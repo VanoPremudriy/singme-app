@@ -67,6 +67,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
         }
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
         when(fragment::class.java){
@@ -75,6 +76,10 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             }
             MyLibraryFragment::class.java -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+                if ((fragment as MyLibraryFragment).binding.libraryGSLayout.visibility == View.VISIBLE){
+                    view = LayoutInflater.from(parent.context).inflate(R.layout.track_item_2, parent, false)
+                }
+
             }
             AlbumFragment::class.java -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
