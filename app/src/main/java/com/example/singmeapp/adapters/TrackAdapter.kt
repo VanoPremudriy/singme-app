@@ -57,6 +57,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
         val binding = TrackItemBinding.bind(item)
 
 
+        @SuppressLint("SuspiciousIndentation")
         fun bind(track: Track) = with(binding){
             tvItemTrackName.text = track.name
             tvItemTrackBandName.text = track.band

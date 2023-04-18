@@ -1,5 +1,6 @@
 package com.example.singmeapp.fragments
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -56,6 +57,7 @@ class PlayerPlayerFragment : Fragment(), View.OnClickListener, MediaPlayer.OnCom
 
 
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

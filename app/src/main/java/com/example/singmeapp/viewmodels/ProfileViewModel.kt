@@ -69,7 +69,7 @@ class ProfileViewModel: ViewModel() {
                 if (extension != "null") {
                     fbAvatar = "storage/users/${auth.currentUser?.uid}/profile/avatar.${extension}"
                 } else {
-                    fbAvatar = "storage/default_images/cover.png"
+                    fbAvatar = "storage/default_images/default_avatar.png"
                 }
                 user = User(auth.currentUser!!.uid,name, age, sex, "", "", "", realName, lastName)
                 currentUser.value = user

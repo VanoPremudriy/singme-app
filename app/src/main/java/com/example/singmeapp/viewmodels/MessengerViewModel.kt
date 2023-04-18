@@ -72,7 +72,7 @@ class MessengerViewModel: ViewModel() {
                     if (avatarExtension != "null"){
                         fbAvatarUrl = "/storage/users/${friendUuid}/profile/avatar.${avatarExtension}"
                     } else {
-                        fbAvatarUrl = "/storage/default_images/cover.png"
+                        fbAvatarUrl = "/storage/default_images/default_avatar.png"
                     }
 
                     fbAvatarUrls.put(it.key.toString(), fbAvatarUrl)

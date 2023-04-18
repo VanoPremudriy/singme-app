@@ -85,7 +85,7 @@ class FriendsViewModel: ViewModel() {
                             "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
                     } else {
                         fbFriendAvatarUrl =
-                            "/storage/default_images/cover.png"
+                            "/storage/default_images/default_avatar.png"
                     }
                     fbFriendAvatarUrls.put(t.key.toString(), fbFriendAvatarUrl)
 
@@ -189,7 +189,7 @@ class FriendsViewModel: ViewModel() {
                             "/storage/users/${t.key}/profile/avatar.${avatarExtension}"
                     } else {
                         fbFriendAvatarUrl =
-                            "/storage/default_images/cover.png"
+                            "/storage/default_images/default_avatar.png"
                     }
                     fbFriendAvatarUrls.put(t.key.toString(), fbFriendAvatarUrl)
 
@@ -282,7 +282,7 @@ class FriendsViewModel: ViewModel() {
                     if (avatarExtension != "null") {
                         fbAvatarUrl = "/storage/users/${it.key}/profile/avatar.${avatarExtension}"
                     } else {
-                        fbAvatarUrl = "/storage/default_images/cover.png"
+                        fbAvatarUrl = "/storage/default_images/default_avatar.png"
                     }
                     fbAvatarUrls.put(it.key.toString(), fbAvatarUrl)
 

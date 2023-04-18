@@ -1,0 +1,12 @@
+@startuml
+class com.example.singmeapp.App {
+- {static} App mInstance
+- {static} Resources res
++ void onCreate()
++ {static} App getInstance()
++ {static} Resources getRes()
+}
+
+
+android.app.Application <|-- com.example.singmeapp.App
+@enduml
