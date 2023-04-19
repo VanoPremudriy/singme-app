@@ -100,13 +100,13 @@ class CatalogueAllViewModel: ViewModel() {
                         arrayListTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
                     listTrack.value = arrayListTrack
                     arrayListTrack.forEach {
-                        getFilePath(fbTrackUrls.get(it.uuid)!!, "newTrack", count)
-                        getFilePath(fbTrackImageUrls.get(it.uuid)!!, "newTrackImage", count)
+                        getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                        getFilePath(fbTrackImageUrls.get(it.uuid)!!, "trackImage", count)
                         count++
                     }
                 } else {
-                    isAlready.value?.put("newTrack", true)
-                    isAlready.value?.put("newTrackImage", true)
+                    isAlready.value?.put("track", true)
+                    isAlready.value?.put("trackImage", true)
                     isAlready.value = isAlready.value
                 }
 
@@ -187,8 +187,8 @@ class CatalogueAllViewModel: ViewModel() {
                 arrayListTrack = arrayListTrack.reversed() as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
                 listTrack.value = arrayListTrack
                 arrayListTrack.forEach {
-                    getFilePath(fbTrackUrls.get(it.uuid)!!, "popularTrack", count)
-                    getFilePath(fbTrackImageUrls.get(it.uuid)!!, "popularTrackImage", count)
+                    getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                    getFilePath(fbTrackImageUrls.get(it.uuid)!!, "trackImage", count)
                     count++
                 }
 
@@ -262,13 +262,13 @@ class CatalogueAllViewModel: ViewModel() {
                 if (arrayListTrack.size != 0) {
                     listTrack.value = arrayListTrack
                     arrayListTrack.forEach {
-                        getFilePath(fbTrackUrls.get(it.uuid)!!, "searchTrack", count)
-                        getFilePath(fbTrackImageUrls.get(it.uuid)!!, "searchTrackImage", count)
+                        getFilePath(fbTrackUrls.get(it.uuid)!!, "track", count)
+                        getFilePath(fbTrackImageUrls.get(it.uuid)!!, "trackImage", count)
                         count++
                     }
                 } else {
-                    isAlready.value?.put("searchTrack", true)
-                    isAlready.value?.put("searchTrackImage", true)
+                    isAlready.value?.put("track", true)
+                    isAlready.value?.put("trackImage", true)
                     isAlready.value = isAlready.value
                 }
 
@@ -338,7 +338,7 @@ class CatalogueAllViewModel: ViewModel() {
                 arrayListAlbum = arrayListAlbum.reversed() as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                 listAlbum.value = arrayListAlbum
                 arrayListAlbum.forEach {
-                    getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "newAlbumImage", count)
+                    getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "albumImage", count)
                     count++
                 }
 
@@ -418,7 +418,7 @@ class CatalogueAllViewModel: ViewModel() {
                 arrayListAlbum = arrayListAlbum.reversed() as ArrayList<Album> /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                 listAlbum.value = arrayListAlbum
                 arrayListAlbum.forEach {
-                    getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "popularAlbumImage", count)
+                    getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "albumImage", count)
                     count++
                 }
 
@@ -499,16 +499,14 @@ class CatalogueAllViewModel: ViewModel() {
                         }
                     }
 
-                /*arrayListAlbum.sortBy { album -> listeningCounters.get(album.uuid) }
-                arrayListAlbum = arrayListAlbum.reversed() as ArrayList<Album> *//* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                 if (arrayListAlbum.size != 0) {
                     listAlbum.value = arrayListAlbum
                     arrayListAlbum.forEach {
-                        getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "searchAlbumImage", count)
+                        getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "albumImage", count)
                         count++
                     }
                 } else {
-                    isAlready.value?.put("searchAlbumImage", true)
+                    isAlready.value?.put("albumImage", true)
                     isAlready.value = isAlready.value
                 }
 
@@ -574,13 +572,13 @@ class CatalogueAllViewModel: ViewModel() {
                         arrayListBand.reverse()
                         listBand.value = arrayListBand
                         arrayListBand.forEach {
-                            getFilePath(fbBandImageUrls.get(it.uuid)!!, "newBandImage", count)
-                            getFilePath(fbBandBackUrls.get(it.uuid)!!, "newBandBack", count)
+                            getFilePath(fbBandImageUrls.get(it.uuid)!!, "bandImage", count)
+                            getFilePath(fbBandBackUrls.get(it.uuid)!!, "bandBack", count)
                             count++
                         }
                     } else {
-                        isAlready.value?.put("newBandImage", true)
-                        isAlready.value?.put("newBandBack", true)
+                        isAlready.value?.put("bandImage", true)
+                        isAlready.value?.put("bandBack", true)
                         isAlready.value = isAlready.value
                     }
                 }
@@ -648,13 +646,13 @@ class CatalogueAllViewModel: ViewModel() {
                     if (arrayListBand.size != 0) {
                         listBand.value = arrayListBand
                         arrayListBand.forEach {
-                            getFilePath(fbBandImageUrls.get(it.uuid)!!, "searchBandImage", count)
-                            getFilePath(fbBandBackUrls.get(it.uuid)!!, "searchBandBack", count)
+                            getFilePath(fbBandImageUrls.get(it.uuid)!!, "bandImage", count)
+                            getFilePath(fbBandBackUrls.get(it.uuid)!!, "bandBack", count)
                             count++
                         }
                     } else {
-                        isAlready.value?.put("searchBandImage", true)
-                        isAlready.value?.put("searchBandBack", true)
+                        isAlready.value?.put("bandImage", true)
+                        isAlready.value?.put("bandBack", true)
                         isAlready.value = isAlready.value
                     }
                 }
@@ -709,141 +707,59 @@ class CatalogueAllViewModel: ViewModel() {
 
     fun setList(url: String, value: String, index: Int){
         when(value){
-            /////////////
-            // new tracks
-            "newTrack" -> {
+
+            "track" -> {
                 arrayListTrack[index].trackUrl = url
                 listTrack.value = arrayListTrack
             }
-            "newTrackImage" ->{
+            "trackImage" ->{
                 arrayListTrack[index].imageUrl = url
                 listTrack.value = arrayListTrack
             }
-            ////////////
 
-            /////////////
-            //popular tracks
-            "popularTrack" -> {
-                arrayListTrack[index].trackUrl = url
-                listTrack.value = arrayListTrack
-            }
-            "popularTrackImage" ->{
-                arrayListTrack[index].imageUrl = url
-                listTrack.value = arrayListTrack
-            }
-            /////////////
-
-            /////////////
-            //search tracks
-            "searchTrack" -> {
-                arrayListTrack[index].trackUrl = url
-                listTrack.value = arrayListTrack
-            }
-            "searchTrackImage" ->{
-                arrayListTrack[index].imageUrl = url
-                listTrack.value = arrayListTrack
-            }
-            /////////////
-
-            "newAlbumImage" -> {
+            "albumImage" -> {
                 arrayListAlbum[index].imageUrl = url
                 listAlbum.value = arrayListAlbum
             }
 
-            "popularAlbumImage" -> {
-                arrayListAlbum[index].imageUrl = url
-                listAlbum.value = arrayListAlbum
-            }
-
-            "searchAlbumImage" -> {
-                arrayListAlbum[index].imageUrl = url
-                listAlbum.value = arrayListAlbum
-            }
-
-            "newBandImage" -> {
+            "bandImage" -> {
                 arrayListBand[index].imageUrl = url
                 listBand.value = arrayListBand
             }
-
-            "newBandBack" -> {
+            "bandBack" -> {
                 arrayListBand[index].backgroundUrl = url
                 listBand.value = arrayListBand
             }
 
-            "searchBandImage" -> {
-                arrayListBand[index].imageUrl = url
-                listBand.value = arrayListBand
-            }
 
-            "searchBandBack" -> {
-                arrayListBand[index].backgroundUrl = url
-                listBand.value = arrayListBand
-            }
         }
 
-        if (index == arrayListTrack.size -1 && value == "newTrack"){
-            isAlready.value?.put("newTrack", true)
+        if (index == arrayListTrack.size -1 && value == "track"){
+            isAlready.value?.put("track", true)
             isAlready.value = isAlready.value
         }
 
-        if (index == arrayListTrack.size -1 && value == "newTrackImage"){
-            isAlready.value?.put("newTrackImage", true)
+        if (index == arrayListTrack.size -1 && value == "trackImage"){
+            isAlready.value?.put("trackImage", true)
             isAlready.value = isAlready.value
         }
 
-        if (index == arrayListTrack.size -1 && value == "popularTrack"){
-            isAlready.value?.put("popularTrack", true)
+
+        if (index ==  arrayListAlbum.size -1 && value == "albumImage"){
+            isAlready.value?.put("albumImage", true)
             isAlready.value = isAlready.value
         }
 
-        if (index == arrayListTrack.size -1 && value == "popularTrackImage"){
-            isAlready.value?.put("popularTrackImage", true)
+
+        if (index == arrayListBand.size -1 && value == "bandImage"){
+            isAlready.value?.put("bandImage", true)
             isAlready.value = isAlready.value
         }
 
-        if (index == arrayListTrack.size -1 && value == "searchTrack"){
-            isAlready.value?.put("searchTrack", true)
+        if (index == arrayListBand.size -1 && value == "bandBack"){
+            isAlready.value?.put("bandBack", true)
             isAlready.value = isAlready.value
         }
 
-        if (index == arrayListTrack.size -1 && value == "searchTrackImage"){
-            isAlready.value?.put("searchTrackImage", true)
-            isAlready.value = isAlready.value
-        }
-
-        if (index ==  arrayListAlbum.size -1 && value == "newAlbumImage"){
-            isAlready.value?.put("newAlbumImage", true)
-            isAlready.value = isAlready.value
-        }
-
-        if (index ==  arrayListAlbum.size -1 && value == "popularAlbumImage"){
-            isAlready.value?.put("popularAlbumImage", true)
-            isAlready.value = isAlready.value
-        }
-
-        if (index ==  arrayListAlbum.size -1 && value == "searchAlbumImage"){
-            isAlready.value?.put("searchAlbumImage", true)
-            isAlready.value = isAlready.value
-        }
-
-        if (index == arrayListBand.size -1 && value == "newBandImage"){
-            isAlready.value?.put("newBandImage", true)
-            isAlready.value = isAlready.value
-        }
-
-        if (index == arrayListBand.size -1 && value == "newBandBack"){
-            isAlready.value?.put("newBandBack", true)
-            isAlready.value = isAlready.value
-        }
-
-        if (index == arrayListBand.size -1 && value == "searchBandImage"){
-            isAlready.value?.put("searchBandImage", true)
-            isAlready.value = isAlready.value
-        }
-
-        if (index == arrayListBand.size -1 && value == "searchBandBack"){
-            isAlready.value?.put("searchBandBack", true)
-            isAlready.value = isAlready.value
-        }
     }
 }
