@@ -23,6 +23,7 @@ import com.example.singmeapp.databinding.FragmentMyLibraryBinding
 import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
+import com.example.singmeapp.viewmodels.GlobalSearchViewModel
 import com.example.singmeapp.viewmodels.MyLibraryViewModel
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -36,6 +37,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
 
     lateinit var myLibraryViewModel: MyLibraryViewModel
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
+    lateinit var globalSearchViewModel: GlobalSearchViewModel
 
     lateinit var trackAdapter: TrackAdapter
 
@@ -52,14 +54,19 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
         setHasOptionsMenu(true)
+
         val provider = ViewModelProvider(this)
         val playlistProvider = ViewModelProvider(fragmentActivity)
+        val globalSearchProvider = ViewModelProvider(this)
+
         myLibraryViewModel = provider[MyLibraryViewModel::class.java]
         playerPlaylistViewModel = playlistProvider[PlayerPlaylistViewModel::class.java]
-        Log.e("LifeCycle", "onCreate")
+        globalSearchViewModel = globalSearchProvider[GlobalSearchViewModel::class.java]
+
+
         myLibraryViewModel.getTracks()
 
-        trackAdapter = TrackAdapter(fragmentActivity, this)
+
 
         searchMyTrackAdapter = TrackAdapter(fragmentActivity, this)
         searchMyAlbumAdapter = AlbumAdapter(this)
@@ -75,6 +82,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        trackAdapter = TrackAdapter(fragmentActivity, this)
         fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
 
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -119,7 +127,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rcView.adapter = trackAdapter
         }
 
-        myLibraryViewModel.listMyTrack.observe(viewLifecycleOwner){
+        globalSearchViewModel.listMyTrack.observe(viewLifecycleOwner){
             if (it.isEmpty()){
                 binding.llMyMusicInGSInLibrary.visibility = View.GONE
             }
@@ -132,7 +140,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rvMyMusicInGSInLibrary.adapter = searchMyTrackAdapter
         }
 
-        myLibraryViewModel.listMyAlbum.observe(viewLifecycleOwner){
+        globalSearchViewModel.listMyAlbum.observe(viewLifecycleOwner){
             if (it.isEmpty()){
                 binding.llMyAlbumsInGSInLibrary.visibility = View.GONE
             } else {
@@ -144,7 +152,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rvMyAlbumsInGSInLibrary.adapter = searchMyAlbumAdapter
         }
 
-        myLibraryViewModel.listMyPlaylist.observe(viewLifecycleOwner){
+        globalSearchViewModel.listMyPlaylist.observe(viewLifecycleOwner){
             if (it.isEmpty()){
                 binding.llMyPlaylistsInGSInLibrary.visibility = View.GONE
             } else {
@@ -156,7 +164,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rvMyPlaylistsInGSInLibrary.adapter = searchMyPlaylistAdapter
         }
 
-        myLibraryViewModel.listMyBand.observe(viewLifecycleOwner){
+        globalSearchViewModel.listMyBand.observe(viewLifecycleOwner){
             if (it.isEmpty()){
                 binding.llMyBandsInGSInLibrary.visibility = View.GONE
             } else {
@@ -168,7 +176,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rvMyBandsInGSInLibrary.adapter = searchMyBandAdapter
         }
 
-        myLibraryViewModel.listAllTrack.observe(viewLifecycleOwner){
+        globalSearchViewModel.listAllTrack.observe(viewLifecycleOwner){
             if (it.isEmpty()){
                 binding.llAllTracksInGSInLibrary.visibility = View.GONE
             } else {
@@ -180,7 +188,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rvAllTracksInGSInLibrary.adapter = searchAllTrackAdapter
         }
 
-        myLibraryViewModel.listAllAlbum.observe(viewLifecycleOwner){
+        globalSearchViewModel.listAllAlbum.observe(viewLifecycleOwner){
             if (it.isEmpty()){
                 binding.llAllAlbumsInGSInLibrary.visibility = View.GONE
             } else {
@@ -192,7 +200,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rvAllAlbumsInGSInLibrary.adapter = searchAllAlbumAdapter
         }
 
-        myLibraryViewModel.listAllBand.observe(viewLifecycleOwner){
+        globalSearchViewModel.listAllBand.observe(viewLifecycleOwner){
             if (it.isEmpty()){
                 binding.llAllBandsInGSInLibrary.visibility = View.GONE
             } else {
@@ -212,7 +220,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             }
         }
 
-        myLibraryViewModel.isAlreadySearch.observe(viewLifecycleOwner){
+        globalSearchViewModel.isAlreadySearch.observe(viewLifecycleOwner){
             if (it["myTrack"] == true
                 && it["myTrackImage"] == true
                 && it["myAlbumImage"] == true
@@ -243,7 +251,6 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                 findNavController().navigate(R.id.loveBandsFragment, bundle)
             }
             binding.idPlaylists.id -> {
-                //Snackbar.make(p,"Playlist",Snackbar.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.myPlaylistsFragment)
             }
             binding.idAlbums.id -> {
@@ -274,7 +281,6 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
 
                 menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener{
                     override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
-                        Log.e("Search", "onMenuItemActionExpand")
                         binding.libraryGSLayout.visibility = View.VISIBLE
                         return true
                     }
@@ -292,16 +298,15 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
 
                 searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        Log.e("Search", "onQueryTextSubmit")
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
                         binding.myLibraryProgressLayout.visibility = View.VISIBLE
-                        myLibraryViewModel.isAlreadySearch.value?.forEach {
+                        globalSearchViewModel.isAlreadySearch.value?.forEach {
                             myLibraryViewModel.isAlready.value?.put(it.key, false)
                         }
-                        myLibraryViewModel.getContent(newText ?: "")
+                        globalSearchViewModel.getContent(newText ?: "")
 
                         return false
                     }
@@ -312,6 +317,12 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             }
         }
         return false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        optionsMenu.clear()
+        optionsMenu.close()
     }
 
 }
