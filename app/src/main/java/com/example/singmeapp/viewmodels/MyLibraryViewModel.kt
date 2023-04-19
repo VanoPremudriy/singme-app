@@ -13,6 +13,7 @@ import com.example.singmeapp.api.interfaces.RetrofitServices
 import com.example.singmeapp.api.models.FileApiModel
 import com.example.singmeapp.api.models.SecondFileApiModel
 import com.example.singmeapp.items.Album
+import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -44,6 +45,9 @@ class MyLibraryViewModel: ViewModel() {
 
     var listMyPlaylist = MutableLiveData<HashMap<String, Album>>()
     var arrayListMyPlaylist = HashMap<String, Album>()
+
+    var listMyBand = MutableLiveData<HashMap<String, Band>>()
+    var arrayListMyBand = HashMap<String, Band>()
 
     var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
 
@@ -372,6 +376,67 @@ class MyLibraryViewModel: ViewModel() {
             })
         }
     }
+
+    fun getMyBands(search: String){
+        var fbBandImageUrl: String
+        var fbBandBackUrl: String
+        var fbBandImageUrls = HashMap<String, String>()
+        var fbBandBackUrls = HashMap<String, String>()
+        var count = 0
+        if (auth.currentUser != null){
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("RestrictedApi")
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    arrayListMyBand.clear()
+                    listMyBand.value = arrayListMyBand
+                    if (search.isNotEmpty())
+                    snapshot.child("/users/${auth.currentUser?.uid}/library/love_bands").children.forEach{ t ->
+                        val bandName = snapshot.child("/bands/${t.value}").child("name").value.toString()
+                        if (bandName.lowercase().contains(search.lowercase())) {
+                            var extension = snapshot.child("/bands/${t.value}").child("avatar").value.toString()
+                            var info = snapshot.child("/bands/${t.value}").child("info").value.toString()
+                            var backExtension = snapshot.child("/bands/${t.value}").child("background").value.toString()
+
+                            fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
+                            fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
+
+                            fbBandBackUrls.put(t.value.toString(), fbBandBackUrl)
+                            fbBandImageUrls.put(t.value.toString(), fbBandImageUrl)
+
+                            val band = Band(
+                                t.value.toString(),
+                                bandName,
+                                info,
+                                "",
+                                ""
+                            )
+                            arrayListMyBand.put(t.value.toString(), band)
+                        }
+
+                    }
+
+                    if (arrayListMyBand.size != 0) {
+                        listMyBand.value = arrayListMyBand
+                        arrayListMyBand.forEach {
+                            getFilePath(fbBandImageUrls.get(it.key)!!, "myBandImage", it.key, count)
+                            getFilePath(fbBandBackUrls.get(it.key)!!, "myBandBack", it.key, count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("myBandImage", true)
+                        isAlready.value?.put("myBandBack", true)
+                        isAlready.value = isAlready.value
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+    }
     fun getFilePath(url: String, value: String,index: String, count: Int){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {
@@ -452,6 +517,20 @@ class MyLibraryViewModel: ViewModel() {
                 }
             }
 
+            "myBandImage" -> {
+                if (arrayListMyBand[index]?.imageUrl == "") {
+                    arrayListMyBand[index]?.imageUrl = url
+                    listMyBand.value = arrayListMyBand
+                }
+            }
+
+            "myBandBack" -> {
+                if (arrayListMyBand[index]?.backgroundUrl == "") {
+                    arrayListMyBand[index]?.backgroundUrl = url
+                    listMyBand.value = arrayListMyBand
+                }
+            }
+
         }
 
         if (count == arrayListTrack.size -1 && value == "image"){
@@ -479,6 +558,16 @@ class MyLibraryViewModel: ViewModel() {
 
         if (count == arrayListMyPlaylist.size -1 && value == "myPlaylistImage"){
             isAlreadySearch.value?.put("myPlaylistImage", true)
+            isAlreadySearch.value = isAlreadySearch.value
+        }
+
+        if (count == arrayListMyBand.size -1 && value == "myBandImage"){
+            isAlreadySearch.value?.put("myBandImage", true)
+            isAlreadySearch.value = isAlreadySearch.value
+        }
+
+        if (count == arrayListMyBand.size -1 && value == "myBandBack"){
+            isAlreadySearch.value?.put("myBandBack", true)
             isAlreadySearch.value = isAlreadySearch.value
         }
 

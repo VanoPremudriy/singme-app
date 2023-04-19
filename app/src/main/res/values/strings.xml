@@ -125,6 +125,7 @@
     <string name="change_user_data">Change data</string>
     <string name="my_albums">My Albums</string>
     <string name="my_playlists">My playlists</string>
+    <string name="my_subscribes">My subscribes</string>
 
 
 </resources>

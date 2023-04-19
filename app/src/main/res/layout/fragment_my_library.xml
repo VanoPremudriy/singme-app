@@ -332,8 +332,57 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:id="@+id/rvMyPlaylistssInGSInLibrary" />
+                            android:id="@+id/rvMyPlaylistsInGSInLibrary" />
                 </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/llMyBandsInGSInLibrary"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                    <View
+                            android:id="@+id/view23"
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/purple_200" />
+
+                    <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:layout_marginTop="8dp">
+
+                        <TextView
+                                android:text="@string/my_subscribes"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tvMyBandsInGSInLibrary" />
+
+                        <TextView
+                                android:text="@string/all"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:id="@+id/tvAllMyBandsInGSInLibrary" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:id="@+id/rvMyBandsInGSInLibrary" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

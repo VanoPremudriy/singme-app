@@ -116,4 +116,5 @@
     <string name="change_user_data">Изменить данные</string>
     <string name="my_albums">Мои альбомы</string>
     <string name="my_playlists">Мои плейлисты</string>
+    <string name="my_subscribes">Мои подписки</string>
 </resources>

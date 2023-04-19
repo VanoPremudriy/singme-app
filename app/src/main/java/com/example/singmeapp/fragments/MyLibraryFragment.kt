@@ -16,10 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.adapters.AlbumAdapter
+import com.example.singmeapp.adapters.BandAdapter
 import com.example.singmeapp.adapters.PlaylistAdapter
 import com.example.singmeapp.adapters.TrackAdapter
 import com.example.singmeapp.databinding.FragmentMyLibraryBinding
 import com.example.singmeapp.items.Album
+import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.MyLibraryViewModel
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
@@ -41,6 +43,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
     lateinit var searchMyTrackAdapter: TrackAdapter
     lateinit var searchMyAlbumAdapter: AlbumAdapter
     lateinit var searchMyPlaylistAdapter: PlaylistAdapter
+    lateinit var searchMyBandAdapter: BandAdapter
 
     lateinit var optionsMenu: Menu
 
@@ -59,6 +62,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
         searchMyTrackAdapter = TrackAdapter(fragmentActivity, this)
         searchMyAlbumAdapter = AlbumAdapter(this)
         searchMyPlaylistAdapter = PlaylistAdapter(this)
+        searchMyBandAdapter = BandAdapter(this)
     }
 
     override fun onCreateView(
@@ -78,7 +82,8 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
 
         binding.rvMyMusicInGSInLibrary.layoutManager = GridLayoutManager(context, 3, RecyclerView.HORIZONTAL, false)
         binding.rvMyAlbumsInGSInLibrary.layoutManager =  LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvMyPlaylistssInGSInLibrary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvMyPlaylistsInGSInLibrary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvMyBandsInGSInLibrary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
 
         playerPlaylistViewModel.isListTrackChanged.observe(viewLifecycleOwner){
@@ -133,7 +138,19 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             val playlists = ArrayList<Album>(it.values)
             searchMyPlaylistAdapter.playlistList.clear()
             searchMyPlaylistAdapter.playlistList.addAll(playlists)
-            binding.rvMyPlaylistssInGSInLibrary.adapter = searchMyPlaylistAdapter
+            binding.rvMyPlaylistsInGSInLibrary.adapter = searchMyPlaylistAdapter
+        }
+
+        myLibraryViewModel.listMyBand.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llMyBandsInGSInLibrary.visibility = View.GONE
+            } else {
+                binding.llMyBandsInGSInLibrary.visibility = View.VISIBLE
+            }
+            val bands = ArrayList<Band>(it.values)
+            searchMyBandAdapter.bandList.clear()
+            searchMyBandAdapter.bandList.addAll(bands)
+            binding.rvMyBandsInGSInLibrary.adapter = searchMyBandAdapter
         }
 
 
@@ -148,7 +165,9 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             if (it["myTrack"] == true
                 && it["myTrackImage"] == true
                 && it["myAlbumImage"] == true
-                && it["myPlaylistImage"] == true){
+                && it["myPlaylistImage"] == true
+                && it["myBandImage"] == true
+                && it["myBandBack"] == true){
                 binding.myLibraryProgressLayout.visibility = View.GONE
             }
         }
@@ -230,6 +249,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                         myLibraryViewModel.getMyTracks(newText ?: "")
                         myLibraryViewModel.getMyAlbums(newText ?: "")
                         myLibraryViewModel.getMyPlaylists(newText ?: "")
+                        myLibraryViewModel.getMyBands(newText ?: "")
                         return false
                     }
 
