@@ -126,6 +126,7 @@
     <string name="my_albums">My Albums</string>
     <string name="my_playlists">My playlists</string>
     <string name="my_subscribes">My subscribes</string>
+    <string name="type_here_to_search">Type here to search</string>
 
 
 </resources>

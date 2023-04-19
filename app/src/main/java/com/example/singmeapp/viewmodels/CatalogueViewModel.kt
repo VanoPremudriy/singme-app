@@ -189,8 +189,6 @@ class CatalogueViewModel: ViewModel() {
                     }
                 }
 
-                /*arrayListAlbum.sortBy { album -> listeningCounters.get(album.uuid) }
-                arrayListAlbum = arrayListAlbum.reversed() as ArrayList<Album> *//* = java.util.ArrayList<com.example.singmeapp.items.Album> */
                 if (arrayListAlbum.size != 0) {
                     listAlbum.value = arrayListAlbum
                     arrayListAlbum.forEach {

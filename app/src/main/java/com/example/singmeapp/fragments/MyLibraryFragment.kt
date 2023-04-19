@@ -28,7 +28,6 @@ import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
@@ -44,7 +43,9 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
     lateinit var searchMyAlbumAdapter: AlbumAdapter
     lateinit var searchMyPlaylistAdapter: PlaylistAdapter
     lateinit var searchMyBandAdapter: BandAdapter
-
+    lateinit var searchAllTrackAdapter: TrackAdapter
+    lateinit var searchAllAlbumAdapter: AlbumAdapter
+    lateinit var searchAllBandAdapter: BandAdapter
     lateinit var optionsMenu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,10 +60,15 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
         myLibraryViewModel.getTracks()
 
         trackAdapter = TrackAdapter(fragmentActivity, this)
+
         searchMyTrackAdapter = TrackAdapter(fragmentActivity, this)
         searchMyAlbumAdapter = AlbumAdapter(this)
         searchMyPlaylistAdapter = PlaylistAdapter(this)
         searchMyBandAdapter = BandAdapter(this)
+
+        searchAllTrackAdapter = TrackAdapter(fragmentActivity, this)
+        searchAllAlbumAdapter = AlbumAdapter(this)
+        searchAllBandAdapter = BandAdapter(this)
     }
 
     override fun onCreateView(
@@ -70,22 +76,31 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
         savedInstanceState: Bundle?
     ): View? {
         fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
+
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         fragmentActivity.title = getString(R.string.library)
 
-        Log.e("LifeCycle", "onCreateView")
         binding = FragmentMyLibraryBinding.inflate(layoutInflater)
 
         buttonSets()
-        val linearLayoutManager = LinearLayoutManager(activity)
-        binding.rcView.layoutManager = linearLayoutManager
+
+        binding.rcView.layoutManager = LinearLayoutManager(activity)
 
         binding.rvMyMusicInGSInLibrary.layoutManager = GridLayoutManager(context, 3, RecyclerView.HORIZONTAL, false)
         binding.rvMyAlbumsInGSInLibrary.layoutManager =  LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMyPlaylistsInGSInLibrary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvMyBandsInGSInLibrary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvAllTracksInGSInLibrary.layoutManager = GridLayoutManager(context, 3, RecyclerView.HORIZONTAL, false)
+        binding.rvAllAlbumsInGSInLibrary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvAllBandsInGSInLibrary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        observes()
 
 
+        return binding.root
+    }
+
+    fun observes(){
         playerPlaylistViewModel.isListTrackChanged.observe(viewLifecycleOwner){
             binding.myLibraryProgressLayout.visibility = View.VISIBLE
             myLibraryViewModel.isAlready.value?.put("track", false)
@@ -153,6 +168,42 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             binding.rvMyBandsInGSInLibrary.adapter = searchMyBandAdapter
         }
 
+        myLibraryViewModel.listAllTrack.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llAllTracksInGSInLibrary.visibility = View.GONE
+            } else {
+                binding.llAllTracksInGSInLibrary.visibility = View.VISIBLE
+            }
+            val tracks = ArrayList<Track>(it.values)
+            searchAllTrackAdapter.trackList.clear()
+            searchAllTrackAdapter.trackList.addAll(tracks)
+            binding.rvAllTracksInGSInLibrary.adapter = searchAllTrackAdapter
+        }
+
+        myLibraryViewModel.listAllAlbum.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llAllAlbumsInGSInLibrary.visibility = View.GONE
+            } else {
+                binding.llAllAlbumsInGSInLibrary.visibility = View.VISIBLE
+            }
+            val albums = ArrayList<Album>(it.values)
+            searchAllAlbumAdapter.albumList.clear()
+            searchAllAlbumAdapter.albumList.addAll(albums)
+            binding.rvAllAlbumsInGSInLibrary.adapter = searchAllAlbumAdapter
+        }
+
+        myLibraryViewModel.listAllBand.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llAllBandsInGSInLibrary.visibility = View.GONE
+            } else {
+                binding.llAllBandsInGSInLibrary.visibility = View.VISIBLE
+            }
+            val bands = ArrayList<Band>(it.values)
+            searchAllBandAdapter.bandList.clear()
+            searchAllBandAdapter.bandList.addAll(bands)
+            binding.rvAllBandsInGSInLibrary.adapter = searchAllBandAdapter
+        }
+
 
 
         myLibraryViewModel.isAlready.observe(viewLifecycleOwner){
@@ -167,11 +218,15 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                 && it["myAlbumImage"] == true
                 && it["myPlaylistImage"] == true
                 && it["myBandImage"] == true
-                && it["myBandBack"] == true){
+                && it["myBandBack"] == true
+                && it["allTrackImage"] == true
+                && it["allTrack"] == true
+                && it["allAlbumImage"] == true
+                && it["allBandImage"] == true
+                && it["allBandBack"] == true){
                 binding.myLibraryProgressLayout.visibility = View.GONE
             }
         }
-        return binding.root
     }
 
 
@@ -233,7 +288,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                 })
 
                 val searchView = menuItem.actionView as SearchView
-                searchView.queryHint = "Type here to search"
+                searchView.queryHint = getString(R.string.type_here_to_search)
 
                 searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
                     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -246,10 +301,8 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                         myLibraryViewModel.isAlreadySearch.value?.forEach {
                             myLibraryViewModel.isAlready.value?.put(it.key, false)
                         }
-                        myLibraryViewModel.getMyTracks(newText ?: "")
-                        myLibraryViewModel.getMyAlbums(newText ?: "")
-                        myLibraryViewModel.getMyPlaylists(newText ?: "")
-                        myLibraryViewModel.getMyBands(newText ?: "")
+                        myLibraryViewModel.getContent(newText ?: "")
+
                         return false
                     }
 

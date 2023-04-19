@@ -24,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
 import java.util.function.Consumer
 
 
@@ -49,6 +50,15 @@ class MyLibraryViewModel: ViewModel() {
     var listMyBand = MutableLiveData<HashMap<String, Band>>()
     var arrayListMyBand = HashMap<String, Band>()
 
+    var listAllTrack = MutableLiveData<HashMap<String, Track>>()
+    var arrayListAllTrack = HashMap<String, Track>()
+
+    var listAllAlbum = MutableLiveData<HashMap<String, Album>>()
+    var arrayListAllAlbum = HashMap<String, Album>()
+
+    var listAllBand = MutableLiveData<HashMap<String, Band>>()
+    var arrayListAllBand = HashMap<String, Band>()
+
     var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
 
     var isAlreadySearch = MutableLiveData<HashMap<String, Boolean>>(HashMap())
@@ -60,6 +70,16 @@ class MyLibraryViewModel: ViewModel() {
                 .permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
+    }
+
+    fun getContent(search: String){
+        getMyTracks(search)
+        getMyAlbums(search)
+        getMyPlaylists(search)
+        getMyBands(search)
+        getAllTracks(search)
+        getAllAlbums(search)
+        getAllBands(search)
     }
 
     fun getTracks() {
@@ -437,6 +457,249 @@ class MyLibraryViewModel: ViewModel() {
             })
         }
     }
+
+    fun getAllTracks(search: String){
+        var fbTrackUrl = ""
+        var fbTrackImageUrl = ""
+        var count = 0
+        var fbTrackUrls = HashMap<String, String>()
+        var fbTrackImageUrls = HashMap<String, String>()
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("RestrictedApi", "SuspiciousIndentation")
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                arrayListAllTrack.clear()
+                listAllTrack.value = arrayListAllTrack
+                if (search.isNotEmpty())
+                    snapshot.child("tracks").children.forEach { t ->
+                        val trackName = t.child("name").value.toString()
+                        if (trackName.lowercase().contains(search.lowercase())) {
+                            val trackAlbumUuid = t.child("album").value.toString()
+                            val trackAlbumName =
+                                snapshot.child("/albums/${trackAlbumUuid}/name").value.toString()
+                            val bandUuid = t.child("band").value.toString()
+                            val bandName = snapshot.child("bands/${bandUuid}/name").value.toString()
+                            val extension =
+                                snapshot.child("/albums/${trackAlbumUuid}/cover").value.toString()
+                            val date = t.child("created_at").value.toString()
+                            var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                LocalDateTime.parse(date)
+                            } else {
+                                TODO("VERSION.SDK_INT < O")
+                            }
+
+                            var isInLove = false
+                            snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
+                                if (it1.value.toString() == t.key.toString()) isInLove = true
+                            }
+
+                            fbTrackUrl =
+                                "/storage/bands/${bandName}/albums/${trackAlbumName}/${trackName}.mp3"
+                            fbTrackImageUrl =
+                                "/storage/bands/${bandName}/albums/${trackAlbumName}/cover.${extension}"
+                            fbTrackUrls.put(t.key.toString(), fbTrackUrl)
+                            fbTrackImageUrls.put(t.key.toString(), fbTrackImageUrl)
+
+                            val track = Track(
+                                t.key.toString(),
+                                trackName,
+                                bandName,
+                                trackAlbumName,
+                                bandUuid,
+                                trackAlbumUuid,
+                                "",
+                                "",
+                                isInLove,
+                                localDateTime
+                            )
+                            arrayListAllTrack.put(t.key.toString(), track)
+                        }
+                    }
+                if (arrayListAllTrack.size != 0) {
+                    listAllTrack.value = arrayListAllTrack
+                    arrayListAllTrack.forEach {
+                        getFilePath(fbTrackUrls.get(it.key)!!, "allTrack", it.key, count)
+                        getFilePath(fbTrackImageUrls.get(it.key)!!, "allTrackImage", it.key, count)
+                        count++
+                    }
+                } else {
+                    isAlreadySearch.value?.put("allTrack", true)
+                    isAlreadySearch.value?.put("allTrackImage", true)
+                    isAlreadySearch.value = isAlreadySearch.value
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    fun getAllAlbums(search: String){
+        var fbAlbumImageUrl: String
+        var count = 0
+        var listeningCounters = HashMap<String, Int>()
+        var fbAlbumImageUrls = HashMap<String, String>()
+        database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("RestrictedApi", "SuspiciousIndentation")
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                arrayListAllAlbum.clear()
+                listAllAlbum.value = arrayListAllAlbum
+                if (search.isNotEmpty())
+                    snapshot.child("albums").children.forEach{ t ->
+                        val albumName = t.child("name").value.toString()
+                        if (albumName.lowercase().contains(search.lowercase())){
+                            val format = t.child("/format").value.toString()
+                            if (format == "Album" || format == "Single/EP"){
+                                val bandUuid = t.child("band").value.toString()
+                                val bandName = snapshot.child("bands/${bandUuid}/name").value.toString()
+                                val year = t.child("year").value?.toString()?.toInt()
+                                val extension = t.child("cover").value.toString()
+                                val date = t.child("created_at").value.toString()
+                                if (albumName != "null" && year != null && extension != "null" && format != "null") {
+
+                                    val listeningCounter = t.child("listening_counter").value.toString()
+                                    if (listeningCounter != "null") {
+                                        listeningCounters.put(t.key.toString(), listeningCounter.toInt())
+                                    } else {
+                                        listeningCounters.put(t.key.toString(), 0)
+                                    }
+
+                                    var localDateTime =
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            LocalDateTime.parse(date)
+                                        } else {
+                                            TODO("VERSION.SDK_INT < O")
+                                        }
+
+                                    fbAlbumImageUrl =
+                                        "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
+                                    fbAlbumImageUrls.put(t.key.toString(), fbAlbumImageUrl)
+
+                                    var isInLove = false
+                                    snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
+                                        if (it1.value.toString() == t.value.toString()) isInLove = true
+                                    }
+
+                                    val isAuthor =
+                                        snapshot.child("bands_has_users/${bandUuid}/${auth.currentUser?.uid}").value != null
+
+                                    val album = Album(
+                                        t.key.toString(),
+                                        albumName,
+                                        bandName,
+                                        year,
+                                        isInLove,
+                                        isAuthor,
+                                        "",
+                                        localDateTime
+                                    )
+                                    arrayListAllAlbum.put(t.key.toString(), album)
+                                }
+
+                            }
+                        }
+                    }
+
+                if (arrayListAllAlbum.size != 0) {
+                    listAllAlbum.value = arrayListAllAlbum
+                    arrayListAllAlbum.forEach {
+                        getFilePath(fbAlbumImageUrls.get(it.key)!!, "allAlbumImage", it.key, count)
+                        count++
+                    }
+                } else {
+                    isAlreadySearch.value?.put("allAlbumImage", true)
+                    isAlreadySearch.value = isAlreadySearch.value
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+    }
+
+    fun getAllBands(search: String){
+        var fbBandImageUrl: String
+        var fbBandBackUrl: String
+        var fbBandImageUrls = HashMap<String, String>()
+        var fbBandBackUrls = HashMap<String, String>()
+        var count = 0
+        if (auth.currentUser != null){
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("RestrictedApi")
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    arrayListAllBand.clear()
+                    listAllBand.value = arrayListAllBand
+                    if (search.isNotEmpty())
+                        snapshot.child("bands").children.forEach{ t ->
+                            val bandName = t.child("name").value.toString()
+                            if (bandName.lowercase().contains(search.lowercase())) {
+                                var extension = t.child("avatar").value.toString()
+                                var info = t.child("info").value.toString()
+                                var backExtension = t.child("background").value.toString()
+
+                                val date = t.child("created_at").value.toString()
+
+                                var localDateTime =
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        LocalDateTime.parse(date)
+                                    } else {
+                                        TODO("VERSION.SDK_INT < O")
+                                    }
+
+                                fbBandImageUrl =
+                                    "/storage/bands/${bandName}/profile/avatar.${extension}"
+                                fbBandBackUrl =
+                                    "/storage/bands/${bandName}/profile/back.${backExtension}"
+
+                                fbBandBackUrls.put(t.key.toString(), fbBandBackUrl)
+                                fbBandImageUrls.put(t.key.toString(), fbBandImageUrl)
+
+                                val band = Band(
+                                    t.key.toString(),
+                                    bandName,
+                                    info,
+                                    "",
+                                    "",
+                                    localDateTime
+                                )
+
+                                arrayListAllBand.put(t.key.toString(), band)
+                            }
+
+                        }
+
+                    if (arrayListAllBand.size != 0) {
+                        listAllBand.value = arrayListAllBand
+                        arrayListAllBand.forEach {
+                            getFilePath(fbBandImageUrls.get(it.key)!!, "allBandImage", it.key, count)
+                            getFilePath(fbBandBackUrls.get(it.key)!!, "allBandBack", it.key, count)
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("allBandImage", true)
+                        isAlready.value?.put("allBandBack", true)
+                        isAlready.value = isAlready.value
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+    }
+
     fun getFilePath(url: String, value: String,index: String, count: Int){
         mService.getFile(url, authToken)
             .enqueue(object : Callback<FileApiModel> {
@@ -457,6 +720,8 @@ class MyLibraryViewModel: ViewModel() {
 
             })
     }
+
+
 
     fun getFileUrl(url: String, value: String, index: String, count: Int){
         mService.getSecondFile(url, authToken)
@@ -498,7 +763,7 @@ class MyLibraryViewModel: ViewModel() {
             }
             "myTrack" -> {
                 if (arrayListMyTrack[index]?.trackUrl == ""){
-                    arrayListTrack[index]?.trackUrl = url
+                    arrayListMyTrack[index]?.trackUrl = url
                     listMyTrack.value = arrayListMyTrack
                 }
             }
@@ -528,6 +793,40 @@ class MyLibraryViewModel: ViewModel() {
                 if (arrayListMyBand[index]?.backgroundUrl == "") {
                     arrayListMyBand[index]?.backgroundUrl = url
                     listMyBand.value = arrayListMyBand
+                }
+            }
+
+            "allTrackImage" -> {
+                if (arrayListAllTrack[index]?.imageUrl == "") {
+                    arrayListAllTrack[index]?.imageUrl = url
+                    listAllTrack.value = arrayListAllTrack
+                }
+
+            }
+            "allTrack" -> {
+                if (arrayListAllTrack[index]?.trackUrl == ""){
+                    arrayListAllTrack[index]?.trackUrl = url
+                    listAllTrack.value = arrayListAllTrack
+                }
+            }
+
+            "allAlbumImage" -> {
+                if (arrayListAllAlbum[index]?.imageUrl == "") {
+                    arrayListAllAlbum[index]?.imageUrl = url
+                    listAllAlbum.value = arrayListAllAlbum
+                }
+            }
+
+            "allBandImage" -> {
+                if (arrayListAllBand[index]?.imageUrl == "") {
+                    arrayListAllBand[index]?.imageUrl = url
+                    listAllBand.value = arrayListAllBand
+                }
+            }
+            "allBandBack" -> {
+                if (arrayListAllBand[index]?.backgroundUrl == "") {
+                    arrayListAllBand[index]?.backgroundUrl = url
+                    listAllBand.value = arrayListAllBand
                 }
             }
 
@@ -568,6 +867,30 @@ class MyLibraryViewModel: ViewModel() {
 
         if (count == arrayListMyBand.size -1 && value == "myBandBack"){
             isAlreadySearch.value?.put("myBandBack", true)
+            isAlreadySearch.value = isAlreadySearch.value
+        }
+
+        if (count == arrayListAllTrack.size -1 && value == "allTrackImage"){
+            isAlreadySearch.value?.put("allTrackImage", true)
+            isAlreadySearch.value = isAlreadySearch.value
+        }
+        if (count == arrayListAllTrack.size -1 && value == "allTrack"){
+            isAlreadySearch.value?.put("allTrack", true)
+            isAlreadySearch.value = isAlreadySearch.value
+        }
+
+        if (count == arrayListAllAlbum.size -1 && value == "allAlbumImage"){
+            isAlreadySearch.value?.put("allAlbumImage", true)
+            isAlreadySearch.value = isAlreadySearch.value
+        }
+
+        if (count == arrayListAllBand.size -1 && value == "allBandImage"){
+            isAlreadySearch.value?.put("allBandImage", true)
+            isAlreadySearch.value = isAlreadySearch.value
+        }
+
+        if (count == arrayListAllBand.size -1 && value == "allBandBack"){
+            isAlreadySearch.value?.put("allBandBack", true)
             isAlreadySearch.value = isAlreadySearch.value
         }
 

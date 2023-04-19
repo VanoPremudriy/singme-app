@@ -117,4 +117,5 @@
     <string name="my_albums">Мои альбомы</string>
     <string name="my_playlists">Мои плейлисты</string>
     <string name="my_subscribes">Мои подписки</string>
+    <string name="type_here_to_search">Нажмите здесь для поиска</string>
 </resources>
