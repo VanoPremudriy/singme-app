@@ -31,6 +31,7 @@ class CatalogueAllFragment : Fragment() {
     lateinit var tracksAdapter: TrackAdapter
     lateinit var albumsAdapter: AlbumAdapter
     lateinit var bandAdapter: BandAdapter
+    lateinit var playlistAdapter: PlaylistAdapter
     lateinit var catalogueAllViewModel: CatalogueAllViewModel
     lateinit var whatIs: String
 
@@ -77,6 +78,9 @@ class CatalogueAllFragment : Fragment() {
         } else if (whatIs.contains("Bands")){
             fragmentActivity.title = getString(R.string.Bands)
             bandAdapter = BandAdapter(this)
+        } else if (whatIs.contains("Playlists")){
+            fragmentActivity.title = getString(R.string.Playlists)
+            playlistAdapter = PlaylistAdapter(this)
         }
 
 
@@ -87,9 +91,13 @@ class CatalogueAllFragment : Fragment() {
             "popularTracks" -> {
                 catalogueAllViewModel.getPopularTracks()
             }
-            "searchTracks" -> {
+            "myTracks" -> {
                 val search = arguments?.getString("search")
-                catalogueAllViewModel.getSearchTracks(search ?: "")
+                catalogueAllViewModel.getSearchTracks(search ?: "", "user")
+            }
+            "allTracks" -> {
+                val search = arguments?.getString("search")
+                catalogueAllViewModel.getSearchTracks(search ?: "", "all")
             }
             "newAlbums" -> {
                 catalogueAllViewModel.getNewAlbums()
@@ -97,16 +105,28 @@ class CatalogueAllFragment : Fragment() {
             "popularAlbums" -> {
                 catalogueAllViewModel.getPopularAlbums()
             }
-            "searchAlbums" -> {
+            "myAlbums" -> {
                 val search = arguments?.getString("search")
-                catalogueAllViewModel.getSearchAlbums(search ?: "")
+                catalogueAllViewModel.getSearchAlbums(search ?: "", "user")
+            }
+            "allAlbums" -> {
+                val search = arguments?.getString("search")
+                catalogueAllViewModel.getSearchAlbums(search ?: "", "all")
             }
             "newBands" -> {
                 catalogueAllViewModel.getNewBands()
             }
-            "searchBands" -> {
+            "myBands" -> {
                 val search = arguments?.getString("search")
-                catalogueAllViewModel.getSearchBands(search ?: "")
+                catalogueAllViewModel.getSearchBands(search ?: "", "user")
+            }
+            "allBands" -> {
+                val search = arguments?.getString("search")
+                catalogueAllViewModel.getSearchBands(search ?: "", "all")
+            }
+            "myPlaylists" -> {
+                val search = arguments?.getString("search")
+                catalogueAllViewModel.getSearchPlaylists(search ?: "")
             }
         }
     }
@@ -115,12 +135,16 @@ class CatalogueAllFragment : Fragment() {
         when (whatIs) {
             "newTracks" -> observeTrack()
             "popularTracks" -> observeTrack()
-            "searchTracks" ->  observeTrack()
+            "myTracks" ->  observeTrack()
+            "allTracks" ->  observeTrack()
             "newAlbums" -> observeAlbum()
             "popularAlbums" -> observeAlbum()
-            "searchAlbums" -> observeAlbum()
+            "myAlbums" -> observeAlbum()
+            "allAlbums" -> observeAlbum()
             "newBands" -> observeBand()
-            "searchBands" ->  observeBand()
+            "myBands" ->  observeBand()
+            "allBands" ->  observeBand()
+            "myPlaylists" -> observePlaylist()
         }
     }
 
@@ -162,6 +186,20 @@ class CatalogueAllFragment : Fragment() {
 
         catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
             if (it["bandImage"] == true && it["bandBack"] == true){
+                binding.catalogueAllProgressLayout.visibility = View.GONE
+            }
+        }
+    }
+
+    fun observePlaylist(){
+        catalogueAllViewModel.listPlaylist.observe(viewLifecycleOwner) {
+            playlistAdapter.playlistList.clear()
+            playlistAdapter.playlistList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+            binding.rvCatalogueAll.adapter = playlistAdapter
+        }
+
+        catalogueAllViewModel.isAlready.observe(viewLifecycleOwner){
+            if (it["playlistImage"] == true){
                 binding.catalogueAllProgressLayout.visibility = View.GONE
             }
         }

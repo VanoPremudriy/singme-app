@@ -218,6 +218,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
         mainActivity.binding.inAlbumMenu.visibility = View.VISIBLE
         mainActivity.binding.view15.visibility = View.VISIBLE
         mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+        mainActivity.binding.tvGoToBandProfileFromAlbum.visibility = View.VISIBLE
     }
 
 

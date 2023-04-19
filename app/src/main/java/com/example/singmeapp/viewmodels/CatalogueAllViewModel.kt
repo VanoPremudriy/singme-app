@@ -2,6 +2,7 @@ package com.example.singmeapp.viewmodels
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDateTime
+import java.util.function.Consumer
 
 class CatalogueAllViewModel: ViewModel() {
 
@@ -39,6 +41,9 @@ class CatalogueAllViewModel: ViewModel() {
 
     var listBand = MutableLiveData<List<Band>>()
     var arrayListBand = ArrayList<Band>()
+
+    var listPlaylist = MutableLiveData<List<Album>>()
+    var arrayListPlaylist = ArrayList<Album>()
 
     var isAlready = MutableLiveData<HashMap<String, Boolean>>(HashMap())
 
@@ -202,59 +207,72 @@ class CatalogueAllViewModel: ViewModel() {
         })
     }
 
-    fun getSearchTracks(search: String){
+    fun getSearchTracks(search: String, category: String){
         var fbTrackUrl = ""
         var fbTrackImageUrl = ""
+        var path = ""
         var count = 0
         var fbTrackUrls = HashMap<String, String>()
         var fbTrackImageUrls = HashMap<String, String>()
+        var uuid = ""
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 arrayListTrack.clear()
                 listTrack.value = arrayListTrack
+                if (category == "all"){
+                    path = "tracks"
+                } else if (category == "user"){
+                    path = "/users/${auth.currentUser?.uid}/library/love_tracks"
+                }
                 if (search != "")
-                    snapshot.child("tracks").children.forEach { t ->
-                        val trackName = t.child("name").value.toString()
-                        if (trackName.lowercase().contains(search.lowercase())) {
-                            val trackAlbumUuid = t.child("album").value.toString()
-                            val trackAlbumName =
-                                snapshot.child("/albums/${trackAlbumUuid}/name").value.toString()
-                            val bandUuid = t.child("band").value.toString()
-                            val bandName = snapshot.child("bands/${bandUuid}/name").value.toString()
-                            val extension =
-                                snapshot.child("/albums/${trackAlbumUuid}/cover").value.toString()
-                            val date = t.child("created_at").value.toString()
-                            var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                LocalDateTime.parse(date)
-                            } else {
-                                TODO("VERSION.SDK_INT < O")
-                            }
+                    snapshot.child(path).children.forEach { t ->
+                        if (category == "all"){
+                            uuid = t.key.toString()
+                        } else if (category == "user"){
+                            uuid = t.value.toString()
+                        }
 
-                            var isInLove = false
-                            snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach { it1 ->
-                                if (it1.value.toString() == t.key.toString()) isInLove = true
-                            }
+                        val trackName =
+                            snapshot.child("/tracks/${uuid}").child("name").value.toString()
+
+                        if (trackName.lowercase().contains(search.lowercase())) {
+                            val band =
+                                snapshot.child("/tracks/${uuid}").child("band").value.toString()
+                            val album = snapshot.child("/tracks/${uuid}")
+                                .child("album").value.toString()
+
+                            val bandName =
+                                snapshot.child("/bands/${band}").child("name").value.toString()
+                            val albumName =
+                                snapshot.child("/albums/${album}").child("name").value.toString()
+                            val extension = snapshot.child("/albums/${album}").child("cover").value.toString()
+
+                            var isTrackInLove = false
+
+                            snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
+                                Consumer { it1 ->
+                                    if (it1.value.toString() == uuid) isTrackInLove = true
+                                })
 
                             fbTrackUrl =
-                                "/storage/bands/${bandName}/albums/${trackAlbumName}/${trackName}.mp3"
+                                "/storage/bands/${bandName}/albums/${albumName}/${trackName}.mp3"
                             fbTrackImageUrl =
-                                "/storage/bands/${bandName}/albums/${trackAlbumName}/cover.${extension}"
-                            fbTrackUrls.put(t.key.toString(), fbTrackUrl)
-                            fbTrackImageUrls.put(t.key.toString(), fbTrackImageUrl)
+                                "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
+                            fbTrackUrls.put(uuid, fbTrackUrl)
+                            fbTrackImageUrls.put(uuid, fbTrackImageUrl)
 
                             val track = Track(
-                                t.key.toString(),
+                                uuid,
                                 trackName,
                                 bandName,
-                                trackAlbumName,
-                                bandUuid,
-                                trackAlbumUuid,
+                                albumName,
+                                band,
+                                album,
                                 "",
                                 "",
-                                isInLove,
-                                localDateTime
+                                isTrackInLove,
                             )
                             arrayListTrack.add( track)
                         }
@@ -432,35 +450,47 @@ class CatalogueAllViewModel: ViewModel() {
 
     }
 
-    fun getSearchAlbums(search: String){
+    fun getSearchAlbums(search: String, category: String){
         var fbAlbumImageUrl: String
         var count = 0
         var listeningCounters = HashMap<String, Int>()
         var fbAlbumImageUrls = HashMap<String, String>()
+        var path = ""
+        var uuid = ""
         database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("RestrictedApi")
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 arrayListAlbum.clear()
                 listAlbum.value = arrayListAlbum
+                if (category == "all"){
+                    path = "albums"
+                } else if (category == "user"){
+                    path = "/users/${auth.currentUser?.uid}/library/love_albums"
+                }
                 if (search != "")
-                    snapshot.child("albums").children.forEach{ t ->
-                        val albumName = t.child("name").value.toString()
+                    snapshot.child(path).children.forEach{ t ->
+                        if (category == "all"){
+                            uuid = t.key.toString()
+                        } else if (category == "user"){
+                            uuid = t.value.toString()
+                        }
+                        val albumName = snapshot.child("/albums/${uuid}").child("name").value.toString()
                         if (albumName.lowercase().contains(search.lowercase())){
-                            val format = t.child("/format").value.toString()
+                            val format = snapshot.child("/albums/${uuid}").child("/format").value.toString()
                             if (format == "Album" || format == "Single/EP"){
-                                val bandUuid = t.child("band").value.toString()
+                                val bandUuid = snapshot.child("/albums/${uuid}").child("band").value.toString()
                                 val bandName = snapshot.child("bands/${bandUuid}/name").value.toString()
-                                val year = t.child("year").value?.toString()?.toInt()
-                                val extension = t.child("cover").value.toString()
-                                val date = t.child("created_at").value.toString()
+                                val year = snapshot.child("/albums/${uuid}").child("year").value?.toString()?.toInt()
+                                val extension = snapshot.child("/albums/${uuid}").child("cover").value.toString()
+                                val date = snapshot.child("/albums/${uuid}").child("created_at").value.toString()
                                 if (albumName != "null" && year != null && extension != "null" && format != "null") {
 
-                                    val listeningCounter = t.child("listening_counter").value.toString()
+                                    val listeningCounter = snapshot.child("/albums/${uuid}").child("listening_counter").value.toString()
                                     if (listeningCounter != "null") {
-                                        listeningCounters.put(t.key.toString(), listeningCounter.toInt())
+                                        listeningCounters.put(uuid, listeningCounter.toInt())
                                     } else {
-                                        listeningCounters.put(t.key.toString(), 0)
+                                        listeningCounters.put(uuid, 0)
                                     }
 
                                     var localDateTime =
@@ -472,18 +502,18 @@ class CatalogueAllViewModel: ViewModel() {
 
                                     fbAlbumImageUrl =
                                         "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
-                                    fbAlbumImageUrls.put(t.key.toString(), fbAlbumImageUrl)
+                                    fbAlbumImageUrls.put(uuid, fbAlbumImageUrl)
 
                                     var isInLove = false
                                     snapshot.child("users/${auth.currentUser?.uid}/library/love_albums").children.forEach { it1 ->
-                                        if (it1.value.toString() == t.value.toString()) isInLove = true
+                                        if (it1.value.toString() == uuid) isInLove = true
                                     }
 
                                     val isAuthor =
                                         snapshot.child("bands_has_users/${bandUuid}/${auth.currentUser?.uid}").value != null
 
                                     val album = Album(
-                                        t.key.toString(),
+                                        uuid,
                                         albumName,
                                         bandName,
                                         year,
@@ -591,12 +621,14 @@ class CatalogueAllViewModel: ViewModel() {
         }
     }
 
-    fun getSearchBands(search: String){
+    fun getSearchBands(search: String, category: String){
         var fbBandImageUrl: String
         var fbBandBackUrl: String
         var fbBandImageUrls = HashMap<String, String>()
         var fbBandBackUrls = HashMap<String, String>()
         var count = 0
+        var path = ""
+        var uuid = ""
         if (auth.currentUser != null){
             database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("RestrictedApi")
@@ -604,15 +636,25 @@ class CatalogueAllViewModel: ViewModel() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     arrayListBand.clear()
                     listBand.value = arrayListBand
+                    if (category == "all"){
+                        path = "bands"
+                    } else if (category == "user"){
+                        path = "/users/${auth.currentUser?.uid}/library/love_bands"
+                    }
                     if (search != "")
-                        snapshot.child("bands").children.forEach{ t ->
-                            val bandName = t.child("name").value.toString()
+                        snapshot.child(path).children.forEach{ t ->
+                            if (category == "all"){
+                                uuid = t.key.toString()
+                            } else if (category == "user"){
+                                uuid = t.value.toString()
+                            }
+                            val bandName = snapshot.child("/bands/${uuid}").child("name").value.toString()
                             if (bandName.lowercase().contains(search.lowercase())) {
-                                var extension = t.child("avatar").value.toString()
-                                var info = t.child("info").value.toString()
-                                var backExtension = t.child("background").value.toString()
+                                var extension = snapshot.child("/bands/${uuid}").child("avatar").value.toString()
+                                var info = snapshot.child("/bands/${uuid}").child("info").value.toString()
+                                var backExtension = snapshot.child("/bands/${uuid}").child("background").value.toString()
 
-                                val date = t.child("created_at").value.toString()
+                                val date = snapshot.child("/bands/${uuid}").child("created_at").value.toString()
 
                                 var localDateTime =
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -626,11 +668,11 @@ class CatalogueAllViewModel: ViewModel() {
                                 fbBandBackUrl =
                                     "/storage/bands/${bandName}/profile/back.${backExtension}"
 
-                                fbBandBackUrls.put(t.key.toString(), fbBandBackUrl)
-                                fbBandImageUrls.put(t.key.toString(), fbBandImageUrl)
+                                fbBandBackUrls.put(uuid, fbBandBackUrl)
+                                fbBandImageUrls.put(uuid, fbBandImageUrl)
 
                                 val band = Band(
-                                    t.key.toString(),
+                                    uuid,
                                     bandName,
                                     info,
                                     "",
@@ -655,6 +697,87 @@ class CatalogueAllViewModel: ViewModel() {
                         isAlready.value?.put("bandBack", true)
                         isAlready.value = isAlready.value
                     }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+    }
+
+    fun getSearchPlaylists(search: String){
+        var fbAlbumImageUrl: String
+        var fbAlbumImageUrls = HashMap<String, String>()
+        var count = 0
+        if (auth.currentUser != null){
+            database.reference.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("RestrictedApi", "SuspiciousIndentation")
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    arrayListPlaylist.clear()
+                    listPlaylist.value = arrayListPlaylist
+                    if (search.isNotEmpty())
+                    snapshot.child("/users/${auth.currentUser?.uid}/library/playlists").children.forEach { t ->
+                        val playlistsName =
+                            snapshot.child("/albums/${t.value}").child("name").value.toString()
+                        if (playlistsName.lowercase().contains(search.lowercase())) {
+                            val authorUuid =
+                                snapshot.child("/albums/${t.value}").child("band").value.toString()
+                            val authorName =
+                                snapshot.child("/users/${authorUuid}/profile/name").value.toString()
+                            val year =
+                                snapshot.child("/albums/${t.value}").child("year").value.toString()
+                            val extension =
+                                snapshot.child("/albums/${t.value}").child("cover").value.toString()
+
+                            if (authorUuid != "null"
+                                && authorName != "null"
+                                && playlistsName != "null"
+                                && year != "null"
+                            ) {
+
+
+                                if (extension != "null")
+                                    fbAlbumImageUrl =
+                                        "/storage/users/${auth.currentUser?.uid}/playlists/${playlistsName}/cover.${extension}"
+                                else fbAlbumImageUrl = "/storage/default_images/cover.png"
+                                fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
+
+                                var isInLove = false
+                                snapshot.child("users/${auth.currentUser?.uid}/library/playlists").children.forEach { it1 ->
+                                    if (it1.value.toString() == t.value.toString()) isInLove = true
+                                }
+
+                                val isAuthor = authorUuid == auth.currentUser?.uid.toString()
+                                val album = Album(
+                                    t.value.toString(),
+                                    playlistsName,
+                                    authorName,
+                                    year.toInt(),
+                                    isInLove,
+                                    isAuthor,
+                                    "",
+                                )
+
+                                arrayListPlaylist.add(album)
+                            }
+                        }
+                    }
+
+                    if (arrayListPlaylist.size != 0) {
+                        listPlaylist.value = arrayListPlaylist
+                        arrayListPlaylist.forEach {
+                            getFilePath(fbAlbumImageUrls.get(it.uuid)!!, "playlistImage", count)
+                            Log.e("Image", fbAlbumImageUrls.get(it.uuid).toString())
+                            count++
+                        }
+                    } else {
+                        isAlready.value?.put("playlistImage", true)
+                        isAlready.value = isAlready.value
+                    }
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -730,6 +853,10 @@ class CatalogueAllViewModel: ViewModel() {
                 arrayListBand[index].backgroundUrl = url
                 listBand.value = arrayListBand
             }
+            "playlistImage" -> {
+                arrayListPlaylist[index].imageUrl = url
+                listPlaylist.value = arrayListPlaylist
+            }
 
 
         }
@@ -758,6 +885,11 @@ class CatalogueAllViewModel: ViewModel() {
 
         if (index == arrayListBand.size -1 && value == "bandBack"){
             isAlready.value?.put("bandBack", true)
+            isAlready.value = isAlready.value
+        }
+
+        if (index == arrayListPlaylist.size -1 && value == "playlistImage"){
+            isAlready.value?.put("playlistImage", true)
             isAlready.value = isAlready.value
         }
 

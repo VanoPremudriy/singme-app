@@ -15,17 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
-import com.example.singmeapp.adapters.AlbumAdapter
-import com.example.singmeapp.adapters.BandAdapter
-import com.example.singmeapp.adapters.CataloguePagerAdapter
-import com.example.singmeapp.adapters.TrackAdapter
+import com.example.singmeapp.adapters.*
 import com.example.singmeapp.databinding.FragmentCatalogueBinding
 import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.items.User
-import com.example.singmeapp.viewmodels.CatalogueNewsViewModel
-import com.example.singmeapp.viewmodels.CatalogueViewModel
+import com.example.singmeapp.viewmodels.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -37,9 +33,15 @@ class CatalogueFragment : Fragment(), MenuProvider {
     lateinit var newAlbumAdapter: AlbumAdapter
     lateinit var optionsMenu: Menu
     lateinit var catalogueViewModel: CatalogueViewModel
-    lateinit var trackAdapter: TrackAdapter
-    lateinit var albumAdapter: AlbumAdapter
-    lateinit var bandAdapter: BandAdapter
+    lateinit var globalSearchViewModel: GlobalSearchViewModel
+
+    lateinit var searchMyTrackAdapter: TrackAdapter
+    lateinit var searchMyAlbumAdapter: AlbumAdapter
+    lateinit var searchMyPlaylistAdapter: PlaylistAdapter
+    lateinit var searchMyBandAdapter: BandAdapter
+    lateinit var searchAllTrackAdapter: TrackAdapter
+    lateinit var searchAllAlbumAdapter: AlbumAdapter
+    lateinit var searchAllBandAdapter: BandAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +49,21 @@ class CatalogueFragment : Fragment(), MenuProvider {
         fragmentActivity = activity as AppCompatActivity
         fragmentActivity.supportActionBar?.show()
         setHasOptionsMenu(true)
-        trackAdapter = TrackAdapter(fragmentActivity, this)
+
         val provider = ViewModelProvider(this)
+        val globalSearchProvider = ViewModelProvider(this)
+
         catalogueViewModel = provider[CatalogueViewModel::class.java]
+        globalSearchViewModel = globalSearchProvider[GlobalSearchViewModel::class.java]
+
+        searchMyTrackAdapter = TrackAdapter(fragmentActivity, this)
+        searchMyAlbumAdapter = AlbumAdapter(this)
+        searchMyPlaylistAdapter = PlaylistAdapter(this)
+        searchMyBandAdapter = BandAdapter(this)
+
+        searchAllTrackAdapter = TrackAdapter(fragmentActivity, this)
+        searchAllAlbumAdapter = AlbumAdapter(this)
+        searchAllBandAdapter = BandAdapter(this)
 
     }
 
@@ -64,47 +78,17 @@ class CatalogueFragment : Fragment(), MenuProvider {
 
         binding = FragmentCatalogueBinding.inflate(layoutInflater)
 
-        binding.rvCatalogueSearchTracks.layoutManager = GridLayoutManager(context, 3, RecyclerView.HORIZONTAL, false)
-        binding.rvCatalogueSearchAlbums.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvCatalogueSearchBands.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.catalogueProgressLayout.visibility = View.GONE
 
-        catalogueViewModel.listTrack.observe(viewLifecycleOwner){
-            trackAdapter = TrackAdapter(fragmentActivity, this)
-            trackAdapter.trackList.clear()
-            val tracks = ArrayList<Track>(it.values)
-            tracks.sortBy { track -> track.date }
-            tracks.reverse()
-            trackAdapter.trackList.addAll(it.values)
-            binding.rvCatalogueSearchTracks.adapter = trackAdapter
-        }
+        binding.rvMyMusicInGSInCatalogue.layoutManager = GridLayoutManager(context, 3, RecyclerView.HORIZONTAL, false)
+        binding.rvMyAlbumsInGSInCatalogue.layoutManager =  LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvMyPlaylistsInGSInCatalogue.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvMyBandsInGSInCatalogue.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvAllTracksInGSInCatalogue.layoutManager = GridLayoutManager(context, 3, RecyclerView.HORIZONTAL, false)
+        binding.rvAllAlbumsInGSInCatalogue.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvAllBandsInGSInCatalogue.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        catalogueViewModel.listAlbum.observe(viewLifecycleOwner){
-            albumAdapter = AlbumAdapter(this)
-            albumAdapter.albumList.clear()
-            val albums = ArrayList<Album>(it.values)
-            albums.sortBy { album -> album.date }
-            albums.reverse()
-            albumAdapter.albumList.addAll(albums)
-            binding.rvCatalogueSearchAlbums.adapter = albumAdapter
-        }
-
-        catalogueViewModel.listBand.observe(viewLifecycleOwner){
-            bandAdapter = BandAdapter(this)
-            bandAdapter.bandList.clear()
-            val bands = ArrayList<Band>(it.values)
-            bandAdapter.bandList.addAll(bands)
-            binding.rvCatalogueSearchBands.adapter = bandAdapter
-        }
-
-        catalogueViewModel.isAlready.observe(viewLifecycleOwner){
-            if (it["trackImage"] == true
-                && it["track"] == true
-                && it["albumImage"] == true
-                && it["bandImage"] == true
-                && it["bandBack"] ==  true){
-                binding.catalogueProgressLayout.visibility = View.GONE
-            }
-        }
+        observes()
 
         binding.catalogueViewPager.adapter = CataloguePagerAdapter(this)
         binding.catalogueViewPager.isUserInputEnabled = false
@@ -118,6 +102,111 @@ class CatalogueFragment : Fragment(), MenuProvider {
 
 
         return binding.root
+    }
+
+    fun observes(){
+
+        globalSearchViewModel.listMyTrack.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llMyMusicInGSInCatalogue.visibility = View.GONE
+            }
+            else {
+                binding.llMyMusicInGSInCatalogue.visibility = View.VISIBLE
+            }
+            val tracks = java.util.ArrayList<Track>(it.values)
+            searchMyTrackAdapter.trackList.clear()
+            searchMyTrackAdapter.trackList.addAll(tracks)
+            binding.rvMyMusicInGSInCatalogue.adapter = searchMyTrackAdapter
+        }
+
+        globalSearchViewModel.listMyAlbum.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llMyAlbumsInGSInCatalogue.visibility = View.GONE
+            } else {
+                binding.llMyAlbumsInGSInCatalogue.visibility = View.VISIBLE
+            }
+            val albums = java.util.ArrayList<Album>(it.values)
+            searchMyAlbumAdapter.albumList.clear()
+            searchMyAlbumAdapter.albumList.addAll(albums)
+            binding.rvMyAlbumsInGSInCatalogue.adapter = searchMyAlbumAdapter
+        }
+
+        globalSearchViewModel.listMyPlaylist.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llMyPlaylistsInGSInCatalogue.visibility = View.GONE
+            } else {
+                binding.llMyPlaylistsInGSInCatalogue.visibility = View.VISIBLE
+            }
+            val playlists = java.util.ArrayList<Album>(it.values)
+            searchMyPlaylistAdapter.playlistList.clear()
+            searchMyPlaylistAdapter.playlistList.addAll(playlists)
+            binding.rvMyPlaylistsInGSInCatalogue.adapter = searchMyPlaylistAdapter
+        }
+
+        globalSearchViewModel.listMyBand.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llMyBandsInGSInCatalogue.visibility = View.GONE
+            } else {
+                binding.llMyBandsInGSInCatalogue.visibility = View.VISIBLE
+            }
+            val bands = java.util.ArrayList<Band>(it.values)
+            searchMyBandAdapter.bandList.clear()
+            searchMyBandAdapter.bandList.addAll(bands)
+            binding.rvMyBandsInGSInCatalogue.adapter = searchMyBandAdapter
+        }
+
+        globalSearchViewModel.listAllTrack.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llAllTracksInGSInCatalogue.visibility = View.GONE
+            } else {
+                binding.llAllTracksInGSInCatalogue.visibility = View.VISIBLE
+            }
+            val tracks = java.util.ArrayList<Track>(it.values)
+            searchAllTrackAdapter.trackList.clear()
+            searchAllTrackAdapter.trackList.addAll(tracks)
+            binding.rvAllTracksInGSInCatalogue.adapter = searchAllTrackAdapter
+        }
+
+        globalSearchViewModel.listAllAlbum.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llAllAlbumsInGSInCatalogue.visibility = View.GONE
+            } else {
+                binding.llAllAlbumsInGSInCatalogue.visibility = View.VISIBLE
+            }
+            val albums = java.util.ArrayList<Album>(it.values)
+            searchAllAlbumAdapter.albumList.clear()
+            searchAllAlbumAdapter.albumList.addAll(albums)
+            binding.rvAllAlbumsInGSInCatalogue.adapter = searchAllAlbumAdapter
+        }
+
+        globalSearchViewModel.listAllBand.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                binding.llAllBandsInGSInCatalogue.visibility = View.GONE
+            } else {
+                binding.llAllBandsInGSInCatalogue.visibility = View.VISIBLE
+            }
+            val bands = java.util.ArrayList<Band>(it.values)
+            searchAllBandAdapter.bandList.clear()
+            searchAllBandAdapter.bandList.addAll(bands)
+            binding.rvAllBandsInGSInCatalogue.adapter = searchAllBandAdapter
+        }
+
+
+        globalSearchViewModel.isAlreadySearch.observe(viewLifecycleOwner){
+            if (it["myTrack"] == true
+                && it["myTrackImage"] == true
+                && it["myAlbumImage"] == true
+                && it["myPlaylistImage"] == true
+                && it["myBandImage"] == true
+                && it["myBandBack"] == true
+                && it["allTrackImage"] == true
+                && it["allTrack"] == true
+                && it["allAlbumImage"] == true
+                && it["allBandImage"] == true
+                && it["allBandBack"] == true){
+                binding.catalogueProgressLayout.visibility = View.GONE
+            }
+        }
     }
 
     companion object {
@@ -140,13 +229,12 @@ class CatalogueFragment : Fragment(), MenuProvider {
         if (item.itemId == R.id.action_search_user){
             item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener{
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
-                    Log.e("Search", "onMenuItemActionExpand")
-                    binding.catalogueSearchLayout.visibility = View.VISIBLE
+                    binding.catalogueGSLayout.visibility = View.VISIBLE
                     return true
                 }
 
                 override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
-                    binding.catalogueSearchLayout.visibility = View.GONE
+                    binding.catalogueGSLayout.visibility = View.GONE
                     (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                     return true
                 }
@@ -158,39 +246,59 @@ class CatalogueFragment : Fragment(), MenuProvider {
 
             searcView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    Log.e("Search", "onQueryTextSubmit")
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    binding.tvAllSearchTracks.setOnClickListener{
+
+                    binding.tvAllMyMusicInGSInCatalogue.setOnClickListener{
                         val bundle = Bundle()
-                        bundle.putString("whatIs", "searchTracks")
+                        bundle.putString("whatIs", "myTracks")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+                    binding.tvAllMyAlbumsInGSInCatalogue.setOnClickListener{
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "myAlbums")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+                    binding.tvAllMyBandsInGSInCatalogue.setOnClickListener{
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "myBands")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+                    binding.tvAllMyPlaylistsInGSInCatalogue.setOnClickListener{
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "myPlaylists")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+                    binding.tvAllAllTracksInGSInCatalogue.setOnClickListener{
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "allTracks")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+                    binding.tvAllAllAlbumsInGSInCatalogue.setOnClickListener{
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "allAlbums")
+                        bundle.putString("search", newText)
+                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                    }
+                    binding.tvAllAllBandsInGSInCatalogue.setOnClickListener{
+                        val bundle = Bundle()
+                        bundle.putString("whatIs", "allBands")
                         bundle.putString("search", newText)
                         findNavController().navigate(R.id.catalogueAllFragment, bundle)
                     }
 
-                    binding.tvAllSearchAlbums.setOnClickListener {
-                        val bundle = Bundle()
-                        bundle.putString("whatIs", "searchAlbums")
-                        bundle.putString("search", newText)
-                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
-                    }
-
-                    binding.tvAllSearchBands.setOnClickListener {
-                        val bundle = Bundle()
-                        bundle.putString("whatIs", "searchBands")
-                        bundle.putString("search", newText)
-                        findNavController().navigate(R.id.catalogueAllFragment, bundle)
-                    }
                     binding.catalogueProgressLayout.visibility = View.VISIBLE
-                    catalogueViewModel.isAlready.value?.forEach {
-                        catalogueViewModel.isAlready.value?.put(it.key, false)
+                    globalSearchViewModel.isAlreadySearch.value?.forEach {
+                        globalSearchViewModel.isAlreadySearch.value?.put(it.key, false)
                     }
-                    Log.e("Search", "onQueryTextChange ${newText}")
-                    catalogueViewModel.getTracks(newText ?: "")
-                    catalogueViewModel.getAlbums(newText ?: "")
-                    catalogueViewModel.getBands(newText ?: "")
+                    globalSearchViewModel.getContent(newText ?: "")
                     return true
                 }
 
@@ -207,6 +315,12 @@ class CatalogueFragment : Fragment(), MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         TODO("Not yet implemented")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        optionsMenu.clear()
+        optionsMenu.close()
     }
 
 }

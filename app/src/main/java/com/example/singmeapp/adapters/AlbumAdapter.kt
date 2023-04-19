@@ -70,7 +70,9 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
 
                 mainActivity.binding.tvAddAlbumInLove.setOnClickListener(this@AlbumHolder)
                 mainActivity.binding.tvDeleteAlbumFromLove.setOnClickListener(this@AlbumHolder)
-                mainActivity.binding.tvGoToBandProfileFromAlbum.setOnClickListener(this@AlbumHolder)
+
+                mainActivity.binding.tvGoToBandProfileFromAlbum.visibility = View.GONE
+                //mainActivity.binding.tvGoToBandProfileFromAlbum.setOnClickListener(this@AlbumHolder)
 
             }
         }
@@ -88,13 +90,13 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
                     mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                 }
 
-                mainActivity.binding.tvGoToBandProfileFromAlbum.id -> {
+                /*mainActivity.binding.tvGoToBandProfileFromAlbum.id -> {
                     val bundle = Bundle()
                     bundle.putString("bandUuid", curAlbum.uuid)
                     fragmentActivity.supportActionBar?.show()
                     mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                     fragment.findNavController().navigate(R.id.bandFragment, bundle)
-                }
+                }*/
 
                 mainActivity.binding.tvDeleteAlbum.id -> {
                     albumViewModel.deleteAlbum(curAlbum.uuid)

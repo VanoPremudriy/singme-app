@@ -34,6 +34,7 @@ import java.util.*
 class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
     lateinit var fragmentActivity: AppCompatActivity
     lateinit var binding: FragmentMyLibraryBinding
+    var fragment = this
 
     lateinit var myLibraryViewModel: MyLibraryViewModel
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
@@ -82,7 +83,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        trackAdapter = TrackAdapter(fragmentActivity, this)
+
         fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
 
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -286,7 +287,10 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                     }
 
                     override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                        binding.myLibraryProgressLayout.visibility = View.VISIBLE
                         binding.libraryGSLayout.visibility = View.GONE
+                        trackAdapter = TrackAdapter(fragmentActivity, fragment)
+                        myLibraryViewModel.getTracks()
                         (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
                         return true
                     }
@@ -302,9 +306,52 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
+                        binding.tvAllMyMusicInGSInLibrary.setOnClickListener{
+                            val bundle = Bundle()
+                            bundle.putString("whatIs", "myTracks")
+                            bundle.putString("search", newText)
+                            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                        }
+                        binding.tvAllMyAlbumsInGSInLibrary.setOnClickListener{
+                            val bundle = Bundle()
+                            bundle.putString("whatIs", "myAlbums")
+                            bundle.putString("search", newText)
+                            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                        }
+                        binding.tvAllMyBandsInGSInLibrary.setOnClickListener{
+                            val bundle = Bundle()
+                            bundle.putString("whatIs", "myBands")
+                            bundle.putString("search", newText)
+                            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                        }
+                        binding.tvAllMyPlaylistsInGSInLibrary.setOnClickListener{
+                            val bundle = Bundle()
+                            bundle.putString("whatIs", "myPlaylists")
+                            bundle.putString("search", newText)
+                            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                        }
+                        binding.tvAllAllTracksInGSInLibrary.setOnClickListener{
+                            val bundle = Bundle()
+                            bundle.putString("whatIs", "allTracks")
+                            bundle.putString("search", newText)
+                            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                        }
+                        binding.tvAllAllAlbumsInGSInLibrary.setOnClickListener{
+                            val bundle = Bundle()
+                            bundle.putString("whatIs", "allAlbums")
+                            bundle.putString("search", newText)
+                            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                        }
+                        binding.tvAllAllBandsInGSInLibrary.setOnClickListener{
+                            val bundle = Bundle()
+                            bundle.putString("whatIs", "allBands")
+                            bundle.putString("search", newText)
+                            findNavController().navigate(R.id.catalogueAllFragment, bundle)
+                        }
+
                         binding.myLibraryProgressLayout.visibility = View.VISIBLE
                         globalSearchViewModel.isAlreadySearch.value?.forEach {
-                            myLibraryViewModel.isAlready.value?.put(it.key, false)
+                            globalSearchViewModel.isAlreadySearch.value?.put(it.key, false)
                         }
                         globalSearchViewModel.getContent(newText ?: "")
 

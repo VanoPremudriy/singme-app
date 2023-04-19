@@ -128,8 +128,6 @@ class GlobalSearchViewModel: ViewModel() {
                                 arrayListMyTrack.put(it.value.toString(), track)
                             }
 
-
-
                         }
 
                     if (arrayListMyTrack.size != 0) {
