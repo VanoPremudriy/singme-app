@@ -1,15 +1,15 @@
 package com.example.singmeapp.fragments
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.adapters.AlbumAdapter
 import com.example.singmeapp.databinding.FragmentLoveAlbumsBinding
@@ -17,9 +17,10 @@ import com.example.singmeapp.items.Album
 import com.example.singmeapp.viewmodels.AlbumViewModel
 import com.example.singmeapp.viewmodels.LoveAlbumsViewModel
 import com.example.singmeapp.viewmodels.MyLibraryViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class LoveAlbumsFragment : Fragment(), View.OnClickListener {
+class LoveAlbumsFragment : Fragment(), View.OnClickListener, MenuProvider {
 
     lateinit var binding: FragmentLoveAlbumsBinding
     lateinit var loveAlbumsViewModel: LoveAlbumsViewModel
@@ -27,11 +28,14 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
 
     lateinit var albumAdapter: AlbumAdapter
     lateinit var fragmentActivity: AppCompatActivity
+    lateinit var mainActivity: MainActivity
+    lateinit var optionsMenu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
-        setHasOptionsMenu(true)
+        mainActivity = activity as MainActivity
+        //setHasOptionsMenu(true)
 
         val provider = ViewModelProvider(this)
         val albumProvider = ViewModelProvider(this)
@@ -47,15 +51,14 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
     ): View? {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.title = getString(R.string.albums)
-
+        fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
         binding = FragmentLoveAlbumsBinding.inflate(layoutInflater)
 
         binding.rcView.layoutManager = LinearLayoutManager(activity)
 
 
         loveAlbumsViewModel.listAlbum.observe(viewLifecycleOwner){
-            albumAdapter.albumList.clear()
-            albumAdapter.albumList.addAll(it as ArrayList<Album>)
+            albumAdapter.initList(it)
             binding.rcView.adapter = albumAdapter
         }
 
@@ -71,12 +74,68 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
             }
         }
 
+        setButtons()
+
         return binding.root
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home){
-           //findNavController().navigate(R.id.myLibraryFragment)
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = LoveAlbumsFragment()
+    }
+
+    fun setButtons(){
+        binding.tvSortByInLoveAlbums.setOnClickListener(this)
+        mainActivity.binding.tvSortByDefault.setOnClickListener(this)
+        mainActivity.binding.tvSortByName.setOnClickListener(this)
+        mainActivity.binding.tvSortByDate.setOnClickListener(this)
+        mainActivity.binding.tvSortByBand.setOnClickListener(this)
+    }
+
+    override fun onClick(p0: View?) {
+        when(p0?.id){
+            binding.tvSortByInLoveAlbums.id -> {
+                mainActivity.binding.sortMenu.visibility = View.VISIBLE
+                mainActivity.binding.tvSortByAlbum.visibility = View.GONE
+                mainActivity.binding.view15.visibility = View.VISIBLE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            mainActivity.binding.tvSortByDefault.id -> {
+                albumAdapter.sortByFefault()
+                binding.rcView.adapter = albumAdapter
+                mainActivity.binding.view15.visibility = View.GONE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+            mainActivity.binding.tvSortByName.id -> {
+                albumAdapter.sortByName()
+                binding.rcView.adapter = albumAdapter
+                mainActivity.binding.view15.visibility = View.GONE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+            mainActivity.binding.tvSortByDate.id -> {
+                albumAdapter.sortByDate()
+                binding.rcView.adapter = albumAdapter
+                mainActivity.binding.view15.visibility = View.GONE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+            mainActivity.binding.tvSortByBand.id -> {
+                albumAdapter.sortByBand()
+                binding.rcView.adapter = albumAdapter
+                mainActivity.binding.view15.visibility = View.GONE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        optionsMenu = menu
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        if (menuItem.itemId == android.R.id.home) {
             val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
 
             if (count == 0) {
@@ -88,15 +147,33 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener {
                 findNavController().popBackStack()
             }
         }
-        return true
+
+        if (menuItem.itemId == R.id.action_search_user){
+
+            val searchView = menuItem.actionView as SearchView
+            searchView.queryHint = getString(R.string.type_here_to_search)
+
+
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    albumAdapter.sortBySearch(newText ?: "")
+                    binding.rcView.adapter = albumAdapter
+                    return true
+                }
+
+            })
+
+        }
+        return false
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = LoveAlbumsFragment()
-    }
-
-    override fun onClick(p0: View?) {
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        optionsMenu.clear()
+        optionsMenu.close()
     }
 }

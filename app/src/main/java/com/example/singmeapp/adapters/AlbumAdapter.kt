@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso
 class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.AlbumHolder>() {
 
     var albumList = ArrayList<Album>()
+    var albumListDefaultCopy = ArrayList<Album>()
 
     class AlbumHolder(item: View, val fragment: Fragment): RecyclerView.ViewHolder(item), View.OnClickListener{
         lateinit var albumViewModel: AlbumViewModel
@@ -136,4 +137,30 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
     override fun getItemCount(): Int {
      return albumList.size
     }
+
+    fun initList(albums: List<Album>){
+        albumList.clear()
+        albumList.addAll(albums)
+        albumListDefaultCopy.clear()
+        albumListDefaultCopy.addAll(albums)
+    }
+
+    fun sortByName() = albumList.sortBy { album: Album -> album.name }
+
+
+    fun sortByDate() = albumList.sortBy { album: Album ->  album.year}
+
+    fun sortByFefault(){
+        albumList.clear()
+        albumList.addAll(albumListDefaultCopy)
+    }
+
+    fun sortByBand() = albumList.sortBy { album: Album ->  album.band}
+
+    fun sortBySearch(search: String){
+        albumList.clear()
+        albumList.addAll(albumListDefaultCopy.filter { album: Album -> album.name.lowercase().contains(search.lowercase()) })
+
+    }
+
 }

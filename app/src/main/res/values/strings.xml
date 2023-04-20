@@ -127,6 +127,12 @@
     <string name="my_playlists">My playlists</string>
     <string name="my_subscribes">My subscribes</string>
     <string name="type_here_to_search">Type here to search</string>
+    <string name="sort_by">Sort by</string>
+    <string name="by_default">By default</string>
+    <string name="by_name">By name</string>
+    <string name="by_date">By date</string>
+    <string name="by_band">By band</string>
+    <string name="by_album">By album</string>
 
 
 </resources>

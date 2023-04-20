@@ -696,6 +696,79 @@
                 android:gravity="center_vertical"
                 android:text="@string/go_to_album" />
         </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/sortMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_swipe_background"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:visibility="gone">
+
+            <View
+                    android:id="@+id/swipeLine20"
+                    android:layout_width="100dp"
+                    android:layout_height="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/bottom_swipe_background"
+                    android:backgroundTint="#4F1578" />
+
+
+            <TextView
+                    android:id="@+id/tvSortByDefault"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/by_default" />
+
+            <TextView
+                    android:id="@+id/tvSortByName"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/by_name" />
+
+            <TextView
+                    android:id="@+id/tvSortByDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/by_date" />
+
+            <TextView
+                    android:id="@+id/tvSortByBand"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/by_band" />
+
+            <TextView
+                    android:id="@+id/tvSortByAlbum"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/by_album" />
+        </LinearLayout>
     </LinearLayout>
 
 

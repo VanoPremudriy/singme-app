@@ -118,4 +118,10 @@
     <string name="my_playlists">Мои плейлисты</string>
     <string name="my_subscribes">Мои подписки</string>
     <string name="type_here_to_search">Нажмите здесь для поиска</string>
+    <string name="sort_by">Сортировать по</string>
+    <string name="by_default">По умолчанию</string>
+    <string name="by_name">По имени</string>
+    <string name="by_date">По дате</string>
+    <string name="by_band">По исполнителю</string>
+    <string name="by_album">По альбому</string>
 </resources>
