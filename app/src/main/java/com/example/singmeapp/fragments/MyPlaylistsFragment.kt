@@ -87,11 +87,11 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
     }
 
     fun setButtons(){
-        mainActivity.binding.tvAddPlaylist.setOnClickListener(this)
-        mainActivity.binding.tvSortByDefault.setOnClickListener(this)
-        mainActivity.binding.tvSortByDate.setOnClickListener(this)
-        mainActivity.binding.tvSortByName.setOnClickListener(this)
-        binding.tvSortByInPlaylists.setOnClickListener(this)
+        mainActivity.binding.tvAddPlaylist.setOnClickListener(this@MyPlaylistsFragment)
+        mainActivity.binding.tvSortByDefault.setOnClickListener(this@MyPlaylistsFragment)
+        mainActivity.binding.tvSortByDate.setOnClickListener(this@MyPlaylistsFragment)
+        mainActivity.binding.tvSortByName.setOnClickListener(this@MyPlaylistsFragment)
+        binding.tvSortByInPlaylists.setOnClickListener(this@MyPlaylistsFragment)
     }
 
 
@@ -163,7 +163,7 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
             }
 
             mainActivity.binding.tvSortByDefault.id -> {
-                playlistAdapter.sortByFefault()
+                playlistAdapter.sortByDefault()
                 doWhenSort()
             }
             mainActivity.binding.tvSortByDate.id -> {

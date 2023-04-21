@@ -32,6 +32,7 @@ import com.example.singmeapp.R
 import com.example.singmeapp.databinding.TrackItemBinding
 import com.example.singmeapp.fragments.*
 import com.example.singmeapp.items.Album
+import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.example.singmeapp.viewmodels.PlaylistViewModel
@@ -39,7 +40,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 
 
-class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragment): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
+class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragment): RecyclerView.Adapter<TrackAdapter.TrackHolder>(), SortInAdapter {
 
     public var trackList = ArrayList<Track>()
     var trackListDefaultCopy = ArrayList<Track>()
@@ -349,28 +350,37 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
         trackListDefaultCopy.addAll(tracks.reversed())
     }
 
-    fun sortByDefault(){
+    override fun sortByDefault(){
         if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
             closePlayer()
         }
         trackList.clear()
         trackList.addAll(trackListDefaultCopy)
     }
-    fun sortByName(){
+    override fun sortByName(){
         if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
             closePlayer()
         }
         trackList.sortBy { track: Track ->  track.name}
     }
 
-    fun sortByAlbum(){
+    override fun sortByAlbum(){
         if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
             closePlayer()
         }
         trackList.sortBy { track: Track ->  track.album}
 
     }
-    fun sortByBand(){
+
+    override fun sortBySearch(search: String) {
+        if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
+            closePlayer()
+        }
+        trackList.clear()
+        trackList.addAll(trackListDefaultCopy.filter { track: Track -> track.name.lowercase().contains(search.lowercase()) })
+    }
+
+    override fun sortByBand(){
         if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
             closePlayer()
         }
@@ -378,7 +388,7 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
 
     }
 
-    fun sortByDate(){
+    override fun sortByDate(){
         if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
             closePlayer()
         }

@@ -20,7 +20,7 @@ import com.example.singmeapp.viewmodels.PlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 
-class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdapter.PlaylistHolder>() {
+class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdapter.PlaylistHolder>(), SortInAdapter {
     var playlistList = ArrayList<Album>()
     var playlistListDefaultCopy = ArrayList<Album>()
 
@@ -120,19 +120,25 @@ class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdap
         playlistListDefaultCopy.addAll(albums)
     }
 
-    fun sortByName() = playlistList.sortBy { playlist: Album -> playlist.name }
-
-
-    fun sortByDate() = playlistList.sortBy { playlist: Album ->  playlist.date}
-
-    fun sortByFefault(){
+    override fun sortByDefault() {
         playlistList.clear()
         playlistList.addAll(playlistListDefaultCopy)
     }
 
-    fun sortByBand() = playlistList.sortBy { album: Album ->  album.band}
+    override fun sortByName() = playlistList.sortBy { playlist: Album -> playlist.name }
 
-    fun sortBySearch(search: String){
+
+    override fun sortByDate() = playlistList.sortBy { playlist: Album ->  playlist.date}
+
+
+    override fun sortByBand(){
+        TODO("Not yet implemented")
+    }
+    override fun sortByAlbum() {
+        TODO("Not yet implemented")
+    }
+
+    override fun sortBySearch(search: String){
         playlistList.clear()
         playlistList.addAll(playlistListDefaultCopy.filter { playlist: Album -> playlist.name.lowercase().contains(search.lowercase()) })
 

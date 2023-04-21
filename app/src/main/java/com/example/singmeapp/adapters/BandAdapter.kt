@@ -18,7 +18,7 @@ import com.example.singmeapp.viewmodels.AlbumViewModel
 import com.example.singmeapp.viewmodels.BandViewModel
 import com.squareup.picasso.Picasso
 
-class BandAdapter(val fragment: Fragment): RecyclerView.Adapter<BandAdapter.BandHolder>(){
+class BandAdapter(val fragment: Fragment): RecyclerView.Adapter<BandAdapter.BandHolder>(), SortInAdapter{
 
     var bandList = ArrayList<Band>()
     var bandListDefaultCopy = ArrayList<Band>()
@@ -72,15 +72,22 @@ class BandAdapter(val fragment: Fragment): RecyclerView.Adapter<BandAdapter.Band
         bandListDefaultCopy.addAll(bands)
     }
 
-    fun sortByDefault(){
+    override fun sortByDefault(){
         bandList.clear()
         bandList.addAll(bandListDefaultCopy)
     }
 
-    fun sortByName() = bandList.sortBy { band: Band ->  band.name}
-    fun sortByDate() =bandList.sortBy { band: Band ->  band.date}
+    override fun sortByName() = bandList.sortBy { band: Band ->  band.name}
+    override fun sortByDate() =bandList.sortBy { band: Band ->  band.date}
+    override fun sortByBand() {
+        TODO("Not yet implemented")
+    }
 
-    fun sortBySearch(search: String){
+    override fun sortByAlbum() {
+        TODO("Not yet implemented")
+    }
+
+    override fun sortBySearch(search: String){
         bandList.clear()
         bandList.addAll(bandListDefaultCopy.filter { band: Band -> band.name.lowercase().contains(search.lowercase()) })
     }

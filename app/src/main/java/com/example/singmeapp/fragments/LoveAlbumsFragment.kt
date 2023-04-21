@@ -110,7 +110,7 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener, MenuProvider {
             }
 
             mainActivity.binding.tvSortByDefault.id -> {
-                albumAdapter.sortByFefault()
+                albumAdapter.sortByDefault()
                 doWhenSort()
             }
             mainActivity.binding.tvSortByName.id -> {

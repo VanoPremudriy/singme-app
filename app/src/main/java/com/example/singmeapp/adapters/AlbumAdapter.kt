@@ -22,7 +22,7 @@ import com.example.singmeapp.viewmodels.AlbumViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
 
-class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.AlbumHolder>() {
+class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.AlbumHolder>(), SortInAdapter {
 
     var albumList = ArrayList<Album>()
     var albumListDefaultCopy = ArrayList<Album>()
@@ -147,19 +147,21 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
         albumListDefaultCopy.addAll(albums)
     }
 
-    fun sortByName() = albumList.sortBy { album: Album -> album.name }
-
-
-    fun sortByDate() = albumList.sortBy { album: Album ->  album.date}
-
-    fun sortByFefault(){
+    override fun sortByDefault() {
         albumList.clear()
         albumList.addAll(albumListDefaultCopy)
     }
 
-    fun sortByBand() = albumList.sortBy { album: Album ->  album.band}
+    override fun sortByName() = albumList.sortBy { album: Album -> album.name }
 
-    fun sortBySearch(search: String){
+    override fun sortByDate() = albumList.sortBy { album: Album ->  album.date}
+
+    override fun sortByBand() = albumList.sortBy { album: Album ->  album.band}
+    override fun sortByAlbum() {
+        TODO("Not yet implemented")
+    }
+
+    override fun sortBySearch(search: String){
         albumList.clear()
         albumList.addAll(albumListDefaultCopy.filter { album: Album -> album.name.lowercase().contains(search.lowercase()) })
 

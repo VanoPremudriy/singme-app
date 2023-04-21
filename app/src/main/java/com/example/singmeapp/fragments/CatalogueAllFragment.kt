@@ -1,30 +1,29 @@
 package com.example.singmeapp.fragments
 
 import android.os.Bundle
+import android.view.*
+import android.view.View.OnClickListener
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
-import com.example.singmeapp.adapters.AlbumAdapter
-import com.example.singmeapp.adapters.BandAdapter
-import com.example.singmeapp.adapters.PlaylistAdapter
-import com.example.singmeapp.adapters.TrackAdapter
+import com.example.singmeapp.adapters.*
 import com.example.singmeapp.databinding.FragmentCatalogueAllBinding
 import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.CatalogueAllViewModel
 import com.example.singmeapp.viewmodels.DiscographyAllViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class CatalogueAllFragment : Fragment() {
+class CatalogueAllFragment : Fragment(), MenuProvider, OnClickListener {
 
     lateinit var fragmentActivity: AppCompatActivity
     lateinit var binding: FragmentCatalogueAllBinding
@@ -34,12 +33,15 @@ class CatalogueAllFragment : Fragment() {
     lateinit var playlistAdapter: PlaylistAdapter
     lateinit var catalogueAllViewModel: CatalogueAllViewModel
     lateinit var whatIs: String
+    lateinit var optionsMenu: Menu
+    lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
+        mainActivity = activity as MainActivity
         fragmentActivity.supportActionBar?.show()
-        setHasOptionsMenu(true)
+
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val provider = ViewModelProvider(this)
@@ -58,11 +60,11 @@ class CatalogueAllFragment : Fragment() {
     ): View? {
         fragmentActivity.title = getString(R.string.catalogue)
         binding = FragmentCatalogueAllBinding.inflate(layoutInflater)
-
+        fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
         binding.rvCatalogueAll.layoutManager = LinearLayoutManager(context)
 
         observe()
-
+        setButtons()
 
         return binding.root
     }
@@ -150,8 +152,7 @@ class CatalogueAllFragment : Fragment() {
 
     fun observeTrack(){
         catalogueAllViewModel.listTrack.observe(viewLifecycleOwner) {
-            tracksAdapter.trackList.clear()
-            tracksAdapter.trackList.addAll(it as ArrayList<Track>) /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
+            tracksAdapter.initList(it) /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
             binding.rvCatalogueAll.adapter = tracksAdapter
         }
 
@@ -164,8 +165,7 @@ class CatalogueAllFragment : Fragment() {
 
     fun observeAlbum(){
         catalogueAllViewModel.listAlbum.observe(viewLifecycleOwner) {
-            albumsAdapter.albumList.clear()
-            albumsAdapter.albumList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+            albumsAdapter.initList(it) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
             binding.rvCatalogueAll.adapter = albumsAdapter
         }
 
@@ -179,8 +179,7 @@ class CatalogueAllFragment : Fragment() {
     fun observeBand(){
         binding.rvCatalogueAll.layoutManager = GridLayoutManager(context, 3)
         catalogueAllViewModel.listBand.observe(viewLifecycleOwner){
-            bandAdapter.bandList.clear()
-            bandAdapter.bandList.addAll(it as ArrayList<Band>)
+            bandAdapter.initList(it)
             binding.rvCatalogueAll.adapter = bandAdapter
         }
 
@@ -193,8 +192,7 @@ class CatalogueAllFragment : Fragment() {
 
     fun observePlaylist(){
         catalogueAllViewModel.listPlaylist.observe(viewLifecycleOwner) {
-            playlistAdapter.playlistList.clear()
-            playlistAdapter.playlistList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+            playlistAdapter.initList(it) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
             binding.rvCatalogueAll.adapter = playlistAdapter
         }
 
@@ -205,24 +203,155 @@ class CatalogueAllFragment : Fragment() {
         }
     }
 
+    fun doWhenSort(){
+        initAdapter(returnAdapter())
+        mainActivity.binding.view15.visibility = View.GONE
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    fun setButtons(){
+        mainActivity.binding.tvAddPlaylist.setOnClickListener(this@CatalogueAllFragment)
+        mainActivity.binding.tvSortByDefault.setOnClickListener(this@CatalogueAllFragment)
+        mainActivity.binding.tvSortByDate.setOnClickListener(this@CatalogueAllFragment)
+        mainActivity.binding.tvSortByName.setOnClickListener(this@CatalogueAllFragment)
+        mainActivity.binding.tvSortByBand.setOnClickListener(this@CatalogueAllFragment)
+        mainActivity.binding.tvSortByAlbum.setOnClickListener(this@CatalogueAllFragment)
+        binding.tvSortByInCatalogueAll.setOnClickListener(this@CatalogueAllFragment)
+    }
+
     companion object {
 
         @JvmStatic
         fun newInstance() = CatalogueAllFragment()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home){
-            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-            if (count == 0) {
-                activity?.onBackPressed()
-            } else {
-                findNavController().popBackStack()
-            }
-        }
-
-        return true
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        optionsMenu = menu
     }
 
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId){
+            android.R.id.home -> {
+                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+                if (count == 0) {
+                    activity?.onBackPressed()
+                } else {
+                    findNavController().popBackStack()
+                }
 
+                return true
+            }
+
+            R.id.action_search_user -> {
+                val searchView = menuItem.actionView as SearchView
+                searchView.queryHint = getString(R.string.type_here_to_search)
+
+
+                searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        sortBySearch(returnAdapter(), newText ?: "")
+                        ///albumAdapter.sortBySearch(newText ?: "")
+                        initAdapter(returnAdapter())
+                        return true
+                    }
+
+                })
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        optionsMenu.clear()
+        optionsMenu.close()
+    }
+
+    override fun onClick(p0: View?) {
+        when (p0?.id){
+            binding.tvSortByInCatalogueAll.id -> {
+                if (whatIs.contains("Tracks")){
+                    mainActivity.binding.tvSortByBand.visibility = View.VISIBLE
+                    mainActivity.binding.tvSortByAlbum.visibility = View.VISIBLE
+                } else if (whatIs.contains("Albums")){
+                    mainActivity.binding.tvSortByBand.visibility = View.VISIBLE
+                    mainActivity.binding.tvSortByAlbum.visibility = View.GONE
+                } else if (whatIs.contains("Bands")){
+                    mainActivity.binding.tvSortByBand.visibility = View.GONE
+                    mainActivity.binding.tvSortByAlbum.visibility = View.GONE
+                } else if (whatIs.contains("Playlists")){
+                    mainActivity.binding.tvSortByBand.visibility = View.GONE
+                    mainActivity.binding.tvSortByAlbum.visibility = View.GONE
+                }
+
+                mainActivity.binding.sortMenu.visibility = View.VISIBLE
+                mainActivity.binding.view15.visibility = View.VISIBLE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+            mainActivity.binding.tvSortByDefault.id -> {
+                sortByDefault(returnAdapter())
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByDate.id -> {
+                sortByDate(returnAdapter())
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByName.id -> {
+                sortByName(returnAdapter())
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByBand.id -> {
+                sortByBand(returnAdapter())
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByAlbum.id -> {
+                sortByAlbum(returnAdapter())
+                doWhenSort()
+            }
+
+        }
+    }
+
+    fun sortByDefault(adapter: SortInAdapter) = adapter.sortByDefault()
+
+    fun sortByName(adapter: SortInAdapter) =adapter.sortByName()
+
+    fun sortByDate(adapter: SortInAdapter) =  adapter.sortByDate()
+
+    fun sortByAlbum(adapter: SortInAdapter) = adapter.sortByAlbum()
+
+    fun sortByBand(adapter: SortInAdapter) = adapter.sortByBand()
+
+    fun sortBySearch(adapter: SortInAdapter, search: String) = adapter.sortBySearch(search)
+
+    fun returnAdapter(): SortInAdapter{
+        if (whatIs.contains("Tracks")){
+            return tracksAdapter
+        } else if (whatIs.contains("Albums")){
+           return albumsAdapter
+        } else if (whatIs.contains("Bands")){
+           return  bandAdapter
+        } else if (whatIs.contains("Playlists")){
+            return playlistAdapter
+        }
+        return tracksAdapter
+    }
+
+    fun initAdapter(sortInAdapter: SortInAdapter){
+        if (whatIs.contains("Tracks")){
+            binding.rvCatalogueAll.adapter = tracksAdapter
+        } else if (whatIs.contains("Albums")){
+            binding.rvCatalogueAll.adapter = albumsAdapter
+        } else if (whatIs.contains("Bands")){
+            binding.rvCatalogueAll.adapter = bandAdapter
+        } else if (whatIs.contains("Playlists")){
+            binding.rvCatalogueAll.adapter = playlistAdapter
+        }
+    }
 }
