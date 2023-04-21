@@ -31,6 +31,7 @@ import com.example.singmeapp.OnClearFromRecentService
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.TrackItemBinding
 import com.example.singmeapp.fragments.*
+import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Track
 import com.example.singmeapp.viewmodels.PlayerPlaylistViewModel
 import com.example.singmeapp.viewmodels.PlaylistViewModel
@@ -41,6 +42,7 @@ import com.squareup.picasso.Picasso
 class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragment): RecyclerView.Adapter<TrackAdapter.TrackHolder>() {
 
     public var trackList = ArrayList<Track>()
+    var trackListDefaultCopy = ArrayList<Track>()
     lateinit var playerPlaylistViewModel: PlayerPlaylistViewModel
     lateinit var curTrack: Track
     val mainActivity = fragmentActivity as MainActivity
@@ -325,8 +327,6 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
     fun deleteFromPlaylist(position: Int){
         mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
         playlistViewModel.deleteTrack(trackList[position].uuid)
-        //val uuid = (fragment as PlaylistFragment).playlistUuid
-        //(fragment as PlaylistFragment).playlistViewModel.getTracks(uuid)
     }
 
 
@@ -342,6 +342,49 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
 
     }
 
+    fun initList(tracks: List<Track>){
+        trackList.clear()
+        trackList.addAll(tracks.reversed())
+        trackListDefaultCopy.clear()
+        trackListDefaultCopy.addAll(tracks.reversed())
+    }
+
+    fun sortByDefault(){
+        if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
+            closePlayer()
+        }
+        trackList.clear()
+        trackList.addAll(trackListDefaultCopy)
+    }
+    fun sortByName(){
+        if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
+            closePlayer()
+        }
+        trackList.sortBy { track: Track ->  track.name}
+    }
+
+    fun sortByAlbum(){
+        if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
+            closePlayer()
+        }
+        trackList.sortBy { track: Track ->  track.album}
+
+    }
+    fun sortByBand(){
+        if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
+            closePlayer()
+        }
+        trackList.sortBy { track: Track ->  track.band}
+
+    }
+
+    fun sortByDate(){
+        if (playerPlaylistViewModel.trackList.value?.equals(trackList) == true) {
+            closePlayer()
+        }
+        trackList.sortBy { track: Track ->  track.date}
+
+    }
 
 
     override fun getItemCount(): Int {

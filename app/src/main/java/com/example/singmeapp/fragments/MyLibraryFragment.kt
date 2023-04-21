@@ -51,9 +51,12 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
     lateinit var searchAllBandAdapter: BandAdapter
     lateinit var optionsMenu: Menu
 
+    lateinit var mainActivity: MainActivity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
+        mainActivity = activity as MainActivity
         setHasOptionsMenu(true)
 
         val provider = ViewModelProvider(this)
@@ -120,11 +123,7 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
 
 
         myLibraryViewModel.listTrack.observe(viewLifecycleOwner){
-            val tracks = ArrayList<Track>(it.values)
-            //tracks.sortBy { track -> track.date }
-            tracks.reverse()
-            trackAdapter.trackList.clear()
-            trackAdapter.trackList.addAll(tracks)
+            trackAdapter.initList(ArrayList(it.values))
             binding.rcView.adapter = trackAdapter
         }
 
@@ -244,6 +243,12 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
         fun newInstance() = MyLibraryFragment()
     }
 
+    fun doWhenSort(){
+        binding.rcView.adapter = trackAdapter
+        mainActivity.binding.view15.visibility = View.GONE
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     override fun onClick(p: View?) {
         when(p?.id) {
             binding.idBands.id -> {
@@ -259,6 +264,33 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
                 bundle.putInt("Back", R.id.myLibraryFragment)
                 findNavController().navigate(R.id.loveAlbumsFragment, bundle)
             }
+            binding.tvSortByInLibrary.id -> {
+                mainActivity.binding.sortMenu.visibility = View.VISIBLE
+                mainActivity.binding.tvSortByAlbum.visibility = View.VISIBLE
+                mainActivity.binding.tvSortByBand.visibility = View.VISIBLE
+                mainActivity.binding.view15.visibility = View.VISIBLE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+            mainActivity.binding.tvSortByDefault.id -> {
+                trackAdapter.sortByDefault()
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByName.id -> {
+                trackAdapter.sortByName()
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByBand.id -> {
+                trackAdapter.sortByBand()
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByAlbum.id -> {
+                trackAdapter.sortByAlbum()
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByDate.id ->{
+                trackAdapter.sortByDate()
+                doWhenSort()
+            }
         }
     }
 
@@ -267,6 +299,14 @@ class MyLibraryFragment : Fragment(), View.OnClickListener, MenuProvider {
             idBands.setOnClickListener(this@MyLibraryFragment)
             idPlaylists.setOnClickListener(this@MyLibraryFragment)
             idAlbums.setOnClickListener(this@MyLibraryFragment)
+            tvSortByInLibrary.setOnClickListener(this@MyLibraryFragment)
+        }
+        mainActivity.binding.apply {
+            tvSortByAlbum.setOnClickListener(this@MyLibraryFragment)
+            tvSortByBand.setOnClickListener(this@MyLibraryFragment)
+            tvSortByDate.setOnClickListener(this@MyLibraryFragment)
+            tvSortByName.setOnClickListener(this@MyLibraryFragment)
+            tvSortByDefault.setOnClickListener(this@MyLibraryFragment)
         }
     }
 

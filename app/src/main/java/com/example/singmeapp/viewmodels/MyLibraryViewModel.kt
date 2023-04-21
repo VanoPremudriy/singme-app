@@ -84,6 +84,13 @@ class MyLibraryViewModel: ViewModel() {
                             Log.e("sv", extension)
                             var isTrackInLove = false
 
+                        val date = snapshot.child("/tracks/${it.value}/created_at").value.toString()
+                        var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            LocalDateTime.parse(date)
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
+                        }
+
                             snapshot.child("users/${auth.currentUser?.uid}/library/love_tracks").children.forEach(
                                 Consumer { it1 ->
                                     if (it1.value.toString() == it1.value.toString()) isTrackInLove = true
@@ -107,7 +114,8 @@ class MyLibraryViewModel: ViewModel() {
                                 album,
                                 "",
                                 "",
-                                isTrackInLove
+                                isTrackInLove,
+                                date = localDateTime
                             )
                             Log.e("Is In Love", isTrackInLove.toString())
 
