@@ -22,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
 import java.util.function.Consumer
 
 class LoveBandsViewModel: ViewModel() {
@@ -56,6 +57,13 @@ class LoveBandsViewModel: ViewModel() {
                         var info = snapshot.child("/bands/${t.value}").child("info").value.toString()
                         var backExtension = snapshot.child("/bands/${t.value}").child("background").value.toString()
 
+                        val date = snapshot.child("/bands/${t.value}/created_at").value.toString()
+                        var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            LocalDateTime.parse(date)
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
+                        }
+
                         fbBandImageUrl = "/storage/bands/${bandName}/profile/avatar.${extension}"
                         fbBandBackUrl = "/storage/bands/${bandName}/profile/back.${backExtension}"
 
@@ -67,7 +75,8 @@ class LoveBandsViewModel: ViewModel() {
                             bandName,
                             info,
                         "",
-                            ""
+                            "",
+                            date = localDateTime
                         )
 
                         arrayListBand.add(band)

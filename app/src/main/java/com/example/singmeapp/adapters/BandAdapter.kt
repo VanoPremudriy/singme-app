@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.BandItemBinding
 import com.example.singmeapp.fragments.MyLibraryFragment
+import com.example.singmeapp.items.Album
 import com.example.singmeapp.items.Band
 import com.example.singmeapp.viewmodels.AlbumViewModel
 import com.example.singmeapp.viewmodels.BandViewModel
@@ -20,6 +21,7 @@ import com.squareup.picasso.Picasso
 class BandAdapter(val fragment: Fragment): RecyclerView.Adapter<BandAdapter.BandHolder>(){
 
     var bandList = ArrayList<Band>()
+    var bandListDefaultCopy = ArrayList<Band>()
 
 
     class BandHolder(item: View, val fragment: Fragment): RecyclerView.ViewHolder(item){
@@ -31,6 +33,7 @@ class BandAdapter(val fragment: Fragment): RecyclerView.Adapter<BandAdapter.Band
             if (band.imageUrl != ""){
                 Picasso.get().load(band.imageUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivItemBandAvatar)
             }
+
             tvItemBandName.text = band.name
 
             val provider = ViewModelProvider(fragment)
@@ -61,4 +64,25 @@ class BandAdapter(val fragment: Fragment): RecyclerView.Adapter<BandAdapter.Band
     override fun getItemCount(): Int {
         return bandList.size
     }
+
+    fun initList(bands: List<Band>) {
+        bandList.clear()
+        bandListDefaultCopy.clear()
+        bandList.addAll(bands)
+        bandListDefaultCopy.addAll(bands)
+    }
+
+    fun sortByDefault(){
+        bandList.clear()
+        bandList.addAll(bandListDefaultCopy)
+    }
+
+    fun sortByName() = bandList.sortBy { band: Band ->  band.name}
+    fun sortByDate() =bandList.sortBy { band: Band ->  band.date}
+
+    fun sortBySearch(search: String){
+        bandList.clear()
+        bandList.addAll(bandListDefaultCopy.filter { band: Band -> band.name.lowercase().contains(search.lowercase()) })
+    }
+
 }

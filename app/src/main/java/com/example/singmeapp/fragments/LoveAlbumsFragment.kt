@@ -93,38 +93,37 @@ class LoveAlbumsFragment : Fragment(), View.OnClickListener, MenuProvider {
         mainActivity.binding.tvSortByBand.setOnClickListener(this)
     }
 
+    fun doWhenSort(){
+        binding.rcView.adapter = albumAdapter
+        mainActivity.binding.view15.visibility = View.GONE
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     override fun onClick(p0: View?) {
         when(p0?.id){
             binding.tvSortByInLoveAlbums.id -> {
                 mainActivity.binding.sortMenu.visibility = View.VISIBLE
                 mainActivity.binding.tvSortByAlbum.visibility = View.GONE
+                mainActivity.binding.tvSortByBand.visibility = View.VISIBLE
                 mainActivity.binding.view15.visibility = View.VISIBLE
                 mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
             }
 
             mainActivity.binding.tvSortByDefault.id -> {
                 albumAdapter.sortByFefault()
-                binding.rcView.adapter = albumAdapter
-                mainActivity.binding.view15.visibility = View.GONE
-                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                doWhenSort()
             }
             mainActivity.binding.tvSortByName.id -> {
                 albumAdapter.sortByName()
-                binding.rcView.adapter = albumAdapter
-                mainActivity.binding.view15.visibility = View.GONE
-                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                doWhenSort()
             }
             mainActivity.binding.tvSortByDate.id -> {
                 albumAdapter.sortByDate()
-                binding.rcView.adapter = albumAdapter
-                mainActivity.binding.view15.visibility = View.GONE
-                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                doWhenSort()
             }
             mainActivity.binding.tvSortByBand.id -> {
                 albumAdapter.sortByBand()
-                binding.rcView.adapter = albumAdapter
-                mainActivity.binding.view15.visibility = View.GONE
-                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                doWhenSort()
             }
         }
     }

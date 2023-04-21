@@ -22,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
 import java.util.function.Consumer
 
 class LoveAlbumsViewModel: ViewModel() {
@@ -67,6 +68,13 @@ class LoveAlbumsViewModel: ViewModel() {
                         val extension = snapshot.child("/albums/${t.value}").child("cover").value.toString()
 
 
+                        val date = snapshot.child("/albums/${t.value}/created_at").value.toString()
+                        var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            LocalDateTime.parse(date)
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
+                        }
+
                         fbAlbumImageUrl = "/storage/bands/${bandName}/albums/${albumName}/cover.${extension}"
                         fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
 
@@ -77,6 +85,8 @@ class LoveAlbumsViewModel: ViewModel() {
 
                         val isAuthor = snapshot.child("bands_has_users/${band}/${auth.currentUser?.uid}").value != null
 
+
+
                         val album = Album(
                             t.value.toString(),
                             albumName,
@@ -85,6 +95,7 @@ class LoveAlbumsViewModel: ViewModel() {
                             isInLove,
                             isAuthor,
                             "",
+                            date = localDateTime
                         )
 
                         arrayListAlbum.add(album)

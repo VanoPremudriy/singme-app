@@ -1,5 +1,6 @@
 package com.example.singmeapp.adapters
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -33,6 +34,7 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
         val fragmentActivity = fragment.activity as AppCompatActivity
         lateinit var curAlbum: Album
 
+        @SuppressLint("SuspiciousIndentation")
         fun bind(album: Album) = with(binding){
             curAlbum = album
             tvItemAlbumName.text = album.name
@@ -148,7 +150,7 @@ class AlbumAdapter(val fragment: Fragment): RecyclerView.Adapter<AlbumAdapter.Al
     fun sortByName() = albumList.sortBy { album: Album -> album.name }
 
 
-    fun sortByDate() = albumList.sortBy { album: Album ->  album.year}
+    fun sortByDate() = albumList.sortBy { album: Album ->  album.date}
 
     fun sortByFefault(){
         albumList.clear()
