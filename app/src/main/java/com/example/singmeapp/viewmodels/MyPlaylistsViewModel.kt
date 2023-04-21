@@ -101,47 +101,51 @@ class MyPlaylistsViewModel: ViewModel() {
                     arrayListPlaylists.clear()
                     listPlaylists.value = arrayListPlaylists
                     snapshot.child("/users/${userUuid?: auth.currentUser?.uid}/library/playlists").children.forEach { t ->
-                            val authorUuid = snapshot.child("/albums/${t.value}").child("band").value.toString()
-                            val authorName = snapshot.child("/users/${authorUuid}/profile/name").value.toString()
-                            val playlistsName = snapshot.child("/albums/${t.value}").child("name").value.toString()
-                            val year = snapshot.child("/albums/${t.value}").child("year").value.toString()
-                            val extension = snapshot.child("/albums/${t.value}").child("cover").value.toString()
+                        val authorUuid = snapshot.child("/albums/${t.value}").child("band").value.toString()
+                        val authorName = snapshot.child("/users/${authorUuid}/profile/name").value.toString()
+                        val playlistsName = snapshot.child("/albums/${t.value}").child("name").value.toString()
+                        val year = snapshot.child("/albums/${t.value}").child("year").value.toString()
+                        val extension = snapshot.child("/albums/${t.value}").child("cover").value.toString()
 
-                            if (authorUuid != null
-                                && authorName != null
-                                && playlistsName!= null
-                                && year != null
-                                && authorUuid != "null"
-                                && authorName != "null"
-                                && playlistsName!= "null"
-                                && year != "null") {
-
-
-                                if (extension != "null")
-                                fbAlbumImageUrl =
-                                    "/storage/users/${userUuid ?: auth.currentUser?.uid}/playlists/${playlistsName}/cover.${extension}"
-                                else fbAlbumImageUrl = "/storage/default_images/cover.png"
-                                fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
-
-                                var isInLove = false
-                                snapshot.child("users/${auth.currentUser?.uid}/library/playlists").children.forEach { it1 ->
-                                    if (it1.value.toString() == t.value.toString()) isInLove = true
-                                }
-
-                                val isAuthor = authorUuid == auth.currentUser?.uid.toString()
-                                val album = Album(
-                                    t.value.toString(),
-                                    playlistsName,
-                                    authorName,
-                                    year.toInt(),
-                                    isInLove,
-                                    isAuthor,
-                                    "",
-                                )
-
-                                arrayListPlaylists.add(album)
-                            }
+                        val date = snapshot.child("/albums/${t.value}/created_at").value.toString()
+                        var localDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            LocalDateTime.parse(date)
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
                         }
+
+                        if (authorUuid != "null"
+                            && authorName != "null"
+                            && playlistsName!= "null"
+                            && year != "null") {
+
+
+                            if (extension != "null")
+                            fbAlbumImageUrl =
+                                "/storage/users/${userUuid ?: auth.currentUser?.uid}/playlists/${playlistsName}/cover.${extension}"
+                            else fbAlbumImageUrl = "/storage/default_images/cover.png"
+                            fbAlbumImageUrls.put(t.value.toString(), fbAlbumImageUrl)
+
+                            var isInLove = false
+                            snapshot.child("users/${auth.currentUser?.uid}/library/playlists").children.forEach { it1 ->
+                                if (it1.value.toString() == t.value.toString()) isInLove = true
+                            }
+
+                            val isAuthor = authorUuid == auth.currentUser?.uid.toString()
+                            val album = Album(
+                                t.value.toString(),
+                                playlistsName,
+                                authorName,
+                                year.toInt(),
+                                isInLove,
+                                isAuthor,
+                                "",
+                                date = localDateTime
+                            )
+
+                            arrayListPlaylists.add(album)
+                        }
+                    }
 
                     if (arrayListPlaylists.size != 0) {
                         listPlaylists.value = arrayListPlaylists

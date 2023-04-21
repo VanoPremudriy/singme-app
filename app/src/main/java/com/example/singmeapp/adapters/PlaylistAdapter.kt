@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso
 
 class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdapter.PlaylistHolder>() {
     var playlistList = ArrayList<Album>()
+    var playlistListDefaultCopy = ArrayList<Album>()
 
     class PlaylistHolder(item: View, val fragment: Fragment): RecyclerView.ViewHolder(item), View.OnClickListener{
         val binding = AlbumItemBinding.bind(item)
@@ -38,10 +39,7 @@ class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdap
             if (playlist.isAuthor){
                 binding.tvItemAlbumBandName.text = fragment.getString(R.string.my_music)
             } else binding.tvItemAlbumBandName.text = playlist.band
-            /*binding.tvItemAlbumBandName.text = {
-                if (playlist.isAuthor) fragment.getString(R.string.my_music)
-                else playlist.band
-            }.toString()*/
+
             binding.tvItemYear.text = playlist.year.toString()
             if (playlist.imageUrl != "")
                 Picasso.get().load(playlist.imageUrl).fit().into(binding.ivItemAlbumCover)
@@ -52,7 +50,7 @@ class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdap
                     bundle.putString("playlistUuid", playlist.uuid)
                     NavHostFragment.findNavController(fragment).navigate(R.id.playlistFragment, bundle)
 
-                //else Toast.makeText(fragment.context, "Загрузка", Toast.LENGTH_SHORT).show()
+
             }
 
             binding.ibItemAlbumMenu.setOnClickListener {
@@ -115,4 +113,28 @@ class PlaylistAdapter(val fragment: Fragment): RecyclerView.Adapter<PlaylistAdap
      return playlistList.size
     }
 
+    fun initList(albums: List<Album>){
+        playlistList.clear()
+        playlistList.addAll(albums)
+        playlistListDefaultCopy.clear()
+        playlistListDefaultCopy.addAll(albums)
+    }
+
+    fun sortByName() = playlistList.sortBy { playlist: Album -> playlist.name }
+
+
+    fun sortByDate() = playlistList.sortBy { playlist: Album ->  playlist.date}
+
+    fun sortByFefault(){
+        playlistList.clear()
+        playlistList.addAll(playlistListDefaultCopy)
+    }
+
+    fun sortByBand() = playlistList.sortBy { album: Album ->  album.band}
+
+    fun sortBySearch(search: String){
+        playlistList.clear()
+        playlistList.addAll(playlistListDefaultCopy.filter { playlist: Album -> playlist.name.lowercase().contains(search.lowercase()) })
+
+    }
 }

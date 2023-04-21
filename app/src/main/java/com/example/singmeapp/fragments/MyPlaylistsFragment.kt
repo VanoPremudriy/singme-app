@@ -5,8 +5,8 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
 
-    lateinit var bingind: FragmentMyPlaylistsBinding
+    lateinit var binding: FragmentMyPlaylistsBinding
     lateinit var fragmentActivity: AppCompatActivity
     lateinit var playlistAdapter: PlaylistAdapter
 
@@ -38,7 +38,6 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
         myPlaylistsViewModel = provider[MyPlaylistsViewModel::class.java]
         playlistViewModel = playlistProvider[PlaylistViewModel::class.java]
         playlistAdapter = PlaylistAdapter(this)
-        setHasOptionsMenu(true)
         mainActivity = activity as MainActivity
         fragmentActivity = activity as AppCompatActivity
         myPlaylistsViewModel.getPlaylists()
@@ -51,32 +50,51 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
     ): View? {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.addMenuProvider(this, viewLifecycleOwner)
-        bingind = FragmentMyPlaylistsBinding.inflate(layoutInflater)
+        binding = FragmentMyPlaylistsBinding.inflate(layoutInflater)
         fragmentActivity.title = getString(R.string.playlists)
-        bingind.rcPlaylists.layoutManager = LinearLayoutManager(context)
+        binding.rcPlaylists.layoutManager = LinearLayoutManager(context)
 
+        observes()
+
+        setButtons()
+
+        return binding.root
+    }
+
+    fun observes() {
         myPlaylistsViewModel.listPlaylists.observe(viewLifecycleOwner){
-            playlistAdapter.playlistList.clear()
-            playlistAdapter.playlistList.addAll(it as ArrayList<Album>) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
-            bingind.rcPlaylists.adapter = playlistAdapter
+            playlistAdapter.initList(it) /* = java.util.ArrayList<com.example.singmeapp.items.Album> */
+            binding.rcPlaylists.adapter = playlistAdapter
         }
 
         playlistViewModel.isUserPlaylistsChanged.observe(viewLifecycleOwner){
             myPlaylistsViewModel.isAlready.value?.put("image", false)
-            bingind.myPlaylistsProgressLayout.visibility = View.VISIBLE
+            binding.myPlaylistsProgressLayout.visibility = View.VISIBLE
             myPlaylistsViewModel.getPlaylists()
         }
 
         myPlaylistsViewModel.isAlready.observe(viewLifecycleOwner){
             if (it["image"] == true){
-                bingind.myPlaylistsProgressLayout.visibility = View.GONE
+                binding.myPlaylistsProgressLayout.visibility = View.GONE
             }
         }
-
-        mainActivity.binding.tvAddPlaylist.setOnClickListener(this)
-
-        return bingind.root
     }
+
+    fun doWhenSort(){
+        binding.rcPlaylists.adapter = playlistAdapter
+        mainActivity.binding.view15.visibility = View.GONE
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    fun setButtons(){
+        mainActivity.binding.tvAddPlaylist.setOnClickListener(this)
+        mainActivity.binding.tvSortByDefault.setOnClickListener(this)
+        mainActivity.binding.tvSortByDate.setOnClickListener(this)
+        mainActivity.binding.tvSortByName.setOnClickListener(this)
+        binding.tvSortByInPlaylists.setOnClickListener(this)
+    }
+
+
 
     companion object {
         @JvmStatic
@@ -89,29 +107,48 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        TODO("Not yet implemented")
+       when(menuItem.itemId){
+           android.R.id.home -> {
+               val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+               if (count == 0) {
+                   activity?.onBackPressed()
+
+               } else {
+                   findNavController().popBackStack()
+               }
+               return true
+           }
+
+           R.id.menu_add_playlist -> {
+               mainActivity.binding.AddPlaylistMenu.visibility = View.VISIBLE
+               mainActivity.binding.view15.visibility = View.VISIBLE
+               mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+               mainActivity.binding.etPlaylistName.text.clear()
+           }
+
+           R.id.menu_search_in_playlist -> {
+               val searchView = menuItem.actionView as SearchView
+               searchView.queryHint = getString(R.string.type_here_to_search)
+
+
+               searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                   override fun onQueryTextSubmit(query: String?): Boolean {
+                       return false
+                   }
+
+                   override fun onQueryTextChange(newText: String?): Boolean {
+                       playlistAdapter.sortBySearch(newText ?: "")
+                       binding.rcPlaylists.adapter = playlistAdapter
+                       return true
+                   }
+
+               })
+           }
+       }
+
+        return false
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-            if (count == 0) {
-                activity?.onBackPressed()
-
-            } else {
-                findNavController().popBackStack()
-            }
-        }
-
-        if (item.itemId == R.id.menu_add_playlist){
-            mainActivity.binding.AddPlaylistMenu.visibility = View.VISIBLE
-            mainActivity.binding.view15.visibility = View.VISIBLE
-            mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
-            mainActivity.binding.etPlaylistName.text.clear()
-
-        }
-        return true
-    }
 
     override fun onClick(p0: View?) {
         when (p0?.id){
@@ -124,8 +161,33 @@ class MyPlaylistsFragment : Fragment(), MenuProvider, View.OnClickListener {
                 }
 
             }
+
+            mainActivity.binding.tvSortByDefault.id -> {
+                playlistAdapter.sortByFefault()
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByDate.id -> {
+                playlistAdapter.sortByDate()
+                doWhenSort()
+            }
+            mainActivity.binding.tvSortByName.id -> {
+                playlistAdapter.sortByName()
+                doWhenSort()
+            }
+            binding.tvSortByInPlaylists.id -> {
+                mainActivity.binding.sortMenu.visibility = View.VISIBLE
+                mainActivity.binding.tvSortByAlbum.visibility = View.GONE
+                mainActivity.binding.tvSortByBand.visibility = View.GONE
+                mainActivity.binding.view15.visibility = View.VISIBLE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+            }
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        optionsMenu.clear()
+        optionsMenu.close()
+    }
 
 }

@@ -2,9 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+            android:id="@+id/menu_search_in_playlist"
+            android:icon="@android:drawable/ic_menu_search"
+            android:orderInCategory="1"
+            app:showAsAction="ifRoom|collapseActionView"
+            android:title="search"
+            app:actionViewClass="androidx.appcompat.widget.SearchView" />
+    <item
         android:id="@+id/menu_add_playlist"
         android:icon="@android:drawable/ic_input_add"
         android:orderInCategory="1"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom|collapseActionView"
         android:title="Add playlist" />
 </menu>
