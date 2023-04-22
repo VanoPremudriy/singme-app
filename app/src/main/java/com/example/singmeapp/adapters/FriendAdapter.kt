@@ -14,6 +14,7 @@ import com.example.singmeapp.MainActivity
 import com.example.singmeapp.R
 import com.example.singmeapp.databinding.FriendItemBinding
 import com.example.singmeapp.fragments.FriendsFragment
+import com.example.singmeapp.items.Band
 import com.example.singmeapp.items.ChatUser
 import com.example.singmeapp.items.User
 import com.example.singmeapp.viewmodels.FriendsViewModel
@@ -23,6 +24,7 @@ import com.squareup.picasso.Picasso
 class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.FriendHolder>() {
 
     var friendList = ArrayList<User>()
+    var friendListDefaultCopy = ArrayList<User>()
 
     class FriendHolder(item: View, val fragment: Fragment): RecyclerView.ViewHolder(item), View.OnClickListener{
         val binding = FriendItemBinding.bind(item)
@@ -37,7 +39,7 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
             curFriend = friend
             tvFriendItemName.text = friend.name
             tvFriendItemAge.text = friend.age.toString()
-            tvFriendItemSex.text = friend.sex
+            tvFriendItemSex.text = if (friend.sex == "male") fragment.getString(R.string.male) else fragment.getString(R.string.female)
             if (friend.avatarUrl != ""){
                 Picasso.get().load(friend.avatarUrl).centerCrop().noFade().noPlaceholder().fit().into(binding.ivFriendItemAvatar)
             }
@@ -184,12 +186,8 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
                     bundle.putSerializable("chatUser", chatUser)
                     friendsFragment.findNavController().navigate(R.id.chatFragment, bundle)
                 }
-
-
             }
         }
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendHolder {
@@ -206,4 +204,40 @@ class FriendAdapter(val fragment: Fragment): RecyclerView.Adapter<FriendAdapter.
     override fun getItemCount(): Int {
         return friendList.size
     }
+
+    fun initList(users: List<User>){
+        friendList.clear()
+        friendListDefaultCopy.clear()
+        friendList.addAll(users)
+        friendListDefaultCopy.addAll(users)
+    }
+
+    fun sortByDefault(){
+        friendList.clear()
+        friendList.addAll(friendListDefaultCopy)
+    }
+
+    fun sortByName(){
+        friendList.sortBy{
+            user: User -> user.name
+        }
+    }
+
+    fun sortByAge(){
+        friendList.sortBy {
+            user: User -> user.age
+        }
+    }
+
+    fun sortBySex(){
+        friendList.sortBy {
+            user: User -> user.sex
+        }
+    }
+
+    fun sortBySearch(search: String){
+        friendList.clear()
+        friendList.addAll(friendListDefaultCopy.filter { friend: User -> friend.name.lowercase().contains(search.lowercase()) })
+    }
+
 }

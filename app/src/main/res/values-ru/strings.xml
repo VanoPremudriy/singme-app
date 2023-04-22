@@ -124,4 +124,6 @@
     <string name="by_date">По дате</string>
     <string name="by_band">По исполнителю</string>
     <string name="by_album">По альбому</string>
+    <string name="by_age">По возрасту</string>
+    <string name="by_sex">По полу</string>
 </resources>

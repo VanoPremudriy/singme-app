@@ -133,6 +133,8 @@
     <string name="by_date">By date</string>
     <string name="by_band">By band</string>
     <string name="by_album">By album</string>
+    <string name="by_age">By age</string>
+    <string name="by_sex">By sex</string>
 
 
 </resources>

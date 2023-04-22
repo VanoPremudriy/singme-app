@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
+import android.view.View.OnClickListener
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -20,7 +21,7 @@ import com.example.singmeapp.viewmodels.FriendsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class FriendsFragment : Fragment(), MenuProvider {
+class FriendsFragment : Fragment(), MenuProvider, OnClickListener {
 
     lateinit var binding: FragmentFriendsBinding
     lateinit var fragmentActivity: AppCompatActivity
@@ -30,13 +31,13 @@ class FriendsFragment : Fragment(), MenuProvider {
     lateinit var myRequestAdapter: FriendAdapter
     lateinit var optionsMenu: Menu
     lateinit var userAdapter: FriendAdapter
-    var arrayListUsers = ArrayList<User>()
+    lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragmentActivity = activity as AppCompatActivity
+        mainActivity = activity as MainActivity
         fragmentActivity.supportActionBar?.show()
-        setHasOptionsMenu(true)
         val provider = ViewModelProvider(this)
         friendsViewModel = provider[FriendsViewModel::class.java]
         if (arguments?.getSerializable("curUser") != null)
@@ -70,32 +71,37 @@ class FriendsFragment : Fragment(), MenuProvider {
         binding.rcMyFriendRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rcAllUsers.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
+
+        observse()
+        setButtons()
+
+
+
+        // Inflate the layout for this fragment
+        return binding.root
+    }
+
+    fun observse(){
         friendsViewModel.listFriends.observe(viewLifecycleOwner){
-            friendAdapter.friendList.clear()
-            friendAdapter.friendList.addAll(it as ArrayList<User>) /* = java.util.ArrayList<com.example.singmeapp.items.User> */
+            friendAdapter.initList(it)
             binding.rcMyFriends.adapter = friendAdapter
             binding.tvMyFriendsInFriendsFragmentCount.text = "(${it.size})"
         }
 
         friendsViewModel.listRequests.observe(viewLifecycleOwner){
-            requestAdapter.friendList.clear()
-            requestAdapter.friendList.addAll(it as ArrayList<User>)
+            requestAdapter.initList(it)
             binding.rcFriendRequests.adapter = requestAdapter
             binding.tvRequestsCount.text = "(${it.size})"
         }
 
         friendsViewModel.listMyRequests.observe(viewLifecycleOwner){
-            myRequestAdapter.friendList.clear()
-            myRequestAdapter.friendList.addAll(it as ArrayList<User>)
+            myRequestAdapter.initList(it)
             binding.rcMyFriendRequests.adapter = myRequestAdapter
             binding.tvMyRequestsCount.text = "(${it.size})"
         }
 
         friendsViewModel.listAllUsers.observe(viewLifecycleOwner){
-            arrayListUsers.clear()
-            arrayListUsers.addAll(it as ArrayList<User>)
-            userAdapter.friendList.clear()
-            userAdapter.friendList.addAll(it as ArrayList<User>) /* = java.util.ArrayList<com.example.singmeapp.items.User> */
+            userAdapter.initList(it)
             binding.rcAllUsers.adapter = userAdapter
         }
 
@@ -104,73 +110,16 @@ class FriendsFragment : Fragment(), MenuProvider {
                 binding.friendsProgressLayout.visibility = View.GONE
             }
         }
-
-
-
-        binding.bWrapMyFriendRequests.setOnClickListener{
-            wrap(binding.rcMyFriendRequests)
-        }
-        binding.bWrapFriendRequests.setOnClickListener{
-            wrap(binding.rcFriendRequests)
-        }
-
-        // Inflate the layout for this fragment
-        return binding.root
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home){
-            val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
-            if (count == 0) {
-                (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                activity?.onBackPressed()
-            } else {
-                (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                findNavController().popBackStack()
-            }
-        }
-
-        if (item.itemId == R.id.action_search_user){
-            item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener{
-                override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
-                    Log.e("Search", "onMenuItemActionExpand")
-                    friendsViewModel.isAlready.value?.put("avatarUser", false)
-                    friendsViewModel.getAllUsers()
-                    binding.friendsProgressLayout.visibility = View.VISIBLE
-                    binding.searchLayout.visibility = View.VISIBLE
-                    return true
-                }
-
-                override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
-                    binding.searchLayout.visibility = View.GONE
-                    (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
-                    return true
-                }
-
-            })
-
-            val searcView = item.actionView as SearchView
-            searcView.queryHint = "Type here to search"
-
-            searcView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    Log.e("Search", "onQueryTextSubmit")
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    Log.e("Search", "onQueryTextChange")
-                    userAdapter.friendList = arrayListUsers.filter {
-                         (it.name.contains(newText!!, ignoreCase = true))
-                    } as ArrayList<User> /* = java.util.ArrayList<com.example.singmeapp.items.User> */
-                    binding.rcAllUsers.adapter = userAdapter
-                    return true
-                }
-
-            })
-
-        }
-        return true
+    fun setButtons(){
+        binding.bWrapMyFriendRequests.setOnClickListener(this@FriendsFragment)
+        binding.bWrapFriendRequests.setOnClickListener(this@FriendsFragment)
+        binding.tvSortByInFriends.setOnClickListener(this@FriendsFragment)
+        mainActivity.binding.tvSortUsersByName.setOnClickListener(this@FriendsFragment)
+        mainActivity.binding.tvSortUsersByDefault.setOnClickListener(this@FriendsFragment)
+        mainActivity.binding.tvSortUsersByAge.setOnClickListener(this@FriendsFragment)
+        mainActivity.binding.tvSortUsersBySex.setOnClickListener(this@FriendsFragment)
     }
 
     private fun convert(value: Int):Int{
@@ -204,7 +153,110 @@ class FriendsFragment : Fragment(), MenuProvider {
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        TODO("Not yet implemented")
+        when(menuItem.itemId){
+            android.R.id.home -> {
+                val count: Int? = activity?.supportFragmentManager?.backStackEntryCount
+                if (count == 0) {
+                    (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    activity?.onBackPressed()
+                } else {
+                    (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                    findNavController().popBackStack()
+                }
+                return true
+            }
+
+            R.id.action_search_user -> {
+                menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener{
+                    override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                        Log.e("Search", "onMenuItemActionExpand")
+                        friendsViewModel.isAlready.value?.put("avatarUser", false)
+                        friendsViewModel.getAllUsers()
+                        binding.friendsProgressLayout.visibility = View.VISIBLE
+                        binding.searchLayout.visibility = View.VISIBLE
+                        return true
+                    }
+
+                    override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                        binding.searchLayout.visibility = View.GONE
+                        (activity as MainActivity).bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+                        return true
+                    }
+
+                })
+
+                val searcView = menuItem.actionView as SearchView
+                searcView.queryHint = "Type here to search"
+
+                searcView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        Log.e("Search", "onQueryTextSubmit")
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        userAdapter.sortBySearch(newText ?: "")
+                        binding.rcAllUsers.adapter = userAdapter
+                        return true
+                    }
+
+                })
+                return true
+            }
+
+        }
+
+        return false
+    }
+
+    fun doWhenSort(){
+        binding.rcMyFriends.adapter  = friendAdapter
+        mainActivity.binding.view15.visibility = View.GONE
+        mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        optionsMenu.clear()
+        optionsMenu.close()
+    }
+
+    override fun onClick(p0: View?) {
+        when (p0?.id){
+            binding.bWrapMyFriendRequests.id -> {
+                wrap(binding.rcMyFriendRequests)
+            }
+
+            binding.bWrapFriendRequests.id -> {
+                wrap(binding.rcFriendRequests)
+            }
+
+            binding.tvSortByInFriends.id -> {
+                mainActivity.binding.userSortMenu.visibility = View.VISIBLE
+                mainActivity.binding.view15.visibility = View.VISIBLE
+                mainActivity.bottomSheetBehavior2.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            mainActivity.binding.tvSortUsersByName.id -> {
+                friendAdapter.sortByName()
+                doWhenSort()
+            }
+
+            mainActivity.binding.tvSortUsersByDefault.id -> {
+                friendAdapter.sortByDefault()
+                doWhenSort()
+            }
+
+            mainActivity.binding.tvSortUsersByAge.id -> {
+                friendAdapter.sortByAge()
+                doWhenSort()
+            }
+
+            mainActivity.binding.tvSortUsersBySex.id -> {
+                friendAdapter.sortBySex()
+                doWhenSort()
+            }
+        }
     }
 
 
