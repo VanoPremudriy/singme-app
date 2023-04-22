@@ -123,6 +123,11 @@ class AlbumFragment : Fragment(), View.OnClickListener {
     }
     override fun onClick(p0: View?) {
         when(p0?.id){
+
+            binding.bPlayAlbum.id -> {
+                trackAdapter.startAlbum()
+            }
+
             binding.ibAlbumBack.id -> {
                back()
             }
@@ -179,6 +184,7 @@ class AlbumFragment : Fragment(), View.OnClickListener {
             ibAlbumBack2.setOnClickListener(this@AlbumFragment)
             ibAlbumMenu.setOnClickListener(this@AlbumFragment)
             ibAlbumMenu2.setOnClickListener(this@AlbumFragment)
+            bPlayAlbum.setOnClickListener(this@AlbumFragment)
         }
 
         mainActivity.binding.tvAddAlbumInLove.setOnClickListener(this@AlbumFragment)

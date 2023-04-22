@@ -128,6 +128,16 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
         binding.ibAddTrackInPlaylist.visibility = View.INVISIBLE
         binding.ibAddOrChangePlaylist.setImageResource(R.drawable.ic_change)
 
+        binding.rcView.layoutManager = LinearLayoutManager(context)
+
+        observes()
+
+        setButtons()
+
+        return binding.root
+    }
+
+    fun observes(){
         playlistViewModel.curPlaylist.observe(viewLifecycleOwner){
             playlist = it
             binding.tvPlaylistName.text = it.name
@@ -142,10 +152,8 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
             if (it.isAuthor){
                 binding.ibAddOrChangePlaylist.setImageResource(R.drawable.ic_change)
             }
-
         }
 
-        binding.rcView.layoutManager = LinearLayoutManager(context)
         playlistViewModel.listTrack.observe(viewLifecycleOwner){
             trackAdapter.trackList = it as ArrayList<Track> /* = java.util.ArrayList<com.example.singmeapp.items.Track> */
             binding.rcView.adapter = trackAdapter
@@ -157,16 +165,6 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
             }
         }
 
-        binding.ibAddOrChangePlaylist.setOnClickListener(this@PlaylistFragment)
-        binding.ibEditPlaylistCover.setOnClickListener(this@PlaylistFragment)
-        binding.ibAddTrackInPlaylist.setOnClickListener(this@PlaylistFragment)
-        binding.ibPlaylistBack.setOnClickListener(this@PlaylistFragment)
-        binding.ibAPlaylistBack2.setOnClickListener(this@PlaylistFragment)
-        binding.ibPlaylistMenu.setOnClickListener(this@PlaylistFragment)
-        binding.ibPlaylistMenu2.setOnClickListener(this@PlaylistFragment)
-        mainActivity.binding.tvDeletePlaylist.setOnClickListener(this@PlaylistFragment)
-        mainActivity.binding.tvChangePlaylist.setOnClickListener(this@PlaylistFragment)
-
         binding.playlistScrollView.viewTreeObserver.addOnScrollChangedListener {
             if (binding.playlistScrollView.scrollY > 150){
                 binding.llTopMenu.visibility = View.VISIBLE
@@ -174,8 +172,19 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
                 binding.llTopMenu.visibility = View.GONE
             }
         }
+    }
 
-        return binding.root
+    fun setButtons(){
+        binding.ibAddOrChangePlaylist.setOnClickListener(this@PlaylistFragment)
+        binding.ibEditPlaylistCover.setOnClickListener(this@PlaylistFragment)
+        binding.ibAddTrackInPlaylist.setOnClickListener(this@PlaylistFragment)
+        binding.ibPlaylistBack.setOnClickListener(this@PlaylistFragment)
+        binding.ibAPlaylistBack2.setOnClickListener(this@PlaylistFragment)
+        binding.ibPlaylistMenu.setOnClickListener(this@PlaylistFragment)
+        binding.ibPlaylistMenu2.setOnClickListener(this@PlaylistFragment)
+        binding.bPlayPlaylist.setOnClickListener(this@PlaylistFragment)
+        mainActivity.binding.tvDeletePlaylist.setOnClickListener(this@PlaylistFragment)
+        mainActivity.binding.tvChangePlaylist.setOnClickListener(this@PlaylistFragment)
     }
 
     companion object {
@@ -218,6 +227,10 @@ class PlaylistFragment : Fragment(), View.OnClickListener {
 
             binding.ibPlaylistMenu2.id -> {
                 menu()
+            }
+
+            binding.bPlayPlaylist.id -> {
+                trackAdapter.startAlbum()
             }
 
             mainActivity.binding.tvDeletePlaylist.id -> {

@@ -51,6 +51,8 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
 
     var prevId: Int? = null
 
+    lateinit var holderForStartAlbum: TrackHolder
+
 
     val playlistViewModelProvider = ViewModelProvider(fragment)
     val playlistViewModel = playlistViewModelProvider[PlaylistViewModel::class.java]
@@ -163,6 +165,10 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             playerPlaylistViewModel.prevId.value = prevId
         }
 
+        if (position == 0){
+            holderForStartAlbum = holder
+        }
+
 
 
         mainActivity.binding.player.ibClose.setOnClickListener {
@@ -214,6 +220,18 @@ class TrackAdapter(val fragmentActivity: AppCompatActivity, val fragment: Fragme
             }
         }
 
+    }
+
+    fun startAlbum(){
+        setTrack(0)
+        holderForStartAlbum.binding.ivPlayPauseTrackItem.visibility = View.VISIBLE
+        if (playerPlaylistViewModel.isPlaying.value == true)
+            holderForStartAlbum.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_pause)
+        else holderForStartAlbum.binding.ivPlayPauseTrackItem.setImageResource(R.drawable.ic_play)
+        prevId = 0
+        prevItem = holderForStartAlbum
+        playerPlaylistViewModel.prevItem.value = prevItem
+        playerPlaylistViewModel.prevId.value = prevId
     }
 
     fun setTrack(position: Int){
