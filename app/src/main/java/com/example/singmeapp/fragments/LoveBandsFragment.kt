@@ -148,6 +148,25 @@ class LoveBandsFragment : Fragment(), MenuProvider, OnClickListener {
             })
 
         }
+
+        if (menuItem.itemId == R.id.action_search_bands){
+            val searchView = menuItem.actionView as SearchView
+            searchView.queryHint = getString(R.string.type_here_to_search)
+
+
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    bandAdapter.sortBySearch(newText ?: "")
+                    binding.rcView.adapter = bandAdapter
+                    return true
+                }
+
+            })
+        }
         return false
     }
 
