@@ -38,32 +38,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
 
-
-    /*@get:Rule
-    val disableAnimationsRule = DisableAnimationsRule()
-
-    class DisableAnimationsRule : TestRule {
-        override fun apply(base: Statement, description: Description): Statement {
-            return object : Statement() {
-                override fun evaluate() {
-                    // Отключаем анимации
-                    UiDevice.getInstance(getInstrumentation()).executeShellCommand("settings put global window_animation_scale 0.0")
-                    UiDevice.getInstance(getInstrumentation()).executeShellCommand("settings put global transition_animation_scale 0.0")
-                    UiDevice.getInstance(getInstrumentation()).executeShellCommand("settings put global animator_duration_scale 0.0")
-
-                    try {
-                        base.evaluate()
-                    } finally {
-                        // Включаем анимации
-                        UiDevice.getInstance(getInstrumentation()).executeShellCommand("settings put global window_animation_scale 1.0")
-                        UiDevice.getInstance(getInstrumentation()).executeShellCommand("settings put global transition_animation_scale 1.0")
-                        UiDevice.getInstance(getInstrumentation()).executeShellCommand("settings put global animator_duration_scale 1.0")
-                    }
-                }
-            }
-        }
-    }*/
-
     lateinit var trackName: String
     @Test
     @Throws(Exception::class)

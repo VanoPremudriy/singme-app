@@ -19,7 +19,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.singmeapp.adapters.PlayerPagerAdapter
 import com.example.singmeapp.databinding.ActivityMainBinding
@@ -107,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
-        super.onPostResume()
+
         createChannel()
         /*registerReceiver(broadcastReceiver, IntentFilter("TRACKSTRACKS"))
         startService(Intent(baseContext, OnClearFromRecentService::class.java))*/
@@ -115,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
         navController = navHostFragment.navController
-        navController.setGraph(R.navigation.main_nav)
+        //navController.setGraph(R.navigation.main_nav)
 
         setNavigation()
 
@@ -235,8 +237,8 @@ class MainActivity : AppCompatActivity() {
 
     fun setNavigation(){
         if (auth.currentUser != null)
-            navController.navigate(R.id.action_global_homeFragment)
-        else navController.navigate(R.id.action_global_notAuthorizedFragment)
+            //navController.navigate(R.id.action_global_homeFragment)
+        else navController.navigate(R.id.action_global_notAuthorizedFragment, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment,true).build())
 
         binding.bNav.setOnItemSelectedListener {
             when(it.itemId){
@@ -272,6 +274,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        if (auth.currentUser?.uid == null){
+            navController.navigate(R.id.notAuthorizedFragment)
+        }
         if (navController.currentDestination?.id != R.id.albumFragment){
             supportActionBar?.show()
         }

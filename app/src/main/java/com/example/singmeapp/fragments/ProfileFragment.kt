@@ -8,18 +8,16 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.singmeapp.MainActivity
 import com.example.singmeapp.PathConverter
@@ -28,20 +26,14 @@ import com.example.singmeapp.databinding.FragmentProfileBinding
 import com.example.singmeapp.items.User
 import com.example.singmeapp.viewmodels.ProfileViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.processNextEventInCurrentThread
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import java.io.File
 import java.io.FileNotFoundException
 
 
-class ProfileFragment : Fragment(), View.OnClickListener {
+class ProfileFragment : Fragment(), View.OnClickListener{
 
     lateinit var fragActivity: AppCompatActivity
     lateinit var mainActivity: MainActivity
@@ -207,5 +199,6 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             }
         }
     }
+
 
 }

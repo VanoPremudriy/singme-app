@@ -11,5 +11,4 @@ data class Track(var uuid: String,
                  var imageUrl: String,
                  var trackUrl: String,
                  var isInLove: Boolean,
-                 val date: LocalDateTime? = null
-                 )
+                 val date: LocalDateTime? = null)

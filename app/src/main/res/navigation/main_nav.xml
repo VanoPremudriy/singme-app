@@ -67,7 +67,7 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_notAuthorizedFragment"
-            app:destination="@id/notAuthorizedFragment" />
+            app:destination="@id/notAuthorizedFragment"/>
     </fragment>
     <action
         android:id="@+id/action_global_notAuthorizedFragment"

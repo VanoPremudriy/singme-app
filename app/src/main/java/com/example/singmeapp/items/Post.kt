@@ -7,4 +7,4 @@ data class Post(val uuid: String,
                 val band: Band,
                 val album: Album,
                 val dateTime: LocalDateTime
-                ): Serializable
+): Serializable
