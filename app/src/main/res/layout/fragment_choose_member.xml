@@ -53,10 +53,10 @@
         app:layout_constraintTop_toBottomOf="@+id/view10">
 
         <ImageView
-            android:id="@+id/ivChooseMemberAvatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/back" />
+                android:id="@+id/ivChooseMemberAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/default_avatar"/>
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -140,23 +140,24 @@
         app:layout_constraintTop_toBottomOf="@+id/llRoles" />
 
     <FrameLayout
-        android:id="@+id/chooseMemberProgressLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#FFFFFF"
-        android:clickable="true"
-        android:elevation="10000dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+            android:id="@+id/chooseMemberProgressLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#FFFFFF"
+            android:clickable="true"
+            android:elevation="10000dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/progressBar9"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+                android:id="@+id/progressBar9"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

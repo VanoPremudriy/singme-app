@@ -22,12 +22,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/ivBandBack"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                app:srcCompat="@drawable/back2"
-                tools:src="@drawable/back2"
-                tools:srcCompat="@drawable/back2" />
+                    android:id="@+id/ivBandBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    tools:src="@drawable/default_avatar" />
 
             <ImageButton
                 android:id="@+id/ibEditBandBackInBandFragment"
@@ -52,10 +50,10 @@
             app:layout_constraintTop_toTopOf="@+id/cvBandBack">
 
             <ImageView
-                android:id="@+id/ivBandAvatar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/back" />
+                    android:id="@+id/ivBandAvatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/default_avatar" />
 
         </androidx.cardview.widget.CardView>
 

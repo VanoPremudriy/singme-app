@@ -25,12 +25,12 @@
             android:layout_height="40dp">
 
             <ImageView
-                android:id="@+id/ivItemTrackCover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/back" />
+                    android:id="@+id/ivItemTrackCover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/default_image" />
 
             <ImageView
                 android:id="@+id/ivPlayPauseTrackItem"
