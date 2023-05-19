@@ -110,6 +110,10 @@ class ProfileFragment : Fragment(), View.OnClickListener{
         fragActivity.title = getString(R.string.profile)
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(layoutInflater)
+        if (arguments?.getSerializable("otherUser") != null){
+            binding.imageButton.visibility = View.GONE
+        }
+
 
         buttonSets()
         observe()

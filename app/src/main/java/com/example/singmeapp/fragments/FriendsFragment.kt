@@ -54,7 +54,6 @@ class FriendsFragment : Fragment(), MenuProvider, OnClickListener {
         fragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         fragmentActivity.title = getString(R.string.my_friends)
         binding = FragmentFriendsBinding.inflate(layoutInflater)
-
         if ((arguments?.getSerializable("curUser") as User).uuid != friendsViewModel.auth.currentUser?.uid.toString()){
             binding.tvMyRequests.text = getString(R.string.user_requests)
             binding.tvMyFriendsInFriendsFragment.text = getString(R.string.friends)

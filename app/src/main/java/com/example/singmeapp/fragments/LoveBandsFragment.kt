@@ -104,7 +104,7 @@ class LoveBandsFragment : Fragment(), MenuProvider, OnClickListener {
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        if (arguments?.getSerializable("curUser") != null){
+        if (arguments?.getSerializable("curUser") != null && (arguments?.getSerializable("curUser") as User).uuid == loveBandsViewModel.auth.currentUser?.uid.toString()){
           menuInflater.inflate(R.menu.user_bands_menu, menu)
         } else {
             menuInflater.inflate(R.menu.search_menu, menu)
